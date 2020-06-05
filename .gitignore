@@ -1,0 +1,10 @@
+# OS
+.DS_Store
+
+# IDE
+.vscode
+.idea
+
+# Log
+*.log
+*.log.*
