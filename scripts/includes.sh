@@ -62,7 +62,8 @@ function init_env() {
     RCLONE_REMOTE="${RCLONE_REMOTE_NAME}:${RCLONE_REMOTE_DIR}"
 
     # ZIP_ENABLE
-    if [[ $(echo "${ZIP_ENABLE}" | tr '[a-z]' '[A-Z]') == "FALSE" ]]; then
+    ZIP_ENABLE=$(echo "${ZIP_ENABLE}" | tr '[a-z]' '[A-Z]')
+    if [[ "${ZIP_ENABLE}" == "FALSE" ]]; then
         ZIP_ENABLE="FALSE"
     else
         ZIP_ENABLE="TRUE"
