@@ -1,0 +1,28 @@
+version: '3'
+
+services:
+
+  bitwardenrs:
+    image: bitwardenrs/server:1.15.0
+    restart: always
+    # environment:
+    #   SIGNUPS_ALLOWED: 'false'
+    #   ADMIN_TOKEN: 'your authentication token'
+    ports:
+      - '127.0.0.1:8200:80'
+    volumes:
+      - ./data:/data/
+
+  backup:
+    image: ttionya/bitwardenrs-backup:latest
+    restart: always
+    # environment:
+    #   RCLONE_REMOTE_NAME: 'BitwardenBackup'
+    #   RCLONE_REMOTE_DIR: '/BitwardenBackup/'
+    #   CRON: '5 * * * *'
+    #   ZIP_ENABLE: 'TRUE'
+    #   ZIP_PASSWORD: 'WHEREISMYPASSWORD?'
+    #   BACKUP_KEEP_DAYS: 0
+    volumes:
+      - ./data:/bitwarden/data/
+      - ./rclone:/config/rclone/

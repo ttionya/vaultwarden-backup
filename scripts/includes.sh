@@ -41,7 +41,7 @@ function check_rclone_connection() {
 ########################################
 function init_env() {
     # CRON
-    local CRON_DEFAULT="0 1 * * *"
+    local CRON_DEFAULT="5 * * * *"
     if [[ -z "${CRON}" ]]; then
         CRON="${CRON_DEFAULT}"
     fi
