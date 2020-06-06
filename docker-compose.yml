@@ -11,7 +11,7 @@ services:
     ports:
       - '127.0.0.1:8200:80'
     volumes:
-      - ./data:/data/
+      - bitwardenrs-data:/data/
 
   backup:
     image: ttionya/bitwardenrs-backup:latest
@@ -24,5 +24,10 @@ services:
     #   ZIP_PASSWORD: 'WHEREISMYPASSWORD?'
     #   BACKUP_KEEP_DAYS: 0
     volumes:
-      - ./data:/bitwarden/data/
-      - ./rclone:/config/rclone/
+      - bitwardenrs-data:/bitwarden/data/
+      - bitwardenrs-rclone-data:/config/
+
+volumes:
+  bitwardenrs-data:
+  bitwardenrs-rclone-data:
+    external: true
