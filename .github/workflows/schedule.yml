@@ -12,7 +12,7 @@ jobs:
         with:
           fetch-depth: 0
       - uses: ttionya/Repository-Sync-Hub@v1
-      with:
-        target_repository: 'https://gitee.com/ttionya/BitwardenRS-Backup.git'
-        http_access_name: 'ttionya'
-        http_access_token: ${{ secrets.GITEE_HTTP_ACCESS_TOKEN }}
+        with:
+          target_repository: 'https://gitee.com/ttionya/BitwardenRS-Backup.git'
+          http_access_name: 'ttionya'
+          http_access_token: ${{ secrets.GITEE_HTTP_ACCESS_TOKEN }}
