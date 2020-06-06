@@ -2,6 +2,13 @@
 
 . /app/includes.sh
 
+# rclone command
+if [[ "$1" == "rclone" ]]; then
+    $*
+
+    exit 0
+fi
+
 function configure_cron() {
     echo "${CRON} sh /app/backup.sh > /dev/stdout" >> /etc/crontabs/root
 }
