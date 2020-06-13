@@ -112,6 +112,62 @@ Only keep last a few days backup files in the storage system. Set to `0` to keep
 
 Default: `0`
 
+#### MAIL_SMTP_ENABLE
+
+The tool uses [heirloom-mailx](https://www.systutorials.com/docs/linux/man/1-heirloom-mailx/) to send mail.
+
+Default: `FALSE`
+
+#### MAIL_SMTP_VARIABLES
+
+Because the configuration for sending emails is too complicated, we allow you to configure it yourself.
+
+**We will set the subject according to the usage scenario, so you should not use the `-s` option.**
+
+When testing, we will add the `-v` option to display detailed information.
+
+```text
+# My example:
+
+# For Zoho
+-S smtp-use-starttls \
+-S smtp=smtp://smtp.zoho.com:587 \
+-S smtp-auth=login \
+-S smtp-auth-user=<my-email-address> \
+-S smtp-auth-password=<my-email-password> \
+-S from=<my-email-address>
+```
+
+See [here](https://www.systutorials.com/sending-email-from-mailx-command-in-linux-using-gmails-smtp/) for more information.
+
+#### MAIL_TO
+
+Who will receive the notification email.
+
+#### MAIL_WHEN_SUCCESS
+
+Send email when backup is successful.
+
+Default: `TRUE`
+
+#### MAIL_WHEN_FAILURE
+
+Send email when backup fails.
+
+Default: `TRUE`
+
+## Mail Test
+
+You can use the following command to test the mail sending. Remember to replace your smtp variables.
+
+```shell
+docker run --rm -it -e MAIL_SMTP_VARIABLES='<your smtp variables>' ttionya/bitwardenrs-backup:latest mail <mail send to>
+
+# Or
+
+docker run --rm -it -e MAIL_SMTP_VARIABLES='<your smtp variables>' -e MAIL_TO='<mail send to>' ttionya/bitwardenrs-backup:latest mail
+```
+
 ## License
 
 MIT

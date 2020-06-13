@@ -9,6 +9,22 @@ if [[ "$1" == "rclone" ]]; then
     exit 0
 fi
 
+# mailx test
+if [[ "$1" == "mail" ]]; then
+    MAIL_SMTP_ENABLE="TRUE"
+    MAIL_DEBUG="TRUE"
+
+    if [[ -n "$2" ]]; then
+        MAIL_TO="$2"
+    fi
+
+    init_env
+
+    send_mail "BitwardenRS Backup Test" "Your SMTP looks configured correctly."
+
+    exit 0
+fi
+
 function configure_cron() {
     echo "${CRON} sh /app/backup.sh > /dev/stdout" >> /etc/crontabs/root
 }

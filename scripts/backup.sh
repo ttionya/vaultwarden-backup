@@ -94,6 +94,11 @@ function upload() {
     rclone copy ${UPLOAD_FILE} ${RCLONE_REMOTE}
     if [[ $? != 0 ]]; then
         color red "upload failed"
+
+        if [[ "${MAIL_SMTP_ENABLE}" == "TRUE" && "${MAIL_WHEN_FAILURE}" == "TRUE" ]]; then
+            send_mail "BitwardenRS Backup Failed" "File upload failed at $(date +"%Y-%m-%d %H:%M:%S")."
+        fi
+
         exit 1
     fi
 }
@@ -127,5 +132,9 @@ backup_package
 upload
 clear_dir
 clear_history
+
+if [[ "${MAIL_SMTP_ENABLE}" == "TRUE" && "${MAIL_WHEN_SUCCESS}" == "TRUE" ]]; then
+    send_mail "BitwardenRS Backup Success" "The file was successfully uploaded at $(date +"%Y-%m-%d %H:%M:%S")."
+fi
 
 color none ""

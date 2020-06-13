@@ -3,7 +3,7 @@ version: '3'
 services:
 
   bitwardenrs:
-    image: bitwardenrs/server:1.15.0
+    image: bitwardenrs/server:1.15.1
     restart: always
     # environment:
     #   SIGNUPS_ALLOWED: 'false'
@@ -23,6 +23,11 @@ services:
     #   ZIP_ENABLE: 'TRUE'
     #   ZIP_PASSWORD: 'WHEREISMYPASSWORD?'
     #   BACKUP_KEEP_DAYS: 0
+    #   MAIL_SMTP_ENABLE: 'FALSE'
+    #   MAIL_SMTP_VARIABLES: ''
+    #   MAIL_TO: ''
+    #   MAIL_WHEN_SUCCESS: 'TRUE'
+    #   MAIL_WHEN_FAILURE: 'TRUE'
     volumes:
       - bitwardenrs-data:/bitwarden/data/
       - bitwardenrs-rclone-data:/config/

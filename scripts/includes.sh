@@ -33,6 +33,27 @@ function check_rclone_connection() {
 }
 
 ########################################
+# Send mail by mailx.
+# Arguments:
+#     mail subject
+#     mail content
+# Outputs:
+#     send mail result
+########################################
+function send_mail() {
+    if [[ "${MAIL_DEBUG}" == "TRUE" ]]; then
+        local MAIL_VERBOSE="-v"
+    fi
+
+    echo "$2" | mailx ${MAIL_VERBOSE} -s "$1" ${MAIL_SMTP_VARIABLES} ${MAIL_TO}
+    if [[ $? != 0 ]]; then
+        color red "mail sending failed"
+    else
+        color blue "mail send was successfully"
+    fi
+}
+
+########################################
 # Initialization environment variables.
 # Arguments:
 #     None
@@ -80,6 +101,31 @@ function init_env() {
         BACKUP_KEEP_DAYS="${BACKUP_KEEP_DAYS_DEFAULT}"
     fi
 
+    # MAIL_SMTP_ENABLE
+    # MAIL_TO
+    MAIL_SMTP_ENABLE=$(echo "${MAIL_SMTP_ENABLE}" | tr '[a-z]' '[A-Z]')
+    if [[ "${MAIL_SMTP_ENABLE}" == "TRUE" && -n "${MAIL_TO}" ]]; then
+        MAIL_SMTP_ENABLE="TRUE"
+    else
+        MAIL_SMTP_ENABLE="FALSE"
+    fi
+
+    # MAIL_WHEN_SUCCESS
+    MAIL_WHEN_SUCCESS=$(echo "${MAIL_WHEN_SUCCESS}" | tr '[a-z]' '[A-Z]')
+    if [[ "${MAIL_WHEN_SUCCESS}" == "FALSE" ]]; then
+        MAIL_WHEN_SUCCESS="FALSE"
+    else
+        MAIL_WHEN_SUCCESS="TRUE"
+    fi
+
+    # MAIL_WHEN_FAILURE
+    MAIL_WHEN_FAILURE=$(echo "${MAIL_WHEN_FAILURE}" | tr '[a-z]' '[A-Z]')
+    if [[ "${MAIL_WHEN_FAILURE}" == "FALSE" ]]; then
+        MAIL_WHEN_FAILURE="FALSE"
+    else
+        MAIL_WHEN_FAILURE="TRUE"
+    fi
+
     color yellow "========================================"
     color yellow "CRON: ${CRON}"
     color yellow "RCLONE_REMOTE_NAME: ${RCLONE_REMOTE_NAME}"
@@ -88,5 +134,11 @@ function init_env() {
     color yellow "ZIP_ENABLE: ${ZIP_ENABLE}"
     color yellow "ZIP_PASSWORD: ${#ZIP_PASSWORD} Chars"
     color yellow "BACKUP_KEEP_DAYS: ${BACKUP_KEEP_DAYS}"
+    color yellow "MAIL_SMTP_ENABLE: ${MAIL_SMTP_ENABLE}"
+    if [[ "${MAIL_SMTP_ENABLE}" == "TRUE" ]]; then
+        color yellow "MAIL_TO: ${MAIL_TO}"
+        color yellow "MAIL_WHEN_SUCCESS: ${MAIL_WHEN_SUCCESS}"
+        color yellow "MAIL_WHEN_FAILURE: ${MAIL_WHEN_FAILURE}"
+    fi
     color yellow "========================================"
 }
