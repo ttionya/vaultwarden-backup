@@ -1,8 +1,17 @@
 # BitwardenRS Backup
 
-Docker containers for [bitwarden_rs](https://github.com/dani-garcia/bitwarden_rs) backup.
+Docker containers for [bitwarden_rs](https://github.com/dani-garcia/bitwarden_rs) backup to remote.
 
-Find this docker image at [Docker Hub](https://hub.docker.com/repository/docker/ttionya/bitwardenrs-backup).
+- [Docker Hub](https://hub.docker.com/repository/docker/ttionya/bitwardenrs-backup)
+- [GitHub](https://github.com/ttionya/BitwardenRS-Backup)
+
+## Feature
+
+This tool supports backing up the following files or directories.
+
+- `db.sqlite3`
+- `config.json`
+- `attachments` (directory)
 
 ## Usage
 
