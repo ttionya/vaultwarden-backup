@@ -2,20 +2,68 @@
 
 . /app/includes.sh
 
+TODAY=$(date +%Y%m%d)
+DATA_DIR="/bitwarden/data/"
 BACKUP_DIR="/bitwarden/backup/"
-BACKUP_FILE="${BACKUP_DIR}/backup.$(date +%Y%m%d).sqlite3"
-BACKUP_FILE_ZIP="${BACKUP_FILE}.zip"
+# backup bitwarden_rs database file
+BACKUP_FILE_DB="${BACKUP_DIR}/db.${TODAY}.sqlite3"
+# backup bitwarden_rs config file
+BACKUP_FILE_CONFIG="${BACKUP_DIR}/config.${TODAY}.json"
+# backup bitwarden_rs attachments directory
+BACKUP_FILE_ATTACHMENTS="${BACKUP_DIR}/attachments.${TODAY}.tar"
+# backup zip file
+BACKUP_FILE_ZIP="${BACKUP_DIR}/backup.${TODAY}.zip"
 
-function backup_clear_dir() {
+function clear_dir() {
     rm -rf ${BACKUP_DIR}
 }
 
-function backup() {
+function backup_db() {
     color blue "backup bitwarden_rs sqlite database"
 
+    local DATA_DB="${DATA_DIR}/db.sqlite3"
+
+    if [[ -f "${DATA_DB}" ]]; then
+        sqlite3 ${DATA_DB} ".backup ${BACKUP_FILE_DB}"
+    else
+        color yellow "not found bitwarden_rs sqlite database, skipping"
+    fi
+}
+
+function backup_config() {
+    color blue "backup bitwarden_rs config"
+
+    local DATA_CONFIG="${DATA_DIR}/config.json"
+
+    if [[ -f "${DATA_CONFIG}" ]]; then
+        cp -f ${DATA_DIR}/config.json ${BACKUP_FILE_CONFIG}
+    else
+        color yellow "not found bitwarden_rs config, skipping"
+    fi
+}
+
+function backup_attachments() {
+    color blue "backup bitwarden_rs attachments"
+
+    local DATA_ATTACHMENTS="attachments"
+
+    if [[ -d "${DATA_DIR}/${DATA_ATTACHMENTS}" ]]; then
+        tar -c -C ${DATA_DIR} -f ${BACKUP_FILE_ATTACHMENTS} ${DATA_ATTACHMENTS}
+
+        color blue "display attachments tar file list"
+
+        tar -tf ${BACKUP_FILE_ATTACHMENTS}
+    else
+        color yellow "not found bitwarden_rs attachments directory, skipping"
+    fi
+}
+
+function backup() {
     mkdir -p ${BACKUP_DIR}
 
-    sqlite3 /bitwarden/data/db.sqlite3 ".backup ${BACKUP_FILE}"
+    backup_db
+    backup_config
+    backup_attachments
 
     ls -lah ${BACKUP_DIR}
 }
@@ -23,18 +71,24 @@ function backup() {
 function backup_package() {
     if [[ "${ZIP_ENABLE}" == "TRUE" ]]; then
         color blue "package backup file"
+
         UPLOAD_FILE="${BACKUP_FILE_ZIP}"
 
-        zip -jP ${ZIP_PASSWORD} ${BACKUP_FILE_ZIP} ${BACKUP_FILE}
+        zip -jP ${ZIP_PASSWORD} ${BACKUP_FILE_ZIP} ${BACKUP_DIR}/*
 
         ls -lah ${BACKUP_DIR}
+
+        color blue "display backup zip file list"
+
+        zip -sf ${BACKUP_FILE_ZIP}
     else
-        color yellow "skip package backup file"
-        UPLOAD_FILE="${BACKUP_FILE}"
+        color yellow "skip package backup files"
+
+        UPLOAD_FILE="${BACKUP_DIR}"
     fi
 }
 
-function backup_upload() {
+function upload() {
     color blue "upload backup file to storage system"
 
     rclone copy ${UPLOAD_FILE} ${RCLONE_REMOTE}
@@ -44,11 +98,11 @@ function backup_upload() {
     fi
 }
 
-function backup_clear_history() {
+function clear_history() {
     if [[ "${BACKUP_KEEP_DAYS}" -gt 0 ]]; then
         color blue "delete ${BACKUP_KEEP_DAYS} days ago backup files"
 
-        RCLONE_DELETE_LIST=$(rclone lsf ${RCLONE_REMOTE} | head -n -${BACKUP_KEEP_DAYS})
+        local RCLONE_DELETE_LIST=$(rclone lsf ${RCLONE_REMOTE} | head -n -${BACKUP_KEEP_DAYS})
 
         for RCLONE_DELETE_FILE in ${RCLONE_DELETE_LIST}
         do
@@ -67,11 +121,11 @@ color blue "running backup program..."
 init_env
 check_rclone_connection
 
-backup_clear_dir
+clear_dir
 backup
 backup_package
-backup_upload
-backup_clear_dir
-backup_clear_history
+upload
+clear_dir
+clear_history
 
 color none ""
