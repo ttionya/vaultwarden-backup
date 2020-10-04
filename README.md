@@ -15,6 +15,8 @@ This tool supports backing up the following files or directories.
 
 ## Usage
 
+> **Important:** We assume you already read the `bitwarden_rs` [documentation](https://github.com/dani-garcia/bitwarden_rs/wiki).
+
 We upload the backup files to the storage system by [Rclone](https://rclone.org/).
 
 Visit [GitHub](https://github.com/rclone/rclone) for more storage system tutorials. Different systems get tokens differently.
