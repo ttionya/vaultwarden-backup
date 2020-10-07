@@ -148,6 +148,12 @@ function init_env() {
         MAIL_WHEN_FAILURE="TRUE"
     fi
 
+    # TIMEZONE
+    local TIMEZONE_MATCHED_COUNT=$(ls "/usr/share/zoneinfo/${TIMEZONE}" 2> /dev/null | wc -l)
+    if [[ ${TIMEZONE_MATCHED_COUNT} -ne 1 ]]; then
+        TIMEZONE="UTC"
+    fi
+
     color yellow "========================================"
     color yellow "CRON: ${CRON}"
     color yellow "RCLONE_REMOTE_NAME: ${RCLONE_REMOTE_NAME}"
@@ -162,5 +168,6 @@ function init_env() {
         color yellow "MAIL_WHEN_SUCCESS: ${MAIL_WHEN_SUCCESS}"
         color yellow "MAIL_WHEN_FAILURE: ${MAIL_WHEN_FAILURE}"
     fi
+    color yellow "TIMEZONE: ${TIMEZONE}"
     color yellow "========================================"
 }

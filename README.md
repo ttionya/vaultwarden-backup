@@ -114,6 +114,14 @@ Only keep last a few days backup files in the storage system. Set to `0` to keep
 
 Default: `0`
 
+#### TIMEZONE
+
+You should set the available timezone name. Currently only used in mail.
+
+Here is timezone list at [wikipedia](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones).
+
+Default: `UTC`
+
 #### MAIL_SMTP_ENABLE
 
 The tool uses [heirloom-mailx](https://www.systutorials.com/docs/linux/man/1-heirloom-mailx/) to send mail.

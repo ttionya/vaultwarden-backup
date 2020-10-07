@@ -25,6 +25,13 @@ if [[ "$1" == "mail" ]]; then
     exit 0
 fi
 
+function configure_timezone() {
+    if [[ ! -f /etc/localtime || ! -f /etc/timezone ]]; then
+        cp -f /usr/share/zoneinfo/${TIMEZONE} /etc/localtime
+        echo "${TIMEZONE}" > /etc/timezone
+    fi
+}
+
 function configure_cron() {
     local FIND_CRON_COUNT=$(crontab -l | grep -c 'backup.sh')
     if [[ ${FIND_CRON_COUNT} -eq 0 ]]; then
@@ -34,6 +41,7 @@ function configure_cron() {
 
 init_env
 check_rclone_connection
+configure_timezone
 configure_cron
 
 # foreground run crond

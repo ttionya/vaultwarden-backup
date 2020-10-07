@@ -28,6 +28,7 @@ services:
     #   MAIL_TO: ''
     #   MAIL_WHEN_SUCCESS: 'TRUE'
     #   MAIL_WHEN_FAILURE: 'TRUE'
+    #   TIMEZONE: 'UTC'
     volumes:
       - bitwardenrs-data:/bitwarden/data/
       - bitwardenrs-rclone-data:/config/
