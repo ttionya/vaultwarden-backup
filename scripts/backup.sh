@@ -91,13 +91,20 @@ function backup_package() {
 function upload() {
     color blue "upload backup file to storage system"
 
+    # upload file not exist
+    if [[ ! -f ${UPLOAD_FILE} ]]; then
+        color red "upload file not found"
+
+        send_mail_content "FALSE" "File upload failed at $(date +"%Y-%m-%d %H:%M:%S"). Reason: Upload file not found."
+
+        exit 1
+    fi
+
     rclone copy ${UPLOAD_FILE} ${RCLONE_REMOTE}
     if [[ $? != 0 ]]; then
         color red "upload failed"
 
-        if [[ "${MAIL_SMTP_ENABLE}" == "TRUE" && "${MAIL_WHEN_FAILURE}" == "TRUE" ]]; then
-            send_mail "BitwardenRS Backup Failed" "File upload failed at $(date +"%Y-%m-%d %H:%M:%S")."
-        fi
+        send_mail_content "FALSE" "File upload failed at $(date +"%Y-%m-%d %H:%M:%S")."
 
         exit 1
     fi
@@ -133,8 +140,6 @@ upload
 clear_dir
 clear_history
 
-if [[ "${MAIL_SMTP_ENABLE}" == "TRUE" && "${MAIL_WHEN_SUCCESS}" == "TRUE" ]]; then
-    send_mail "BitwardenRS Backup Success" "The file was successfully uploaded at $(date +"%Y-%m-%d %H:%M:%S")."
-fi
+send_mail_content "TRUE" "The file was successfully uploaded at $(date +"%Y-%m-%d %H:%M:%S")."
 
 color none ""

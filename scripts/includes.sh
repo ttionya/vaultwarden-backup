@@ -54,6 +54,28 @@ function send_mail() {
 }
 
 ########################################
+# Send mail.
+# Arguments:
+#     backup successful
+#     mail content
+########################################
+function send_mail_content() {
+    if [[ "${MAIL_SMTP_ENABLE}" == "FALSE" ]]; then
+        return
+    fi
+
+    # successful
+    if [[ "$1" == "TRUE" && "${MAIL_WHEN_SUCCESS}" == "TRUE" ]]; then
+        send_mail "BitwardenRS Backup Success" "$2"
+    fi
+
+    # failed
+    if [[ "$1" == "FALSE" && "${MAIL_WHEN_FAILURE}" == "TRUE" ]]; then
+        send_mail "BitwardenRS Backup Failed" "$2"
+    fi
+}
+
+########################################
 # Initialization environment variables.
 # Arguments:
 #     None
