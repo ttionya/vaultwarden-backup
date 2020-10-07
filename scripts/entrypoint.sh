@@ -2,6 +2,10 @@
 
 . /app/includes.sh
 
+# timezone
+ln -sf /usr/share/zoneinfo/${TZ:-"Asia/Shanghai"} /etc/localtime
+echo ${TZ:-"Asia/Shanghai"} > /etc/timezone
+
 # rclone command
 if [[ "$1" == "rclone" ]]; then
     $*
