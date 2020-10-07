@@ -26,7 +26,10 @@ if [[ "$1" == "mail" ]]; then
 fi
 
 function configure_cron() {
-    echo "${CRON} sh /app/backup.sh > /dev/stdout" >> /etc/crontabs/root
+    local FIND_CRON_COUNT=$(crontab -l | grep -c 'backup.sh')
+    if [[ ${FIND_CRON_COUNT} -eq 0 ]]; then
+        echo "${CRON} sh /app/backup.sh > /dev/stdout" >> /etc/crontabs/root
+    fi
 }
 
 init_env
