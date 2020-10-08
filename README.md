@@ -78,7 +78,7 @@ docker-compose down
 
 ## Environment Variables
 
-**Note:** All environment variables have default values, and you can use the docker image without setting environment variables.
+> **Note:** All environment variables have default values, and you can use the docker image without setting environment variables.
 
 #### RCLONE_REMOTE_NAME
 
