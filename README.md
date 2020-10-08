@@ -2,7 +2,7 @@
 
 Docker containers for [bitwarden_rs](https://github.com/dani-garcia/bitwarden_rs) backup to remote.
 
-- [Docker Hub](https://hub.docker.com/repository/docker/ttionya/bitwardenrs-backup)
+- [Docker Hub](https://hub.docker.com/r/ttionya/bitwardenrs-backup)
 - [GitHub](https://github.com/ttionya/BitwardenRS-Backup)
 
 ## Feature
@@ -77,6 +77,8 @@ docker-compose down
 ```
 
 ## Environment Variables
+
+**Note:** All environment variables have default values, and you can use the docker image without setting environment variables.
 
 #### RCLONE_REMOTE_NAME
 
