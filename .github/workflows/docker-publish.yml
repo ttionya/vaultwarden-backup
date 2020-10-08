@@ -1,4 +1,4 @@
-name: 'Docker Release'
+name: 'Docker Publish'
 
 on:
   push:
@@ -7,7 +7,8 @@ on:
       - '!v*.*.*-*'
 
 jobs:
-  release:
+  publish:
+    name: Docker Publish
     runs-on: ubuntu-latest
     steps:
       -
