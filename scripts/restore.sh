@@ -141,6 +141,22 @@ function restore_file() {
     fi
 }
 
+function check_empty_input() {
+    if [[ -z "${RESTORE_FILE_ZIP}${RESTORE_FILE_DB}${RESTORE_FILE_CONFIG}${RESTORE_FILE_ATTACHMENTS}" ]]; then
+        color yellow "Empty input"
+        color none ""
+        color none "Find out more at https://github.com/ttionya/BitwardenRS-Backup#restore"
+        exit 0
+    fi
+}
+
+function check_data_dir_exist() {
+    if [[ ! -d "${DATA_DIR}" ]]; then
+        color red "Bitwarden data directory not found"
+        exit 1
+    fi
+}
+
 function restore() {
     local READ_RESTORE_CONTINUE
 
@@ -178,7 +194,8 @@ function restore() {
         esac
     done
 
-    mkdir -p ${DATA_DIR}
+    check_empty_input
+    check_data_dir_exist
 
     color yellow "Restore will overwrite the existing files, continue? (y/N)"
     read -p "(Default: n): " READ_RESTORE_CONTINUE
