@@ -8,8 +8,53 @@ RESTORE_FILE_ATTACHMENTS=""
 RESTORE_FILE_ZIP=""
 ZIP_PASSWORD=""
 
+function clear_extract_dir() {
+    rm -rf ${RESTORE_EXTRACT_DIR}
+}
+
 function restore_zip() {
     color blue "restore bitwarden_rs backup zip file"
+
+    local FIND_FILE_DB
+    local FIND_FILE_CONFIG
+    local FIND_FILE_ATTACHMENTS
+
+    if [[ -n "${ZIP_PASSWORD}" ]]; then
+        unzip -P ${ZIP_PASSWORD} ${RESTORE_FILE_ZIP} -d ${RESTORE_EXTRACT_DIR}
+    else
+        unzip ${RESTORE_FILE_ZIP} -d ${RESTORE_EXTRACT_DIR}
+    fi
+
+    if [[ $? == 0 ]]; then
+        color green "extract bitwarden_rs backup zip file successful"
+    else
+        color red "extract bitwarden_rs backup zip file failed"
+        exit 1
+    fi
+
+    # get restore db file
+    RESTORE_FILE_DB=""
+    FIND_FILE_DB=$(basename $(ls ${RESTORE_EXTRACT_DIR}/db.*.sqlite3))
+    if [[ -n "${FIND_FILE_DB}" ]]; then
+        RESTORE_FILE_DB="extract/${FIND_FILE_DB}"
+    fi
+
+    # get restore config file
+    RESTORE_FILE_CONFIG=""
+    FIND_FILE_CONFIG=$(basename $(ls ${RESTORE_EXTRACT_DIR}/config.*.json))
+    if [[ -n "${FIND_FILE_CONFIG}" ]]; then
+        RESTORE_FILE_CONFIG="extract/${FIND_FILE_CONFIG}"
+    fi
+
+    # get restore attachments file
+    RESTORE_FILE_ATTACHMENTS=""
+    FIND_FILE_ATTACHMENTS=$(basename $(ls ${RESTORE_EXTRACT_DIR}/attachments.*.tar))
+    if [[ -n "${FIND_FILE_ATTACHMENTS}" ]]; then
+        RESTORE_FILE_ATTACHMENTS="extract/${FIND_FILE_ATTACHMENTS}"
+    fi
+
+    RESTORE_FILE_ZIP=""
+    restore_file
 }
 
 function restore_db() {
@@ -62,7 +107,9 @@ function restore_file() {
 
         RESTORE_FILE_ZIP="${RESTORE_DIR}/${RESTORE_FILE_ZIP}"
 
+        clear_extract_dir
         restore_zip
+        clear_extract_dir
     else
         if [[ -n "${RESTORE_FILE_DB}" ]]; then
             check_restore_file_exist ${RESTORE_FILE_DB} "--db-file"
