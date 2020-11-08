@@ -3,7 +3,7 @@ version: '3.4'
 services:
 
   bitwardenrs:
-    image: bitwardenrs/server:1.16.3
+    image: bitwardenrs/server:1.17.0
     restart: always
     # environment:
     #   SIGNUPS_ALLOWED: 'false'
