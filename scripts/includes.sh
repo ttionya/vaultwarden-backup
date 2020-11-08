@@ -1,11 +1,12 @@
 #!/bin/sh
 
-DATA_DIR="/bitwarden/data/"
+DATA_DIR="/bitwarden/data"
 DATA_DB="${DATA_DIR}/db.sqlite3"
 DATA_CONFIG="${DATA_DIR}/config.json"
 DATA_ATTACHMENTS="${DATA_DIR}/attachments"
-BACKUP_DIR="/bitwarden/backup/"
-RESTORE_DIR="/bitwarden/restore/"
+BACKUP_DIR="/bitwarden/backup"
+RESTORE_DIR="/bitwarden/restore"
+RESTORE_EXTRACT_DIR="${RESTORE_DIR}/extract"
 
 #################### Function ####################
 ########################################
