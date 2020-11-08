@@ -3,8 +3,6 @@
 . /app/includes.sh
 
 TODAY=$(date +%Y%m%d)
-DATA_DIR="/bitwarden/data/"
-BACKUP_DIR="/bitwarden/backup/"
 # backup bitwarden_rs database file
 BACKUP_FILE_DB="${BACKUP_DIR}/db.${TODAY}.sqlite3"
 # backup bitwarden_rs config file
@@ -21,8 +19,6 @@ function clear_dir() {
 function backup_db() {
     color blue "backup bitwarden_rs sqlite database"
 
-    local DATA_DB="${DATA_DIR}/db.sqlite3"
-
     if [[ -f "${DATA_DB}" ]]; then
         sqlite3 ${DATA_DB} ".backup ${BACKUP_FILE_DB}"
     else
@@ -32,8 +28,6 @@ function backup_db() {
 
 function backup_config() {
     color blue "backup bitwarden_rs config"
-
-    local DATA_CONFIG="${DATA_DIR}/config.json"
 
     if [[ -f "${DATA_CONFIG}" ]]; then
         cp -f ${DATA_DIR}/config.json ${BACKUP_FILE_CONFIG}

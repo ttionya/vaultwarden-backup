@@ -1,5 +1,10 @@
 #!/bin/sh
 
+DATA_DIR="/bitwarden/data/"
+DATA_DB="${DATA_DIR}/db.sqlite3"
+DATA_CONFIG="${DATA_DIR}/config.json"
+DATA_ATTACHMENTS="${DATA_DIR}/attachments"
+BACKUP_DIR="/bitwarden/backup/"
 #################### Function ####################
 ########################################
 # Print colorful message.
