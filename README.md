@@ -32,13 +32,19 @@ Visit [GitHub](https://github.com/rclone/rclone) for more storage system tutoria
 You can get the token by the following command.
 
 ```shell
-docker run --rm -it --mount source=bitwardenrs-rclone-data,target=/config/ ttionya/bitwardenrs-backup:latest rclone config
+docker run --rm -it \
+  --mount type=volume,source=bitwardenrs-rclone-data,target=/config/ \
+  ttionya/bitwardenrs-backup:latest \
+  rclone config
 ```
 
 After setting, check the configuration content by the following command.
 
 ```shell
-docker run --rm -it --mount source=bitwardenrs-rclone-data,target=/config/ ttionya/bitwardenrs-backup:latest rclone config show
+docker run --rm -it \
+  --mount type=volume,source=bitwardenrs-rclone-data,target=/config/ \
+  ttionya/bitwardenrs-backup:latest \
+  rclone config show
 
 # Microsoft Onedrive Example
 # [YouRemoteName]
@@ -61,7 +67,7 @@ docker run -d \
   --restart=always \
   --name bitwardenrs_backup \
   --volumes-from=bitwardenrs \
-  --mount source=bitwardenrs-rclone-data,target=/config/ \
+  --mount type=volume,source=bitwardenrs-rclone-data,target=/config/ \
   -e RCLONE_REMOTE_NAME="YouRemoteName"
   ttionya/bitwardenrs-backup:latest
 ```
@@ -92,11 +98,13 @@ You need to stop the Docker container before the restore.
 
 Because the host's files are not accessible in the Docker container, you need to map the directory where the backup files that need to be restored are located to the docker container.
 
+And go to the directory where your backup files are located.
+
 If you are using automatic backups, please confirm the bitwarden_rs volume and replace the `--mount` `source` section.
 
 ```shell
 docker run --rm -it \
-  --mount type=bind,source=bitwardenrs-data,target=/bitwarden/data/ \
+  --mount type=volume,source=bitwardenrs-data,target=/bitwarden/data/ \
   --mount type=bind,source=$(pwd),target=/bitwarden/restore/ \
   ttionya/bitwardenrs-backup:latest restore \
   [OPTIONS]
