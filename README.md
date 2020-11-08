@@ -19,6 +19,8 @@ This tool supports backing up the following files or directories.
 
 > **Important:** We assume you already read the `bitwarden_rs` [documentation](https://github.com/dani-garcia/bitwarden_rs/wiki).
 
+### Backup
+
 We upload the backup files to the storage system by [Rclone](https://rclone.org/).
 
 Visit [GitHub](https://github.com/rclone/rclone) for more storage system tutorials. Different systems get tokens differently.
@@ -44,7 +46,7 @@ docker run --rm -it --mount source=bitwardenrs-rclone-data,target=/config/ ttion
 
 Note that you need to set the environment variable `RCLONE_REMOTE_NAME` to a remote name like `YouRemoteName`.
 
-### Automatic Backups
+#### Automatic Backups
 
 Make sure that your bitwarden_rs container is named `bitwardenrs` otherwise you have to replace the container name in the `--volumes-from` section of the docker run call.
 
@@ -60,7 +62,7 @@ docker run -d \
   ttionya/bitwardenrs-backup:latest
 ```
 
-### Use Docker Compose
+#### Use Docker Compose
 
 Download `docker-compose.yml` to you machine, edit environment variables and start it. You need to go to the directory where the `docker-compose.yml` file is saved.
 
@@ -77,6 +79,46 @@ docker-compose restart
 # Remove
 docker-compose down
 ```
+
+### Restore
+
+> **Important:** Restore will overwrite the existing files.
+
+You need to stop the Docker container before the restore.
+
+If you are using automatic backups, please confirm the bitwarden_rs volume and replace the `--mount` `source` section.
+
+```shell
+docker run --rm -it --mount source=bitwardenrs-data,target=/bitwarden/data/ ttionya/bitwardenrs-backup:latest restore [OPTIONS]
+```
+
+See [Options](#options) for options information.
+
+#### Options
+
+##### --db-file
+
+If you didn't set the `ZIP_ENABLE` environment variable to `TRUE` when you backed up the file, you need to use this option to specify the `db.sqlite3` file.
+
+##### --config-file
+
+If you didn't set the `ZIP_ENABLE` environment variable to `TRUE` when you backed up the file, you need to use this option to specify the `config.json` file.
+
+##### --attachments-file
+
+If you didn't set the `ZIP_ENABLE` environment variable to `TRUE` when you backed up the file, you need to use this option to specify the `attachments.tar` file.
+
+##### --zip-file
+
+If you set the `ZIP_ENABLE` environment variable to `TRUE` when you backed up the file, you need to use this option to specify the `backup.zip` file.
+
+##### -p / --password
+
+THIS IS INSECURE!
+
+If the `backup.zip` file has a password, you can use this option to set the password to unzip it.
+
+If not, the password will be asked for interactively.
 
 ## Environment Variables
 
@@ -185,3 +227,5 @@ docker run --rm -it -e MAIL_SMTP_VARIABLES='<your smtp variables>' -e MAIL_TO='<
 ## License
 
 MIT
+
+确认保持zip文件的内容无变动
