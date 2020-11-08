@@ -1,4 +1,4 @@
-version: '3'
+version: '3.4'
 
 services:
 
@@ -35,6 +35,6 @@ services:
 
 volumes:
   bitwardenrs-data:
-    external: true
+    name: bitwardenrs-data
   bitwardenrs-rclone-data:
     external: true
