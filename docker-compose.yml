@@ -35,5 +35,6 @@ services:
 
 volumes:
   bitwardenrs-data:
+    external: true
   bitwardenrs-rclone-data:
     external: true

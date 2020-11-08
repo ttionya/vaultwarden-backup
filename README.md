@@ -7,6 +7,8 @@ Docker containers for [bitwarden_rs](https://github.com/dani-garcia/bitwarden_rs
 - [Docker Hub](https://hub.docker.com/r/ttionya/bitwardenrs-backup)
 - [GitHub](https://github.com/ttionya/BitwardenRS-Backup)
 
+
+
 ## Feature
 
 This tool supports backing up the following files or directories.
@@ -14,6 +16,8 @@ This tool supports backing up the following files or directories.
 - `db.sqlite3`
 - `config.json`
 - `attachments` (directory)
+
+
 
 ## Usage
 
@@ -86,10 +90,16 @@ docker-compose down
 
 You need to stop the Docker container before the restore.
 
+Because the host's files are not accessible in the Docker container, you need to map the directory where the backup files that need to be restored are located to the docker container.
+
 If you are using automatic backups, please confirm the bitwarden_rs volume and replace the `--mount` `source` section.
 
 ```shell
-docker run --rm -it --mount source=bitwardenrs-data,target=/bitwarden/data/ ttionya/bitwardenrs-backup:latest restore [OPTIONS]
+docker run --rm -it \
+  --mount type=bind,source=bitwardenrs-data,target=/bitwarden/data/ \
+  --mount type=bind,source=$(pwd),target=/bitwarden/restore/ \
+  ttionya/bitwardenrs-backup:latest restore \
+  [OPTIONS]
 ```
 
 See [Options](#options) for options information.
@@ -112,6 +122,8 @@ If you didn't set the `ZIP_ENABLE` environment variable to `TRUE` when you backe
 
 If you set the `ZIP_ENABLE` environment variable to `TRUE` when you backed up the file, you need to use this option to specify the `backup.zip` file.
 
+Make sure the file name in the zip file has not been changed.
+
 ##### -p / --password
 
 THIS IS INSECURE!
@@ -119,6 +131,8 @@ THIS IS INSECURE!
 If the `backup.zip` file has a password, you can use this option to set the password to unzip it.
 
 If not, the password will be asked for interactively.
+
+
 
 ## Environment Variables
 
@@ -212,6 +226,8 @@ Send email when backup fails.
 
 Default: `TRUE`
 
+
+
 ## Mail Test
 
 You can use the following command to test the mail sending. Remember to replace your smtp variables.
@@ -224,8 +240,8 @@ docker run --rm -it -e MAIL_SMTP_VARIABLES='<your smtp variables>' ttionya/bitwa
 docker run --rm -it -e MAIL_SMTP_VARIABLES='<your smtp variables>' -e MAIL_TO='<mail send to>' ttionya/bitwardenrs-backup:latest mail
 ```
 
+
+
 ## License
 
 MIT
-
-确认保持zip文件的内容无变动
