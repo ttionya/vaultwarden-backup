@@ -95,6 +95,8 @@ function restore_file() {
 }
 
 function restore() {
+    local READ_RESTORE_CONTINUE
+
     while [[ $# -gt 0 ]]; do
         case "$1" in
             -p|--password)
@@ -131,5 +133,9 @@ function restore() {
 
     mkdir -p ${DATA_DIR}
 
-    restore_file
+    color yellow "Restore will overwrite the existing files, continue? (y/N)"
+    read -p "(Default: n): " READ_RESTORE_CONTINUE
+    if [[ $(echo "${READ_RESTORE_CONTINUE:-n}" | tr [a-z] [A-Z]) == "Y" ]]; then
+        restore_file
+    fi
 }
