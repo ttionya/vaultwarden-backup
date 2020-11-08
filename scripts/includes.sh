@@ -5,6 +5,8 @@ DATA_DB="${DATA_DIR}/db.sqlite3"
 DATA_CONFIG="${DATA_DIR}/config.json"
 DATA_ATTACHMENTS="${DATA_DIR}/attachments"
 BACKUP_DIR="/bitwarden/backup/"
+RESTORE_DIR="/bitwarden/restore/"
+
 #################### Function ####################
 ########################################
 # Print colorful message.

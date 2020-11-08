@@ -25,6 +25,16 @@ if [[ "$1" == "mail" ]]; then
     exit 0
 fi
 
+# restore
+if [[ "$1" == "restore" ]]; then
+    . /app/restore.sh
+
+    shift
+    restore $*
+
+    exit 0
+fi
+
 function configure_timezone() {
     if [[ ! -f /etc/localtime || ! -f /etc/timezone ]]; then
         cp -f /usr/share/zoneinfo/${TIMEZONE} /etc/localtime
