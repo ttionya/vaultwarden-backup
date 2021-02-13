@@ -58,7 +58,7 @@ function backup_secret() {
     color blue "backup etebase config"
 
     if [[ -f "${DATA_SECRET}" ]]; then
-        cp -f ${DATA_SECRET} ${BACKUP_FILE_CONFIG}
+        cp -f ${DATA_SECRET} ${BACKUP_FILE_SECRET}
     else
         color yellow "not found etebase secret, skipping"
     fi

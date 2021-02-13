@@ -43,7 +43,7 @@ function restore_zip() {
 
     # get restore config file
     RESTORE_FILE_CONFIG=""
-    FIND_FILE_CONFIG=$(basename $(ls ${RESTORE_EXTRACT_DIR}/config.*.json))
+    FIND_FILE_CONFIG=$(basename $(ls ${RESTORE_EXTRACT_DIR}/etebase-server.${TODAY}.ini))
     if [[ -n "${FIND_FILE_CONFIG}" ]]; then
         RESTORE_FILE_CONFIG="extract/${FIND_FILE_CONFIG}"
     fi
