@@ -12,7 +12,7 @@ BACKUP_FILE_MEDIA="${BACKUP_DIR}/media.${TODAY}.tar"
 # backup etebase secret file
 BACKUP_FILE_SECRET="${BACKUP_DIR}/secret.${TODAY}.txt"
 # backup zip file
-BACKUP_FILE_ZIP="${BACKUP_DIR}/backup.${TODAY}.zip"
+BACKUP_FILE_ZIP="${BACKUP_DIR}/backup-etebase.${TODAY}.zip"
 
 function clear_dir() {
     rm -rf ${BACKUP_DIR}

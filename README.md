@@ -133,7 +133,7 @@ If you didn't set the `ZIP_ENABLE` environment variable to `TRUE` when you backe
 
 ##### --zip-file
 
-If you set the `ZIP_ENABLE` environment variable to `TRUE` when you backed up the file, you need to use this option to specify the `backup.zip` file.
+If you set the `ZIP_ENABLE` environment variable to `TRUE` when you backed up the file, you need to use this option to specify the `backup-etebase.zip` file.
 
 Make sure the file name in the zip file has not been changed.
 
@@ -141,7 +141,7 @@ Make sure the file name in the zip file has not been changed.
 
 THIS IS INSECURE!
 
-If the `backup.zip` file has a password, you can use this option to set the password to unzip it.
+If the `backup-etebase.zip` file has a password, you can use this option to set the password to unzip it.
 
 If not, the password will be asked for interactively.
 
