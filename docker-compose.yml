@@ -2,23 +2,27 @@ version: '3.4'
 
 services:
 
-  bitwardenrs:
-    image: bitwardenrs/server:1.17.0
-    restart: always
-    # environment:
-    #   SIGNUPS_ALLOWED: 'false'
-    #   ADMIN_TOKEN: 'your authentication token'
+  etebase:
+    image: victorrds/etebase:alpine
+    user: 0:0
     ports:
-      - '127.0.0.1:8200:80'
+      - "3735:3735"
+    expose:
+      - "3735"
+    restart: always
     volumes:
-      - bitwardenrs-data:/data/
+      - etebase-data:/data
+    environment:
+      - SUPER_USER=...
+      - SUPER_PASS=...
+
 
   backup:
-    image: ttionya/bitwardenrs-backup:latest
+    image: karbon15/etebase-backup:latest
     restart: always
     # environment:
-    #   RCLONE_REMOTE_NAME: 'BitwardenBackup'
-    #   RCLONE_REMOTE_DIR: '/BitwardenBackup/'
+    #   RCLONE_REMOTE_NAME: 'EtebaseBackup'
+    #   RCLONE_REMOTE_DIR: '/EtebaseBackup/'
     #   CRON: '5 * * * *'
     #   ZIP_ENABLE: 'TRUE'
     #   ZIP_PASSWORD: 'WHEREISMYPASSWORD?'
@@ -30,11 +34,11 @@ services:
     #   MAIL_WHEN_FAILURE: 'TRUE'
     #   TIMEZONE: 'UTC'
     volumes:
-      - bitwardenrs-data:/bitwarden/data/
-      - bitwardenrs-rclone-data:/config/
+      - etebase-data:/etebase/data/
+      - etebase-rclone-data:/config/
 
 volumes:
-  bitwardenrs-data:
-    name: bitwardenrs-data
-  bitwardenrs-rclone-data:
+  etebase-data:
+    name: etebase-data
+  etebase-rclone-data:
     external: true

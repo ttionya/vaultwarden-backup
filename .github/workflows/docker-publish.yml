@@ -39,5 +39,5 @@ jobs:
           platforms: 'linux/amd64,linux/386'
           push: true
           tags: |
-            ttionya/bitwardenrs-backup:latest
-            ttionya/bitwardenrs-backup:${{ steps.pre.outputs.tag }}
+            karbon15/etebase-backup:latest
+            karbon15/etebase-backup:${{ steps.pre.outputs.tag }}

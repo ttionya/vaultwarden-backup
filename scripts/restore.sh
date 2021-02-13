@@ -4,7 +4,8 @@
 
 RESTORE_FILE_DB=""
 RESTORE_FILE_CONFIG=""
-RESTORE_FILE_ATTACHMENTS=""
+RESTORE_FILE_MEDIA=""
+RESTORE_FILE_SECRET=""
 RESTORE_FILE_ZIP=""
 ZIP_PASSWORD=""
 
@@ -13,11 +14,12 @@ function clear_extract_dir() {
 }
 
 function restore_zip() {
-    color blue "restore bitwarden_rs backup zip file"
+    color blue "restore etebase backup zip file"
 
     local FIND_FILE_DB
     local FIND_FILE_CONFIG
-    local FIND_FILE_ATTACHMENTS
+    local FIND_FILE_MEDIA
+    local FIND_FILE_SECRET
 
     if [[ -n "${ZIP_PASSWORD}" ]]; then
         unzip -P ${ZIP_PASSWORD} ${RESTORE_FILE_ZIP} -d ${RESTORE_EXTRACT_DIR}
@@ -26,9 +28,9 @@ function restore_zip() {
     fi
 
     if [[ $? == 0 ]]; then
-        color green "extract bitwarden_rs backup zip file successful"
+        color green "extract etebase backup zip file successful"
     else
-        color red "extract bitwarden_rs backup zip file failed"
+        color red "extract etebase backup zip file failed"
         exit 1
     fi
 
@@ -46,11 +48,18 @@ function restore_zip() {
         RESTORE_FILE_CONFIG="extract/${FIND_FILE_CONFIG}"
     fi
 
-    # get restore attachments file
-    RESTORE_FILE_ATTACHMENTS=""
-    FIND_FILE_ATTACHMENTS=$(basename $(ls ${RESTORE_EXTRACT_DIR}/attachments.*.tar))
-    if [[ -n "${FIND_FILE_ATTACHMENTS}" ]]; then
-        RESTORE_FILE_ATTACHMENTS="extract/${FIND_FILE_ATTACHMENTS}"
+    # get restore media file
+    RESTORE_FILE_MEDIA=""
+    FIND_FILE_MEDIA=$(basename $(ls ${RESTORE_EXTRACT_DIR}/media.*.tar))
+    if [[ -n "${FIND_FILE_MEDIA}" ]]; then
+        RESTORE_FILE_MEDIA="extract/${FIND_FILE_MEDIA}"
+    fi
+
+    # get restore media file
+    RESTORE_FILE_SECRET=""
+    FIND_FILE_SECRET=$(basename $(ls ${RESTORE_EXTRACT_DIR}/secret.*.txt))
+    if [[ -n "${FIND_FILE_SECRET}" ]]; then
+        RESTORE_FILE_SECRET="extract/${FIND_FILE_SECRET}"
     fi
 
     RESTORE_FILE_ZIP=""
@@ -58,39 +67,51 @@ function restore_zip() {
 }
 
 function restore_db() {
-    color blue "restore bitwarden_rs sqlite database"
+    color blue "restore etebase sqlite database"
 
     cp -f ${RESTORE_FILE_DB} ${DATA_DB}
 
     if [[ $? == 0 ]]; then
-        color green "restore bitwarden_rs sqlite database successful"
+        color green "restore etebase sqlite database successful"
     else
-        color red "restore bitwarden_rs sqlite database failed"
+        color red "restore etebase sqlite database failed"
     fi
 }
 
 function restore_config() {
-    color blue "restore bitwarden_rs config"
+    color blue "restore etebase config"
 
     cp -f ${RESTORE_FILE_CONFIG} ${DATA_CONFIG}
 
     if [[ $? == 0 ]]; then
-        color green "restore bitwarden_rs config successful"
+        color green "restore etebase config successful"
     else
-        color red "restore bitwarden_rs config failed"
+        color red "restore etebase config failed"
     fi
 }
 
-function restore_attachments() {
-    color blue "restore bitwarden_rs attachments"
+function restore_media() {
+    color blue "restore etebase attachments"
 
-    rm -rf ${DATA_ATTACHMENTS}
-    tar -x -C ${DATA_DIR} -f ${RESTORE_FILE_ATTACHMENTS}
+    rm -rf ${DATA_MEDIA}
+    tar -x -C ${DATA_DIR} -f ${RESTORE_FILE_MEDIA}
 
     if [[ $? == 0 ]]; then
-        color green "restore bitwarden_rs attachments successful"
+        color green "restore etebase media successful"
     else
-        color red "restore bitwarden_rs attachments failed"
+        color red "restore etebase media failed"
+    fi
+}
+
+function restore_secret() {
+    color blue "restore secret config"
+
+    cp -f ${RESTORE_FILE_SECRET} ${DATA_SECRET}
+
+    if [[ $? == 0 ]]; then
+        color green "restore etebase config successful"
+    else
+        color red "restore etebase config failed"
     fi
 }
 
@@ -138,6 +159,9 @@ function restore_file() {
         if [[ -n "${RESTORE_FILE_ATTACHMENTS}" ]]; then
             restore_attachments
         fi
+        if [[ -n "${RESTORE_FILE_SECRET}" ]]; then
+            restore_secret
+        fi
     fi
 }
 
@@ -145,14 +169,14 @@ function check_empty_input() {
     if [[ -z "${RESTORE_FILE_ZIP}${RESTORE_FILE_DB}${RESTORE_FILE_CONFIG}${RESTORE_FILE_ATTACHMENTS}" ]]; then
         color yellow "Empty input"
         color none ""
-        color none "Find out more at https://github.com/ttionya/BitwardenRS-Backup#restore"
+        color none "Find out more at https://github.com/karbon15/EteBase-backup#restore"
         exit 0
     fi
 }
 
 function check_data_dir_exist() {
     if [[ ! -d "${DATA_DIR}" ]]; then
-        color red "Bitwarden data directory not found"
+        color red "EteBase data directory not found"
         exit 1
     fi
 }
@@ -185,6 +209,11 @@ function restore() {
             --attachments-file)
                 shift
                 RESTORE_FILE_ATTACHMENTS=$(basename "$1")
+                shift
+                ;;
+            --secret-file)
+                shift
+                RESTORE_FILE_SECRET=$(basename "$1")
                 shift
                 ;;
             *)

@@ -20,7 +20,7 @@ if [[ "$1" == "mail" ]]; then
 
     init_env
 
-    send_mail "BitwardenRS Backup Test" "Your SMTP looks configured correctly."
+    send_mail "EteBase Backup Test" "Your SMTP looks configured correctly."
 
     exit 0
 fi

@@ -1,11 +1,12 @@
 #!/bin/sh
 
-DATA_DIR="/bitwarden/data"
+DATA_DIR="/etebase/data"
 DATA_DB="${DATA_DIR}/db.sqlite3"
-DATA_CONFIG="${DATA_DIR}/config.json"
-DATA_ATTACHMENTS="${DATA_DIR}/attachments"
-BACKUP_DIR="/bitwarden/backup"
-RESTORE_DIR="/bitwarden/restore"
+DATA_CONFIG="${DATA_DIR}/etebase-server.ini"
+DATA_MEDIA="${DATA_DIR}/media"
+DATA_SECRET="${DATA_DIR}/secret.txt"
+BACKUP_DIR="/etebase/backup"
+RESTORE_DIR="/etebase/restore"
 RESTORE_EXTRACT_DIR="${RESTORE_DIR}/extract"
 
 #################### Function ####################
@@ -74,12 +75,12 @@ function send_mail_content() {
 
     # successful
     if [[ "$1" == "TRUE" && "${MAIL_WHEN_SUCCESS}" == "TRUE" ]]; then
-        send_mail "BitwardenRS Backup Success" "$2"
+        send_mail "EteBase Backup Success" "$2"
     fi
 
     # failed
     if [[ "$1" == "FALSE" && "${MAIL_WHEN_FAILURE}" == "TRUE" ]]; then
-        send_mail "BitwardenRS Backup Failed" "$2"
+        send_mail "EteBase Backup Failed" "$2"
     fi
 }
 
@@ -98,13 +99,13 @@ function init_env() {
     fi
 
     # RCLONE_REMOTE_NAME
-    local RCLONE_REMOTE_NAME_DEFAULT="BitwardenBackup"
+    local RCLONE_REMOTE_NAME_DEFAULT="EteBaseBackup"
     if [[ -z "${RCLONE_REMOTE_NAME}" ]]; then
         RCLONE_REMOTE_NAME="${RCLONE_REMOTE_NAME_DEFAULT}"
     fi
 
     # RCLONE_REMOTE_DIR
-    local RCLONE_REMOTE_DIR_DEFAULT="/BitwardenBackup/"
+    local RCLONE_REMOTE_DIR_DEFAULT="/EteBaseBackup/"
     if [[ -z "${RCLONE_REMOTE_DIR}" ]]; then
         RCLONE_REMOTE_DIR="${RCLONE_REMOTE_DIR_DEFAULT}"
     fi

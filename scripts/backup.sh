@@ -3,12 +3,14 @@
 . /app/includes.sh
 
 TODAY=$(date +%Y%m%d)
-# backup bitwarden_rs database file
+# backup etebase database file
 BACKUP_FILE_DB="${BACKUP_DIR}/db.${TODAY}.sqlite3"
-# backup bitwarden_rs config file
-BACKUP_FILE_CONFIG="${BACKUP_DIR}/config.${TODAY}.json"
-# backup bitwarden_rs attachments directory
-BACKUP_FILE_ATTACHMENTS="${BACKUP_DIR}/attachments.${TODAY}.tar"
+# backup etebase config file
+BACKUP_FILE_CONFIG="${BACKUP_DIR}/etebase-server.${TODAY}.ini"
+# backup etebase media directory
+BACKUP_FILE_MEDIA="${BACKUP_DIR}/media.${TODAY}.tar"
+# backup etebase secret file
+BACKUP_FILE_SECRET="${BACKUP_DIR}/secret.${TODAY}.txt"
 # backup zip file
 BACKUP_FILE_ZIP="${BACKUP_DIR}/backup.${TODAY}.zip"
 
@@ -17,38 +19,48 @@ function clear_dir() {
 }
 
 function backup_db() {
-    color blue "backup bitwarden_rs sqlite database"
+    color blue "backup etebase sqlite database"
 
     if [[ -f "${DATA_DB}" ]]; then
         sqlite3 ${DATA_DB} ".backup ${BACKUP_FILE_DB}"
     else
-        color yellow "not found bitwarden_rs sqlite database, skipping"
+        color yellow "not found etebase sqlite database, skipping"
     fi
 }
 
 function backup_config() {
-    color blue "backup bitwarden_rs config"
+    color blue "backup etebase config"
 
     if [[ -f "${DATA_CONFIG}" ]]; then
-        cp -f ${DATA_DIR}/config.json ${BACKUP_FILE_CONFIG}
+        cp -f ${DATA_CONFIG} ${BACKUP_FILE_CONFIG}
     else
-        color yellow "not found bitwarden_rs config, skipping"
+        color yellow "not found etebase config, skipping"
     fi
 }
 
-function backup_attachments() {
-    color blue "backup bitwarden_rs attachments"
+function backup_media() {
+    color blue "backup etebase media"
 
-    local DATA_ATTACHMENTS="attachments"
+    local DATA_MEDIA="media"
 
-    if [[ -d "${DATA_DIR}/${DATA_ATTACHMENTS}" ]]; then
-        tar -c -C ${DATA_DIR} -f ${BACKUP_FILE_ATTACHMENTS} ${DATA_ATTACHMENTS}
+    if [[ -d "${DATA_DIR}/${DATA_MEDIA}" ]]; then
+        tar -c -C ${DATA_DIR} -f ${BACKUP_FILE_MEDIA} ${DATA_MEDIA}
 
-        color blue "display attachments tar file list"
+        color blue "display media tar file list"
 
-        tar -tf ${BACKUP_FILE_ATTACHMENTS}
+        tar -tf ${BACKUP_FILE_MEDIA}
     else
-        color yellow "not found bitwarden_rs attachments directory, skipping"
+        color yellow "not found etebase media directory, skipping"
+    fi
+}
+
+function backup_secret() {
+    color blue "backup etebase config"
+
+    if [[ -f "${DATA_SECRET}" ]]; then
+        cp -f ${DATA_SECRET} ${BACKUP_FILE_CONFIG}
+    else
+        color yellow "not found etebase secret, skipping"
     fi
 }
 
@@ -57,7 +69,8 @@ function backup() {
 
     backup_db
     backup_config
-    backup_attachments
+    backup_media
+    backup_secret
 
     ls -lah ${BACKUP_DIR}
 }

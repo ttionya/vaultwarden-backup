@@ -1,11 +1,11 @@
-# BitwardenRS Backup
+# EteBase Backup
 
-[![Docker Image Version (latest by date)](https://img.shields.io/docker/v/ttionya/bitwardenrs-backup?label=Version&logo=docker)](https://hub.docker.com/r/ttionya/bitwardenrs-backup/tags) [![Docker Pulls](https://img.shields.io/docker/pulls/ttionya/bitwardenrs-backup?label=Docker%20Pulls&logo=docker)](https://hub.docker.com/r/ttionya/bitwardenrs-backup) [![GitHub](https://img.shields.io/github/license/ttionya/BitwardenRS-Backup?label=License&logo=github)](https://github.com/ttionya/BitwardenRS-Backup/blob/master/LICENSE)
+[![Docker Image Version (latest by date)](https://img.shields.io/docker/v/karbon15/etebase-backup?label=Version&logo=docker)](https://hub.docker.com/r/karbon15/etebase-backup/tags) [![Docker Pulls](https://img.shields.io/docker/pulls/karbon15/etebase-backup?label=Docker%20Pulls&logo=docker)](https://hub.docker.com/r/karbon15/etebase-backup) [![GitHub](https://img.shields.io/github/license/karbon16/EteBase-Backup?label=License&logo=github)](https://github.com/karbon15/EteBase-Backup/blob/master/LICENSE)
 
-Docker containers for [bitwarden_rs](https://github.com/dani-garcia/bitwarden_rs) backup to remote.
+Docker containers for [etebase server](https://github.com/etesync/server) backup to remote.
 
-- [Docker Hub](https://hub.docker.com/r/ttionya/bitwardenrs-backup)
-- [GitHub](https://github.com/ttionya/BitwardenRS-Backup)
+- [Docker Hub](https://hub.docker.com/r/karbon15/etebase-backup)
+- [GitHub](https://github.com/karbon15/EteBase-Backup)
 
 
 
@@ -14,14 +14,14 @@ Docker containers for [bitwarden_rs](https://github.com/dani-garcia/bitwarden_rs
 This tool supports backing up the following files or directories.
 
 - `db.sqlite3`
-- `config.json`
-- `attachments` (directory)
-
+- `etebase-server.ini`
+- `media` (directory)
+- `secret.txt`
 
 
 ## Usage
 
-> **Important:** We assume you already read the `bitwarden_rs` [documentation](https://github.com/dani-garcia/bitwarden_rs/wiki).
+> **Important:** We assume you already read the `etebase` [documentation](https://github.com/etesync/server/wiki).
 
 ### Backup
 
@@ -33,8 +33,8 @@ You can get the token by the following command.
 
 ```shell
 docker run --rm -it \
-  --mount type=volume,source=bitwardenrs-rclone-data,target=/config/ \
-  ttionya/bitwardenrs-backup:latest \
+  --mount type=volume,source=etebase-rclone-data,target=/config/ \
+  karbon15/etebase-backup:latest \
   rclone config
 ```
 
@@ -42,8 +42,8 @@ After setting, check the configuration content by the following command.
 
 ```shell
 docker run --rm -it \
-  --mount type=volume,source=bitwardenrs-rclone-data,target=/config/ \
-  ttionya/bitwardenrs-backup:latest \
+  --mount type=volume,source=etebase-rclone-data,target=/config/ \
+  karbon15/etebase-backup:latest \
   rclone config show
 
 # Microsoft Onedrive Example
@@ -58,18 +58,18 @@ Note that you need to set the environment variable `RCLONE_REMOTE_NAME` to a rem
 
 #### Automatic Backups
 
-Make sure that your bitwarden_rs container is named `bitwardenrs` otherwise you have to replace the container name in the `--volumes-from` section of the docker run call.
+Make sure that your etebase container is named `etebase` otherwise you have to replace the container name in the `--volumes-from` section of the docker run call.
 
 Start backup container with default settings (automatic backup at 5 minute every hour)
 
 ```shell
 docker run -d \
   --restart=always \
-  --name bitwardenrs_backup \
-  --volumes-from=bitwardenrs \
-  --mount type=volume,source=bitwardenrs-rclone-data,target=/config/ \
+  --name etebase_backup \
+  --volumes-from=etebase \
+  --mount type=volume,source=etebase-rclone-data,target=/config/ \
   -e RCLONE_REMOTE_NAME="YouRemoteName"
-  ttionya/bitwardenrs-backup:latest
+  karbon15/etebase-backup:latest
 ```
 
 #### Use Docker Compose
@@ -100,13 +100,13 @@ Because the host's files are not accessible in the Docker container, you need to
 
 And go to the directory where your backup files are located.
 
-If you are using automatic backups, please confirm the bitwarden_rs volume and replace the `--mount` `source` section.
+If you are using automatic backups, please confirm the etebase volume and replace the `--mount` `source` section.
 
 ```shell
 docker run --rm -it \
-  --mount type=volume,source=bitwardenrs-data,target=/bitwarden/data/ \
-  --mount type=bind,source=$(pwd),target=/bitwarden/restore/ \
-  ttionya/bitwardenrs-backup:latest restore \
+  --mount type=volume,source=etebase-data,target=/etebase/data/ \
+  --mount type=bind,source=$(pwd),target=/etebase/restore/ \
+  karbon15/etebase-backup:latest restore \
   [OPTIONS]
 ```
 
@@ -120,11 +120,16 @@ If you didn't set the `ZIP_ENABLE` environment variable to `TRUE` when you backe
 
 ##### --config-file
 
-If you didn't set the `ZIP_ENABLE` environment variable to `TRUE` when you backed up the file, you need to use this option to specify the `config.json` file.
+If you didn't set the `ZIP_ENABLE` environment variable to `TRUE` when you backed up the file, you need to use this option to specify the `etebase-server.ini` file.
 
-##### --attachments-file
+##### --media-file
 
 If you didn't set the `ZIP_ENABLE` environment variable to `TRUE` when you backed up the file, you need to use this option to specify the `attachments.tar` file.
+
+##### --secret-file
+
+If you didn't set the `ZIP_ENABLE` environment variable to `TRUE` when you backed up the file, you need to use this option to specify the `secret.txt` file.
+
 
 ##### --zip-file
 
@@ -150,13 +155,13 @@ If not, the password will be asked for interactively.
 
 Rclone remote name, you can name it yourself.
 
-Default: `BitwardenBackup`
+Default: `EtebaseBackup`
 
 #### RCLONE_REMOTE_DIR
 
 Folder for storing backup files in the storage system.
 
-Default: `/BitwardenBackup/`
+Default: `/EtebaseBackup/`
 
 #### CRON
 
@@ -241,11 +246,11 @@ Default: `TRUE`
 You can use the following command to test the mail sending. Remember to replace your smtp variables.
 
 ```shell
-docker run --rm -it -e MAIL_SMTP_VARIABLES='<your smtp variables>' ttionya/bitwardenrs-backup:latest mail <mail send to>
+docker run --rm -it -e MAIL_SMTP_VARIABLES='<your smtp variables>' karbon15/etebase-backup:latest mail <mail send to>
 
 # Or
 
-docker run --rm -it -e MAIL_SMTP_VARIABLES='<your smtp variables>' -e MAIL_TO='<mail send to>' ttionya/bitwardenrs-backup:latest mail
+docker run --rm -it -e MAIL_SMTP_VARIABLES='<your smtp variables>' -e MAIL_TO='<mail send to>' karbon15/etebase-backup:latest mail
 ```
 
 
