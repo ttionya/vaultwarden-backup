@@ -43,7 +43,7 @@ function restore_zip() {
 
     # get restore config file
     RESTORE_FILE_CONFIG=""
-    FIND_FILE_CONFIG=$(basename $(ls ${RESTORE_EXTRACT_DIR}/etebase-server.${TODAY}.ini))
+    FIND_FILE_CONFIG=$(basename $(ls ${RESTORE_EXTRACT_DIR}/etebase-server.*.ini))
     if [[ -n "${FIND_FILE_CONFIG}" ]]; then
         RESTORE_FILE_CONFIG="extract/${FIND_FILE_CONFIG}"
     fi
@@ -104,14 +104,14 @@ function restore_media() {
 }
 
 function restore_secret() {
-    color blue "restore secret config"
+    color blue "restore etebase secret"
 
     cp -f ${RESTORE_FILE_SECRET} ${DATA_SECRET}
 
     if [[ $? == 0 ]]; then
-        color green "restore etebase config successful"
+        color green "restore etebase secret successful"
     else
-        color red "restore etebase config failed"
+        color red "restore etebase secret failed"
     fi
 }
 
