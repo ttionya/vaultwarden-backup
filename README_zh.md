@@ -1,0 +1,259 @@
+# BitwardenRS Backup
+
+[![Docker Image Version (latest by date)](https://img.shields.io/docker/v/ttionya/bitwardenrs-backup?label=Version&logo=docker)](https://hub.docker.com/r/ttionya/bitwardenrs-backup/tags) [![Docker Pulls](https://img.shields.io/docker/pulls/ttionya/bitwardenrs-backup?label=Docker%20Pulls&logo=docker)](https://hub.docker.com/r/ttionya/bitwardenrs-backup) [![GitHub](https://img.shields.io/github/license/ttionya/BitwardenRS-Backup?label=License&logo=github)](https://github.com/ttionya/BitwardenRS-Backup/blob/master/LICENSE)
+
+[README](README.md) | [中文文档](README_zh.md)
+
+备份 [bitwarden_rs](https://github.com/dani-garcia/bitwarden_rs) 数据并通过 [Rclone](https://rclone.org/) 同步到其他存储系统。
+
+- [Docker Hub](https://hub.docker.com/r/ttionya/bitwardenrs-backup)
+- [GitHub](https://github.com/ttionya/BitwardenRS-Backup)
+
+
+
+## 功能
+
+本工具会备份以下文件或目录。
+
+- `db.sqlite3`
+- `config.json`
+- `attachments` (directory)
+
+
+
+## 使用方法
+
+> **重要：** 我们假设你已经完整阅读了 `bitwarden_rs` [文档](https://github.com/dani-garcia/bitwarden_rs/wiki) 。
+
+### 备份
+
+我们通过 [Rclone](https://rclone.org/) 同步备份文件到远程存储系统。
+
+访问 [GitHub](https://github.com/rclone/rclone) 了解更多存储系统使用教程，不同的系统获得 Token 的方式不同。
+
+你可以通过下面的命令获得 Token。
+
+```shell
+docker run --rm -it \
+  --mount type=volume,source=bitwardenrs-rclone-data,target=/config/ \
+  ttionya/bitwardenrs-backup:latest \
+  rclone config
+```
+
+完成设置后，可以通过以下命令检查配置情况。
+
+```shell
+docker run --rm -it \
+  --mount type=volume,source=bitwardenrs-rclone-data,target=/config/ \
+  ttionya/bitwardenrs-backup:latest \
+  rclone config show
+
+# Microsoft Onedrive Example
+# [YouRemoteName]
+# type = onedrive
+# token = {"access_token":"access token","token_type":"token type","refresh_token":"refresh token","expiry":"expiry time"}
+# drive_id = driveid
+# drive_type = personal
+```
+
+需要注意的是，你要将环境变量 `RCLONE_REMOTE_NAME` 设置为远程名称，比如上面的 `YouRemoteName`。
+
+#### 自动备份
+
+确保你的 bitwarden_rs 容器被命名为 `bitwardenrs`，否则你需要自行替换 docker run 的 `--volumes-from` 部分。
+
+使用默认设置启动容器（每小时的 05 分自动备份）。
+
+```shell
+docker run -d \
+  --restart=always \
+  --name bitwardenrs_backup \
+  --volumes-from=bitwardenrs \
+  --mount type=volume,source=bitwardenrs-rclone-data,target=/config/ \
+  -e RCLONE_REMOTE_NAME="YouRemoteName"
+  ttionya/bitwardenrs-backup:latest
+```
+
+#### 使用 Docker Compose
+
+下载 `docker-compose.yml`，根据实际情况编辑环境变量后启动它。
+
+你需要进入 `docker-compose.yml` 文件所在目录执行操作。
+
+```shell
+# Start
+docker-compose up -d
+
+# Stop
+docker-compose stop
+
+# Restart
+docker-compose restart
+
+# Remove
+docker-compose down
+```
+
+### 还原备份
+
+> **重要：** 还原备份会覆盖已存在的文件。
+
+你需要在还原备份前停止 Docker 容器。
+
+因为主机的文件无法在 Docker 容器中直接访问，所以要将需要还原的备份文件所在目录映射到 Docker 容器中。
+
+首先进入备份文件所在目录。
+
+如果你使用的是自动备份，请确认 bitwarden_rs 卷的命名，并替换 `--mount` `source` 部分。
+
+```shell
+docker run --rm -it \
+  --mount type=volume,source=bitwardenrs-data,target=/bitwarden/data/ \
+  --mount type=bind,source=$(pwd),target=/bitwarden/restore/ \
+  ttionya/bitwardenrs-backup:latest restore \
+  [OPTIONS]
+```
+
+选项已在下面列出。
+
+#### 选项
+
+##### --db-file
+
+如果你在备份文件时没有将 `ZIP_ENABLE` 环境变量设置为 `TRUE`，那你需要用这个选项来指定 `db.sqlite3` 文件。
+
+##### --config-file
+
+如果你在备份文件时没有将 `ZIP_ENABLE` 环境变量设置为 `TRUE`，那你需要用这个选项来指定 `config.json` 文件。
+
+##### --attachments-file
+
+如果你在备份文件时没有将 `ZIP_ENABLE` 环境变量设置为 `TRUE`，那你需要用这个选项来指定 `attachments.tar` 文件。
+
+##### --zip-file
+
+如果你在备份文件时将 `ZIP_ENABLE` 环境变量设置为 `TRUE`，则需要使用这个选项来指定 `backup.zip` 文件。
+
+请确保压缩文件中的文件名没有被更改。
+
+##### -p / --password
+
+**这是不安全的！！**
+
+如果 `backup.zip` 文件设置了密码，你可以用这个选项指定备份文件的密码。
+
+不建议使用该选项，因为在没有使用该选项且存在密码时，程序会交互式地询问密码。
+
+
+
+## 环境变量
+
+> **注意：** 所有的环境变量都有默认值，你可以在不设置环境变量的情况下使用 Docker 镜像。
+
+#### RCLONE_REMOTE_NAME
+
+Rclone 远程名称，你可以自己修改命名。
+
+默认值：`BitwardenBackup`
+
+#### RCLONE_REMOTE_DIR
+
+远程存储系统中存放备份文件的文件夹路径。
+
+默认值：`/BitwardenBackup/`
+
+#### CRON
+
+`crond` 的规则，它基于 Linux `crond`。你可以在 [这里](https://crontab.guru/#5_*_*_*_*) 进行测试。
+
+默认值：`5 * * * *` (每小时的 05 分自动备份)
+
+#### ZIP_ENABLE
+
+将备份文件打包为 Zip 文件。当设置为 `'FALSE'` 时，会单独上传备份文件。
+
+默认值：`TRUE`
+
+#### ZIP_PASSWORD
+
+使用密码加密打包的备份文件。请注意，打包备份文件时将始终使用密码。
+
+默认值：`WHEREISMYPASSWORD?`
+
+#### BACKUP_KEEP_DAYS
+
+在远程存储系统中保留最近 X 天的备份文件。设置为 `0` 会保留所有备份文件。
+
+默认值：`0`
+
+#### TIMEZONE
+
+设置合法的时区名称。时区信息目前只在邮件通知中使用。
+
+[这里](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) 可以查看所有合法的时区名称。
+
+默认值：`UTC`
+
+#### MAIL_SMTP_ENABLE
+
+本工具使用 [heirloom-mailx](https://www.systutorials.com/docs/linux/man/1-heirloom-mailx/) 发送邮件。
+
+默认值：`FALSE`
+
+#### MAIL_SMTP_VARIABLES
+
+因为发送邮件的配置太复杂，请自己配置邮件发送参数。
+
+**我们会根据使用场景设置邮件主题，所以你不应该使用 `-s` 选项。**
+
+在测试时，我们将增加 `-v` 选项来显示详细信息。
+
+```text
+# 提供一个能正常使用的例子：
+
+# For Zoho
+-S smtp-use-starttls \
+-S smtp=smtp://smtp.zoho.com:587 \
+-S smtp-auth=login \
+-S smtp-auth-user=<my-email-address> \
+-S smtp-auth-password=<my-email-password> \
+-S from=<my-email-address>
+```
+
+[这里](https://www.systutorials.com/sending-email-from-mailx-command-in-linux-using-gmails-smtp/) 能查看更多配置说明。
+
+#### MAIL_TO
+
+设置会收到通知邮件的邮箱。
+
+#### MAIL_WHEN_SUCCESS
+
+备份成功后发送邮件。
+
+默认值：`TRUE`
+
+#### MAIL_WHEN_FAILURE
+
+备份失败时发送邮件。
+
+默认值：`TRUE`
+
+
+
+## 邮件发送测试
+
+你可以使用下面的命令来测试邮件的发送。记得替换你的 SMTP 变量。
+
+```shell
+docker run --rm -it -e MAIL_SMTP_VARIABLES='<your smtp variables>' ttionya/bitwardenrs-backup:latest mail <mail send to>
+
+# Or
+
+docker run --rm -it -e MAIL_SMTP_VARIABLES='<your smtp variables>' -e MAIL_TO='<mail send to>' ttionya/bitwardenrs-backup:latest mail
+```
+
+
+
+## 许可证
+
+MIT

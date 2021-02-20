@@ -2,6 +2,8 @@
 
 [![Docker Image Version (latest by date)](https://img.shields.io/docker/v/ttionya/bitwardenrs-backup?label=Version&logo=docker)](https://hub.docker.com/r/ttionya/bitwardenrs-backup/tags) [![Docker Pulls](https://img.shields.io/docker/pulls/ttionya/bitwardenrs-backup?label=Docker%20Pulls&logo=docker)](https://hub.docker.com/r/ttionya/bitwardenrs-backup) [![GitHub](https://img.shields.io/github/license/ttionya/BitwardenRS-Backup?label=License&logo=github)](https://github.com/ttionya/BitwardenRS-Backup/blob/master/LICENSE)
 
+[README](README.md) | [中文文档](README_zh.md)
+
 Docker containers for [bitwarden_rs](https://github.com/dani-garcia/bitwarden_rs) backup to remote.
 
 - [Docker Hub](https://hub.docker.com/r/ttionya/bitwardenrs-backup)
