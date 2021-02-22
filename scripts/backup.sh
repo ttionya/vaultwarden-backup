@@ -108,7 +108,7 @@ function clear_history() {
     if [[ "${BACKUP_KEEP_DAYS}" -gt 0 ]]; then
         color blue "delete ${BACKUP_KEEP_DAYS} days ago backup files"
 
-        local RCLONE_DELETE_LIST=$(rclone lsf "${RCLONE_REMOTE}" | head -n -${BACKUP_KEEP_DAYS})
+        local RCLONE_DELETE_LIST=$(rclone lsf "${RCLONE_REMOTE}" --min-age ${BACKUP_KEEP_DAYS}d)
 
         for RCLONE_DELETE_FILE in ${RCLONE_DELETE_LIST}
         do
