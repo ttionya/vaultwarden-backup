@@ -2,15 +2,15 @@
 
 . /app/includes.sh
 
-TODAY=$(date +%Y%m%d)
+NOW=$(date +"%Y%m%d-%H%M%S%Z")
 # backup bitwarden_rs database file
-BACKUP_FILE_DB="${BACKUP_DIR}/db.${TODAY}.sqlite3"
+BACKUP_FILE_DB="${BACKUP_DIR}/db.${NOW}.sqlite3"
 # backup bitwarden_rs config file
-BACKUP_FILE_CONFIG="${BACKUP_DIR}/config.${TODAY}.json"
+BACKUP_FILE_CONFIG="${BACKUP_DIR}/config.${NOW}.json"
 # backup bitwarden_rs attachments directory
-BACKUP_FILE_ATTACHMENTS="${BACKUP_DIR}/attachments.${TODAY}.tar"
+BACKUP_FILE_ATTACHMENTS="${BACKUP_DIR}/attachments.${NOW}.tar"
 # backup zip file
-BACKUP_FILE_ZIP="${BACKUP_DIR}/backup.${TODAY}.zip"
+BACKUP_FILE_ZIP="${BACKUP_DIR}/backup.${NOW}.zip"
 
 function clear_dir() {
     rm -rf ${BACKUP_DIR}
