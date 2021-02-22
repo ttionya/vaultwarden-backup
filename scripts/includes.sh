@@ -33,7 +33,7 @@ function color() {
 #     None
 ########################################
 function check_rclone_connection() {
-    rclone mkdir ${RCLONE_REMOTE}
+    rclone mkdir "${RCLONE_REMOTE}"
     if [[ $? != 0 ]]; then
         color red "storage system connection failure"
         exit 1

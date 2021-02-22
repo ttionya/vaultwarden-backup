@@ -94,7 +94,7 @@ function upload() {
         exit 1
     fi
 
-    rclone copy ${UPLOAD_FILE} ${RCLONE_REMOTE}
+    rclone copy ${UPLOAD_FILE} "${RCLONE_REMOTE}"
     if [[ $? != 0 ]]; then
         color red "upload failed"
 
@@ -108,13 +108,13 @@ function clear_history() {
     if [[ "${BACKUP_KEEP_DAYS}" -gt 0 ]]; then
         color blue "delete ${BACKUP_KEEP_DAYS} days ago backup files"
 
-        local RCLONE_DELETE_LIST=$(rclone lsf ${RCLONE_REMOTE} | head -n -${BACKUP_KEEP_DAYS})
+        local RCLONE_DELETE_LIST=$(rclone lsf "${RCLONE_REMOTE}" | head -n -${BACKUP_KEEP_DAYS})
 
         for RCLONE_DELETE_FILE in ${RCLONE_DELETE_LIST}
         do
             color yellow "deleting ${RCLONE_DELETE_FILE}"
 
-            rclone delete ${RCLONE_REMOTE}/${RCLONE_DELETE_FILE}
+            rclone delete "${RCLONE_REMOTE}/${RCLONE_DELETE_FILE}"
             if [[ $? != 0 ]]; then
                 color red "delete ${RCLONE_DELETE_FILE} failed"
             fi
