@@ -2,7 +2,7 @@
 
 . /app/includes.sh
 
-NOW=$(date +"%Y%m%d-%H%M%S%Z")
+NOW=$(date +"${BACKUP_FILE_DATE_FORMAT}")
 # backup bitwarden_rs database file
 BACKUP_FILE_DB="${BACKUP_DIR}/db.${NOW}.sqlite3"
 # backup bitwarden_rs config file

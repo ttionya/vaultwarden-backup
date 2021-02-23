@@ -125,6 +125,9 @@ function init_env() {
         ZIP_PASSWORD="WHEREISMYPASSWORD?"
     fi
 
+    # BACKUP_FILE_DATE_FORMAT
+    BACKUP_FILE_DATE_FORMAT="%Y%m%d${BACKUP_FILE_DATE_SUFFIX}"
+
     # BACKUP_KEEP_DAYS
     local BACKUP_KEEP_DAYS_DEFAULT="0"
     if [[ -z "${BACKUP_KEEP_DAYS}" ]]; then
@@ -169,6 +172,7 @@ function init_env() {
     color yellow "RCLONE_REMOTE: ${RCLONE_REMOTE}"
     color yellow "ZIP_ENABLE: ${ZIP_ENABLE}"
     color yellow "ZIP_PASSWORD: ${#ZIP_PASSWORD} Chars"
+    color yellow "BACKUP_FILE_DATE_FORMAT: ${BACKUP_FILE_DATE_FORMAT}"
     color yellow "BACKUP_KEEP_DAYS: ${BACKUP_KEEP_DAYS}"
     color yellow "MAIL_SMTP_ENABLE: ${MAIL_SMTP_ENABLE}"
     if [[ "${MAIL_SMTP_ENABLE}" == "TRUE" ]]; then
