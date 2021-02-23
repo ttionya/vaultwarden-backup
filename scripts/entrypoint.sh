@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 . /app/includes.sh
 
@@ -37,7 +37,7 @@ fi
 
 function configure_timezone() {
     if [[ ! -f /etc/localtime || ! -f /etc/timezone ]]; then
-        cp -f /usr/share/zoneinfo/${TIMEZONE} /etc/localtime
+        cp -f "/usr/share/zoneinfo/${TIMEZONE}" /etc/localtime
         echo "${TIMEZONE}" > /etc/timezone
     fi
 }
