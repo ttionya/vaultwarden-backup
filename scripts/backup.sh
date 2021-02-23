@@ -2,18 +2,20 @@
 
 . /app/includes.sh
 
-NOW=$(date +"${BACKUP_FILE_DATE_FORMAT}")
-# backup bitwarden_rs database file
-BACKUP_FILE_DB="${BACKUP_DIR}/db.${NOW}.sqlite3"
-# backup bitwarden_rs config file
-BACKUP_FILE_CONFIG="${BACKUP_DIR}/config.${NOW}.json"
-# backup bitwarden_rs attachments directory
-BACKUP_FILE_ATTACHMENTS="${BACKUP_DIR}/attachments.${NOW}.tar"
-# backup zip file
-BACKUP_FILE_ZIP="${BACKUP_DIR}/backup.${NOW}.zip"
-
 function clear_dir() {
     rm -rf ${BACKUP_DIR}
+}
+
+function backup_init() {
+    NOW=$(date +"${BACKUP_FILE_DATE_FORMAT}")
+    # backup bitwarden_rs database file
+    BACKUP_FILE_DB="${BACKUP_DIR}/db.${NOW}.sqlite3"
+    # backup bitwarden_rs config file
+    BACKUP_FILE_CONFIG="${BACKUP_DIR}/config.${NOW}.json"
+    # backup bitwarden_rs attachments directory
+    BACKUP_FILE_ATTACHMENTS="${BACKUP_DIR}/attachments.${NOW}.tar"
+    # backup zip file
+    BACKUP_FILE_ZIP="${BACKUP_DIR}/backup.${NOW}.zip"
 }
 
 function backup_db() {
@@ -128,6 +130,7 @@ init_env
 check_rclone_connection
 
 clear_dir
+backup_init
 backup
 backup_package
 upload
