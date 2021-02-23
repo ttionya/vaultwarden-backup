@@ -125,14 +125,14 @@ function init_env() {
         ZIP_PASSWORD="WHEREISMYPASSWORD?"
     fi
 
-    # BACKUP_FILE_DATE_FORMAT
-    BACKUP_FILE_DATE_FORMAT="%Y%m%d${BACKUP_FILE_DATE_SUFFIX}"
-
     # BACKUP_KEEP_DAYS
     local BACKUP_KEEP_DAYS_DEFAULT="0"
     if [[ -z "${BACKUP_KEEP_DAYS}" ]]; then
         BACKUP_KEEP_DAYS="${BACKUP_KEEP_DAYS_DEFAULT}"
     fi
+
+    # BACKUP_FILE_DATE_FORMAT
+    BACKUP_FILE_DATE_FORMAT=$(echo "%Y%m%d${BACKUP_FILE_DATE_SUFFIX}" | sed 's/[^0-9a-zA-Z%_-]//g')
 
     # MAIL_SMTP_ENABLE
     # MAIL_TO
