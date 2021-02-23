@@ -15,7 +15,7 @@ function backup_init() {
     # backup bitwarden_rs attachments directory
     BACKUP_FILE_ATTACHMENTS="${BACKUP_DIR}/attachments.${NOW}.tar"
     # backup zip file
-    BACKUP_FILE_ZIP="${BACKUP_DIR}/backup.${NOW}.zip"
+    BACKUP_FILE_ZIP="${BACKUP_DIR}/backup.${NOW}.7z"
 }
 
 function backup_db() {
@@ -66,17 +66,16 @@ function backup() {
 
 function backup_package() {
     if [[ "${ZIP_ENABLE}" == "TRUE" ]]; then
+        color blue "display backup zip file list"
+        
+        ls -lah "${BACKUP_DIR}"
+
         color blue "package backup file"
 
         UPLOAD_FILE="${BACKUP_FILE_ZIP}"
+        # explanation for this 7z command: https://askubuntu.com/a/928301
+        7z a -t7z -m0=lzma2 -mx=9 -mfb=64 -md=32m -ms=on -mhe=on -p"${ZIP_PASSWORD}" "${BACKUP_FILE_ZIP}" "${BACKUP_DIR}"
 
-        zip -jP "${ZIP_PASSWORD}" "${BACKUP_FILE_ZIP}" "${BACKUP_DIR}"/*
-
-        ls -lah "${BACKUP_DIR}"
-
-        color blue "display backup zip file list"
-
-        zip -sf "${BACKUP_FILE_ZIP}"
     else
         color yellow "skip package backup files"
 

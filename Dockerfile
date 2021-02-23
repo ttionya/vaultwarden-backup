@@ -7,6 +7,6 @@ LABEL "repository"="https://github.com/ttionya/BitwardenRS-Backup" \
 COPY scripts/*.sh /app/
 
 RUN chmod +x /app/*.sh \
-  && apk add --no-cache bash sqlite zip heirloom-mailx tzdata
+  && apk add --no-cache bash sqlite zip heirloom-mailx tzdata p7zip
 
 ENTRYPOINT ["/app/entrypoint.sh"]
