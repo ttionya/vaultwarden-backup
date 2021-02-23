@@ -180,15 +180,27 @@ Rclone 远程名称，你可以自己修改命名。
 
 默认值：`WHEREISMYPASSWORD?`
 
+#### BACKUP_FILE_DATE_SUFFIX
+
+我们建议使用远程存储系统的历史控制维护同一天不同时间的备份文件。但是有些存储系统不支持历史控制，所以我们支持配置时间信息后缀。
+
 #### BACKUP_KEEP_DAYS
 
 在远程存储系统中保留最近 X 天的备份文件。设置为 `0` 会保留所有备份文件。
 
 默认值：`0`
 
+#### BACKUP_FILE_DATE_SUFFIX
+
+每个备份文件都默认添加 `%Y%m%d` 后缀。如果你在一天内多次进行备份，每次备份都会被覆盖之前同名的文件。这个环境变量允许你追加日期信息 (`%Y%m%d${BACKUP_FILE_DATE_SUFFIX`) 以便每次备份生成不同的文件。
+
+在 [这里](https://man7.org/linux/man-pages/man1/date.1.html) 查看时间格式化说明。
+
+默认值：`''`
+
 #### TIMEZONE
 
-设置合法的时区名称。时区信息目前只在邮件通知中使用。
+设置合法的时区名称。
 
 [这里](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) 可以查看所有合法的时区名称。
 

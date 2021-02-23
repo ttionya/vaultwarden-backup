@@ -191,11 +191,11 @@ This environment variable allows you to append that date (`%Y%m%d${BACKUP_FILE_D
 
 Please use the [date man page](https://man7.org/linux/man-pages/man1/date.1.html) for the format notation.
 
-Default: ` `
+Default: `''`
 
 #### TIMEZONE
 
-You should set the available timezone name. Currently only used in mail. The timezone information will also be used if you use `%Z` in `BACKUP_FILE_DATE_SUFFIX`.
+You should set the available timezone name.
 
 Here is timezone list at [wikipedia](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones).
 
