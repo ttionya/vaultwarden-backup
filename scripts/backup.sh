@@ -7,7 +7,7 @@ function clear_dir() {
 }
 
 function backup_init() {
-    NOW=$(date +"${BACKUP_FILE_DATE_FORMAT}")
+    NOW="$(date +"${BACKUP_FILE_DATE_FORMAT}")"
     # backup bitwarden_rs database file
     BACKUP_FILE_DB="${BACKUP_DIR}/db.${NOW}.sqlite3"
     # backup bitwarden_rs config file
@@ -32,7 +32,7 @@ function backup_config() {
     color blue "backup bitwarden_rs config"
 
     if [[ -f "${DATA_CONFIG}" ]]; then
-        cp -f ${DATA_DIR}/config.json ${BACKUP_FILE_CONFIG}
+        cp -f "${DATA_DIR}/config.json" "${BACKUP_FILE_CONFIG}"
     else
         color yellow "not found bitwarden_rs config, skipping"
     fi
@@ -110,7 +110,7 @@ function clear_history() {
     if [[ "${BACKUP_KEEP_DAYS}" -gt 0 ]]; then
         color blue "delete ${BACKUP_KEEP_DAYS} days ago backup files"
 
-        local RCLONE_DELETE_LIST=($(rclone lsf "${RCLONE_REMOTE}" --min-age ${BACKUP_KEEP_DAYS}d))
+        mapfile -t RCLONE_DELETE_LIST < <(rclone lsf "${RCLONE_REMOTE}" --min-age "${BACKUP_KEEP_DAYS}d")
 
         for RCLONE_DELETE_FILE in "${RCLONE_DELETE_LIST[@]}"
         do
