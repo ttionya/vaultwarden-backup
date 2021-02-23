@@ -187,7 +187,7 @@ Default: `0`
 #### BACKUP_FILE_DATE_SUFFIX
 
 Each backup file is suffixed by default with `%Y%m%d`. If you back up your vault multiple times a day that suffix is not unique anymore.
-This environment variable allows you to append that date (`%Y%m%d${BACKUP_FILE_DATE_SUFFIX`) suffix in order to create a unique backup name. 
+This environment variable allows you to append that date (`%Y%m%d${BACKUP_FILE_DATE_SUFFIX}`) suffix in order to create a unique backup name. 
 
 Please use the [date man page](https://man7.org/linux/man-pages/man1/date.1.html) for the format notation.
 

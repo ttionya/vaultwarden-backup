@@ -192,7 +192,7 @@ Rclone 远程名称，你可以自己修改命名。
 
 #### BACKUP_FILE_DATE_SUFFIX
 
-每个备份文件都默认添加 `%Y%m%d` 后缀。如果你在一天内多次进行备份，每次备份都会被覆盖之前同名的文件。这个环境变量允许你追加日期信息 (`%Y%m%d${BACKUP_FILE_DATE_SUFFIX`) 以便每次备份生成不同的文件。
+每个备份文件都默认添加 `%Y%m%d` 后缀。如果你在一天内多次进行备份，每次备份都会被覆盖之前同名的文件。这个环境变量允许你追加日期信息 (`%Y%m%d${BACKUP_FILE_DATE_SUFFIX}`) 以便每次备份生成不同的文件。
 
 在 [这里](https://man7.org/linux/man-pages/man1/date.1.html) 查看时间格式化说明。
 
