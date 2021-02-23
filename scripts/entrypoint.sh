@@ -45,7 +45,7 @@ function configure_timezone() {
 function configure_cron() {
     local FIND_CRON_COUNT=$(crontab -l | grep -c 'backup.sh')
     if [[ ${FIND_CRON_COUNT} -eq 0 ]]; then
-        echo "${CRON} bash /app/backup.sh > /dev/stdout" >> /etc/crontabs/root
+        echo "${CRON} sh /app/backup.sh > /dev/stdout" >> /etc/crontabs/root
     fi
 }
 
