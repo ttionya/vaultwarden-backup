@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 DATA_DIR="/bitwarden/data"
 DATA_DB="${DATA_DIR}/db.sqlite3"
@@ -53,7 +53,7 @@ function send_mail() {
         local MAIL_VERBOSE="-v"
     fi
 
-    echo "$2" | mailx ${MAIL_VERBOSE} -s "$1" ${MAIL_SMTP_VARIABLES} ${MAIL_TO}
+    echo "$2" | mailx "${MAIL_VERBOSE}" -s "$1" ${MAIL_SMTP_VARIABLES} "${MAIL_TO}"
     if [[ $? != 0 ]]; then
         color red "mail sending failed"
     else
@@ -161,7 +161,7 @@ function init_env() {
 
     # TIMEZONE
     local TIMEZONE_MATCHED_COUNT=$(ls "/usr/share/zoneinfo/${TIMEZONE}" 2> /dev/null | wc -l)
-    if [[ ${TIMEZONE_MATCHED_COUNT} -ne 1 ]]; then
+    if [[ "${TIMEZONE_MATCHED_COUNT}" -ne 1 ]]; then
         TIMEZONE="UTC"
     fi
 
