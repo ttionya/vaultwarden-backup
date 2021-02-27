@@ -15,7 +15,7 @@ function backup_init() {
     # backup bitwarden_rs attachments directory
     BACKUP_FILE_ATTACHMENTS="${BACKUP_DIR}/attachments.${NOW}.tar"
     # backup zip file
-    BACKUP_FILE_ZIP="${BACKUP_DIR}/backup.${NOW}.zip"
+    BACKUP_FILE_ZIP="${BACKUP_DIR}/backup.${NOW}.${ZIP_TYPE}"
 }
 
 function backup_db() {
@@ -70,13 +70,17 @@ function backup_package() {
 
         UPLOAD_FILE="${BACKUP_FILE_ZIP}"
 
-        zip -jP "${ZIP_PASSWORD}" "${BACKUP_FILE_ZIP}" "${BACKUP_DIR}"/*
+        if [[ "${ZIP_TYPE}" == "zip" ]]; then
+            7z a -tzip -mx=9 -p"${ZIP_PASSWORD}" "${BACKUP_FILE_ZIP}" "${BACKUP_DIR}"/*
+        else
+            7z a -t7z -m0=lzma2 -mx=9 -mfb=64 -md=32m -ms=on -p"${ZIP_PASSWORD}" "${BACKUP_FILE_ZIP}" "${BACKUP_DIR}"/*
+        fi
 
         ls -lah "${BACKUP_DIR}"
 
-        color blue "display backup zip file list"
+        color blue "display backup ${ZIP_TYPE} file list"
 
-        zip -sf "${BACKUP_FILE_ZIP}"
+        7z l "${BACKUP_FILE_ZIP}"
     else
         color yellow "skip package backup files"
 

@@ -22,6 +22,7 @@ services:
     #   CRON: '5 * * * *'
     #   ZIP_ENABLE: 'TRUE'
     #   ZIP_PASSWORD: 'WHEREISMYPASSWORD?'
+    #   ZIP_TYPE: 'zip'
     #   BACKUP_FILE_DATE_SUFFIX: ''
     #   BACKUP_KEEP_DAYS: 0
     #   MAIL_SMTP_ENABLE: 'FALSE'
