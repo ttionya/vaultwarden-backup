@@ -20,9 +20,9 @@ function restore_zip() {
     local FIND_FILE_ATTACHMENTS
 
     if [[ -n "${ZIP_PASSWORD}" ]]; then
-        unzip -P "${ZIP_PASSWORD}" "${RESTORE_FILE_ZIP}" -d "${RESTORE_EXTRACT_DIR}"
+        7z e -aoa -p"${ZIP_PASSWORD}" -o"${RESTORE_EXTRACT_DIR}" "${RESTORE_FILE_ZIP}"
     else
-        unzip "${RESTORE_FILE_ZIP}" -d "${RESTORE_EXTRACT_DIR}"
+        7z e -aoa -o"${RESTORE_EXTRACT_DIR}" "${RESTORE_FILE_ZIP}"
     fi
 
     if [[ $? == 0 ]]; then

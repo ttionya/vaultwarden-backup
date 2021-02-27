@@ -125,6 +125,14 @@ function init_env() {
         ZIP_PASSWORD="WHEREISMYPASSWORD?"
     fi
 
+    # ZIP_TYPE
+    ZIP_TYPE=$(echo "${ZIP_TYPE}" | tr '[A-Z]' '[a-z]')
+    if [[ "${ZIP_TYPE}" == "7z" ]; then
+        ZIP_TYPE="7z"
+    else
+        ZIP_TYPE="zip"
+    fi
+
     # BACKUP_KEEP_DAYS
     local BACKUP_KEEP_DAYS_DEFAULT="0"
     if [[ -z "${BACKUP_KEEP_DAYS}" ]]; then
@@ -172,6 +180,7 @@ function init_env() {
     color yellow "RCLONE_REMOTE: ${RCLONE_REMOTE}"
     color yellow "ZIP_ENABLE: ${ZIP_ENABLE}"
     color yellow "ZIP_PASSWORD: ${#ZIP_PASSWORD} Chars"
+    color yellow "ZIP_TYPE: ${ZIP_TYPE}"
     color yellow "BACKUP_FILE_DATE_FORMAT: ${BACKUP_FILE_DATE_FORMAT}"
     color yellow "BACKUP_KEEP_DAYS: ${BACKUP_KEEP_DAYS}"
     color yellow "MAIL_SMTP_ENABLE: ${MAIL_SMTP_ENABLE}"
