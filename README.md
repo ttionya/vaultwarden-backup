@@ -178,6 +178,14 @@ Set your password to encrypt Zip archive. Note that the password will always be 
 
 Default: `WHEREISMYPASSWORD?`
 
+#### ZIP_TYPE
+
+Because the `zip` format is less secure, we offer archives in `7z` format for those who seek security.
+
+It should be noted that the password for bitwardenrs is encrypted before it is sent to the server. The server does not have plaintext passwords, so the `zip` format is good enough for basic encryption needs.
+
+Default: `zip` (only support `zip` and `7z` format)
+
 #### BACKUP_KEEP_DAYS
 
 Only keep last a few days backup files in the storage system. Set to `0` to keep all backup files.
