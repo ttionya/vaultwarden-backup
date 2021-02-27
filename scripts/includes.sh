@@ -127,7 +127,7 @@ function init_env() {
 
     # ZIP_TYPE
     ZIP_TYPE=$(echo "${ZIP_TYPE}" | tr '[A-Z]' '[a-z]')
-    if [[ "${ZIP_TYPE}" == "7z" ]; then
+    if [[ "${ZIP_TYPE}" == "7z" ]]; then
         ZIP_TYPE="7z"
     else
         ZIP_TYPE="zip"
