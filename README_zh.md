@@ -258,6 +258,36 @@ Rclone 远程名称，你可以自己修改命名。
 
 
 
+## Use `.env` file
+
+如果你喜欢使用 env 文件而不是环境变量，可以将包含环境变量的 env 文件映射到容器中的 `/.env` 文件。
+
+```shell
+docker run -d \
+  --mount type=bind,source=/path/to/env,target=/.env \
+  ttionya/bitwardenrs-backup:latest
+```
+
+
+
+## Docker Secrets
+
+作为通过环境变量传递敏感信息的替代方法，`_FILE` 可以追加到前面列出的环境变量后面，使初始化脚本从容器中存在的文件加载这些变量的值。特别是这可以用来从存储在 `/run/secrets/<secret_name>` 文件中的 Docker Secrets 中加载密码。
+
+```shell
+docker run -d \
+  -e ZIP_PASSWORD_FILE=/run/secrets/zip-password \
+  ttionya/bitwardenrs-backup:latest
+```
+
+
+
+## 关于优先级
+
+我们会优先使用环境变量，然后是环境变量定义的 `_FILE` 结尾的文件内容，之后是 `.env` 文件中定义的 `_FILE` 结尾的文件内容，最后才是 `.env` 文件的值。
+
+
+
 ## 邮件发送测试
 
 你可以使用下面的命令来测试邮件的发送。记得替换你的 SMTP 变量。

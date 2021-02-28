@@ -34,6 +34,7 @@ services:
     volumes:
       - bitwardenrs-data:/bitwarden/data/
       - bitwardenrs-rclone-data:/config/
+    #   - /path/to/env:/.env
 
 volumes:
   bitwardenrs-data:

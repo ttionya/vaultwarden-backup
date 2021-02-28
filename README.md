@@ -257,6 +257,36 @@ Default: `TRUE`
 
 
 
+## Use `.env` file
+
+If you prefer to use env file instead of environment variables, you can map the env file containing the environment variables to the `/.env` file in the container.
+
+```shell
+docker run -d \
+  --mount type=bind,source=/path/to/env,target=/.env \
+  ttionya/bitwardenrs-backup:latest
+```
+
+
+
+## Docker Secrets
+
+As an alternative to passing sensitive information via environment variables, `_FILE` may be appended to the previously listed environment variables, causing the initialization script to load the values for those variables from files present in the container. In particular, this can be used to load passwords from Docker secrets stored in `/run/secrets/<secret_name>` files.
+
+```shell
+docker run -d \
+  -e ZIP_PASSWORD_FILE=/run/secrets/zip-password \
+  ttionya/bitwardenrs-backup:latest
+```
+
+
+
+## About Priority
+
+We will use the environment variables first, then the contents of the file ending in `_FILE` as defined by the environment variables, followed by the contents of the file ending in `_FILE` as defined in the `.env` file, and finally the `.env` file values.
+
+
+
 ## Mail Test
 
 You can use the following command to test the mail sending. Remember to replace your smtp variables.
