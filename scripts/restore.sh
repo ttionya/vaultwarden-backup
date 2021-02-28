@@ -19,7 +19,7 @@ function restore_zip() {
     local FIND_FILE_CONFIG
     local FIND_FILE_ATTACHMENTS
 
-    if [[ -n "${ZIP_PASSWORD}" ]]; then
+    if [[ "${ZIP_PASSWORD}" ]]; then
         7z e -aoa -p"${ZIP_PASSWORD}" -o"${RESTORE_EXTRACT_DIR}" "${RESTORE_FILE_ZIP}"
     else
         7z e -aoa -o"${RESTORE_EXTRACT_DIR}" "${RESTORE_FILE_ZIP}"
@@ -35,21 +35,21 @@ function restore_zip() {
     # get restore db file
     RESTORE_FILE_DB=""
     FIND_FILE_DB="$( basename "$(ls ${RESTORE_EXTRACT_DIR}/db.*.sqlite3)" )"
-    if [[ -n "${FIND_FILE_DB}" ]]; then
+    if [[ "${FIND_FILE_DB}" ]]; then
         RESTORE_FILE_DB="extract/${FIND_FILE_DB}"
     fi
 
     # get restore config file
     RESTORE_FILE_CONFIG=""
     FIND_FILE_CONFIG="$( basename "$(ls ${RESTORE_EXTRACT_DIR}/config.*.json)" )"
-    if [[ -n "${FIND_FILE_CONFIG}" ]]; then
+    if [[ "${FIND_FILE_CONFIG}" ]]; then
         RESTORE_FILE_CONFIG="extract/${FIND_FILE_CONFIG}"
     fi
 
     # get restore attachments file
     RESTORE_FILE_ATTACHMENTS=""
     FIND_FILE_ATTACHMENTS="$( basename "$(ls ${RESTORE_EXTRACT_DIR}/attachments.*.tar)" )"
-    if [[ -n "${FIND_FILE_ATTACHMENTS}" ]]; then
+    if [[ "${FIND_FILE_ATTACHMENTS}" ]]; then
         RESTORE_FILE_ATTACHMENTS="extract/${FIND_FILE_ATTACHMENTS}"
     fi
 
@@ -102,7 +102,7 @@ function check_restore_file_exist() {
 }
 
 function restore_file() {
-    if [[ -n "${RESTORE_FILE_ZIP}" ]]; then
+    if [[ "${RESTORE_FILE_ZIP}" ]]; then
         check_restore_file_exist "${RESTORE_FILE_ZIP}" "--zip-file"
 
         RESTORE_FILE_ZIP="${RESTORE_DIR}/${RESTORE_FILE_ZIP}"
@@ -111,31 +111,31 @@ function restore_file() {
         restore_zip
         clear_extract_dir
     else
-        if [[ -n "${RESTORE_FILE_DB}" ]]; then
+        if [[ "${RESTORE_FILE_DB}" ]]; then
             check_restore_file_exist "${RESTORE_FILE_DB}" "--db-file"
 
             RESTORE_FILE_DB="${RESTORE_DIR}/${RESTORE_FILE_DB}"
         fi
 
-        if [[ -n "${RESTORE_FILE_CONFIG}" ]]; then
+        if [[ "${RESTORE_FILE_CONFIG}" ]]; then
             check_restore_file_exist "${RESTORE_FILE_CONFIG}" "--config-file"
 
             RESTORE_FILE_CONFIG="${RESTORE_DIR}/${RESTORE_FILE_CONFIG}"
         fi
 
-        if [[ -n "${RESTORE_FILE_ATTACHMENTS}" ]]; then
+        if [[ "${RESTORE_FILE_ATTACHMENTS}" ]]; then
             check_restore_file_exist "${RESTORE_FILE_ATTACHMENTS}" "--attachments-file"
 
             RESTORE_FILE_ATTACHMENTS="${RESTORE_DIR}/${RESTORE_FILE_ATTACHMENTS}"
         fi
 
-        if [[ -n "${RESTORE_FILE_DB}" ]]; then
+        if [[ "${RESTORE_FILE_DB}" ]]; then
             restore_db
         fi
-        if [[ -n "${RESTORE_FILE_CONFIG}" ]]; then
+        if [[ "${RESTORE_FILE_CONFIG}" ]]; then
             restore_config
         fi
-        if [[ -n "${RESTORE_FILE_ATTACHMENTS}" ]]; then
+        if [[ "${RESTORE_FILE_ATTACHMENTS}" ]]; then
             restore_attachments
         fi
     fi
