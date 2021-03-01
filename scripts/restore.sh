@@ -6,6 +6,7 @@ RESTORE_FILE_DB=""
 RESTORE_FILE_CONFIG=""
 RESTORE_FILE_ATTACHMENTS=""
 RESTORE_FILE_ZIP=""
+RESTORE_FILE_DIR="${RESTORE_DIR}"
 ZIP_PASSWORD=""
 
 function clear_extract_dir() {
@@ -33,27 +34,19 @@ function restore_zip() {
     fi
 
     # get restore db file
-    RESTORE_FILE_DB=""
-    FIND_FILE_DB="$( basename "$(ls ${RESTORE_EXTRACT_DIR}/db.*.sqlite3)" )"
-    if [[ -n "${FIND_FILE_DB}" ]]; then
-        RESTORE_FILE_DB="extract/${FIND_FILE_DB}"
-    fi
+    FIND_FILE_DB="$( basename "$(ls ${RESTORE_EXTRACT_DIR}/db.*.sqlite3) 2>/dev/null" )"
+    RESTORE_FILE_DB="${FIND_FILE_DB:-}"
 
     # get restore config file
-    RESTORE_FILE_CONFIG=""
-    FIND_FILE_CONFIG="$( basename "$(ls ${RESTORE_EXTRACT_DIR}/config.*.json)" )"
-    if [[ -n "${FIND_FILE_CONFIG}" ]]; then
-        RESTORE_FILE_CONFIG="extract/${FIND_FILE_CONFIG}"
-    fi
+    FIND_FILE_CONFIG="$( basename "$(ls ${RESTORE_EXTRACT_DIR}/config.*.json) 2>/dev/null" )"
+    RESTORE_FILE_CONFIG="${FIND_FILE_CONFIG:-}"
 
     # get restore attachments file
-    RESTORE_FILE_ATTACHMENTS=""
-    FIND_FILE_ATTACHMENTS="$( basename "$(ls ${RESTORE_EXTRACT_DIR}/attachments.*.tar)" )"
-    if [[ -n "${FIND_FILE_ATTACHMENTS}" ]]; then
-        RESTORE_FILE_ATTACHMENTS="extract/${FIND_FILE_ATTACHMENTS}"
-    fi
+    FIND_FILE_ATTACHMENTS="$( basename "$(ls ${RESTORE_EXTRACT_DIR}/attachments.*.tar) 2>/dev/null" )"
+    RESTORE_FILE_ATTACHMENTS="${FIND_FILE_ATTACHMENTS:-}"
 
     RESTORE_FILE_ZIP=""
+    RESTORE_FILE_DIR="${RESTORE_EXTRACT_DIR}"
     restore_file
 }
 
@@ -95,7 +88,7 @@ function restore_attachments() {
 }
 
 function check_restore_file_exist() {
-    if [[ ! -f "${RESTORE_DIR}/$1" ]]; then
+    if [[ ! -f "${RESTORE_FILE_DIR}/$1" ]]; then
         color red "$2: cannot access $1: No such file"
         exit 1
     fi
@@ -105,7 +98,7 @@ function restore_file() {
     if [[ -n "${RESTORE_FILE_ZIP}" ]]; then
         check_restore_file_exist "${RESTORE_FILE_ZIP}" "--zip-file"
 
-        RESTORE_FILE_ZIP="${RESTORE_DIR}/${RESTORE_FILE_ZIP}"
+        RESTORE_FILE_ZIP="${RESTORE_FILE_DIR}/${RESTORE_FILE_ZIP}"
 
         clear_extract_dir
         restore_zip
@@ -114,19 +107,19 @@ function restore_file() {
         if [[ -n "${RESTORE_FILE_DB}" ]]; then
             check_restore_file_exist "${RESTORE_FILE_DB}" "--db-file"
 
-            RESTORE_FILE_DB="${RESTORE_DIR}/${RESTORE_FILE_DB}"
+            RESTORE_FILE_DB="${RESTORE_FILE_DIR}/${RESTORE_FILE_DB}"
         fi
 
         if [[ -n "${RESTORE_FILE_CONFIG}" ]]; then
             check_restore_file_exist "${RESTORE_FILE_CONFIG}" "--config-file"
 
-            RESTORE_FILE_CONFIG="${RESTORE_DIR}/${RESTORE_FILE_CONFIG}"
+            RESTORE_FILE_CONFIG="${RESTORE_FILE_DIR}/${RESTORE_FILE_CONFIG}"
         fi
 
         if [[ -n "${RESTORE_FILE_ATTACHMENTS}" ]]; then
             check_restore_file_exist "${RESTORE_FILE_ATTACHMENTS}" "--attachments-file"
 
-            RESTORE_FILE_ATTACHMENTS="${RESTORE_DIR}/${RESTORE_FILE_ATTACHMENTS}"
+            RESTORE_FILE_ATTACHMENTS="${RESTORE_FILE_DIR}/${RESTORE_FILE_ATTACHMENTS}"
         fi
 
         if [[ -n "${RESTORE_FILE_DB}" ]]; then

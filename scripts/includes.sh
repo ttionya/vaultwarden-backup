@@ -7,7 +7,7 @@ DATA_CONFIG="${DATA_DIR}/config.json"
 DATA_ATTACHMENTS="${DATA_DIR}/attachments"
 BACKUP_DIR="/bitwarden/backup"
 RESTORE_DIR="/bitwarden/restore"
-RESTORE_EXTRACT_DIR="${RESTORE_DIR}/extract"
+RESTORE_EXTRACT_DIR="/bitwarden/extract"
 
 #################### Function ####################
 ########################################
