@@ -14,7 +14,7 @@ if [[ "$1" == "mail" ]]; then
     MAIL_SMTP_ENABLE="TRUE"
     MAIL_DEBUG="TRUE"
 
-    if [[ "$2" ]]; then
+    if [[ -n "$2" ]]; then
         MAIL_TO="$2"
     fi
 
