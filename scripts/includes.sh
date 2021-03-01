@@ -91,7 +91,7 @@ function send_mail_content() {
 # Outputs:
 #     variables with prefix 'DOTENV_'
 # Reference:
-#     https://gist.github.com/judy2k/7656bfe3b322d669ef75364a46327836
+#     https://gist.github.com/judy2k/7656bfe3b322d669ef75364a46327836#gistcomment-3632918
 ########################################
 function export_env_file() {
     if [[ -f "${ENV_FILE}" ]]; then
@@ -120,13 +120,13 @@ function get_env() {
     local VAR_DOTENV_FILE="DOTENV_${VAR_FILE}"
     local VALUE=""
 
-    if [[ "${!VAR:-}" ]]; then
+    if [[ -n "${!VAR:-}" ]]; then
         VALUE="${!VAR}"
-    elif [[ "${!VAR_FILE:-}" ]]; then
+    elif [[ -n "${!VAR_FILE:-}" ]]; then
         VALUE="$(cat "${!VAR_FILE}")"
-    elif [[ "${!VAR_DOTENV_FILE:-}" ]]; then
+    elif [[ -n "${!VAR_DOTENV_FILE:-}" ]]; then
         VALUE="$(cat "${!VAR_DOTENV_FILE}")"
-    elif [[ "${!VAR_DOTENV:-}" ]]; then
+    elif [[ -n "${!VAR_DOTENV:-}" ]]; then
         VALUE="${!VAR_DOTENV}"
     fi
 
