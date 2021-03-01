@@ -1,5 +1,6 @@
 #!/bin/bash
 
+ENV_FILE="/.env"
 DATA_DIR="/bitwarden/data"
 DATA_DB="${DATA_DIR}/db.sqlite3"
 DATA_CONFIG="${DATA_DIR}/config.json"
@@ -84,6 +85,55 @@ function send_mail_content() {
 }
 
 ########################################
+# Export variables from .env file.
+# Arguments:
+#     None
+# Outputs:
+#     variables with prefix 'DOTENV_'
+# Reference:
+#     https://gist.github.com/judy2k/7656bfe3b322d669ef75364a46327836#gistcomment-3632918
+########################################
+function export_env_file() {
+    if [[ -f "${ENV_FILE}" ]]; then
+        color blue "find \"${ENV_FILE}\" file and export variables"
+        set -a
+        source <(cat "${ENV_FILE}" | sed -e '/^#/d;/^\s*$/d' -e 's/\(\w*\)[ \t]*=[ \t]*\(.*\)/DOTENV_\1=\2/')
+        set +a
+    fi
+}
+
+########################################
+# Get variables from
+#     environment variables,
+#     secret file in environment variables,
+#     secret file in .env file,
+#     environment variables in .env file.
+# Arguments:
+#     variable name
+# Outputs:
+#     variable value
+########################################
+function get_env() {
+    local VAR="$1"
+    local VAR_FILE="${VAR}_FILE"
+    local VAR_DOTENV="DOTENV_${VAR}"
+    local VAR_DOTENV_FILE="DOTENV_${VAR_FILE}"
+    local VALUE=""
+
+    if [[ -n "${!VAR:-}" ]]; then
+        VALUE="${!VAR}"
+    elif [[ -n "${!VAR_FILE:-}" ]]; then
+        VALUE="$(cat "${!VAR_FILE}")"
+    elif [[ -n "${!VAR_DOTENV_FILE:-}" ]]; then
+        VALUE="$(cat "${!VAR_DOTENV_FILE}")"
+    elif [[ -n "${!VAR_DOTENV:-}" ]]; then
+        VALUE="${!VAR_DOTENV}"
+    fi
+
+    export "${VAR}=${VALUE}"
+}
+
+########################################
 # Initialization environment variables.
 # Arguments:
 #     None
@@ -91,28 +141,26 @@ function send_mail_content() {
 #     environment variables
 ########################################
 function init_env() {
+    # export
+    export_env_file
+
     # CRON
-    local CRON_DEFAULT="5 * * * *"
-    if [[ -z "${CRON}" ]]; then
-        CRON="${CRON_DEFAULT}"
-    fi
+    get_env CRON
+    CRON="${CRON:-"5 * * * *"}"
 
     # RCLONE_REMOTE_NAME
-    local RCLONE_REMOTE_NAME_DEFAULT="BitwardenBackup"
-    if [[ -z "${RCLONE_REMOTE_NAME}" ]]; then
-        RCLONE_REMOTE_NAME="${RCLONE_REMOTE_NAME_DEFAULT}"
-    fi
+    get_env RCLONE_REMOTE_NAME
+    RCLONE_REMOTE_NAME="${RCLONE_REMOTE_NAME:-"BitwardenBackup"}"
 
     # RCLONE_REMOTE_DIR
-    local RCLONE_REMOTE_DIR_DEFAULT="/BitwardenBackup/"
-    if [[ -z "${RCLONE_REMOTE_DIR}" ]]; then
-        RCLONE_REMOTE_DIR="${RCLONE_REMOTE_DIR_DEFAULT}"
-    fi
+    get_env RCLONE_REMOTE_DIR
+    RCLONE_REMOTE_DIR="${RCLONE_REMOTE_DIR:-"/BitwardenBackup/"}"
 
     # RCLONE_REMOTE
     RCLONE_REMOTE="${RCLONE_REMOTE_NAME}:${RCLONE_REMOTE_DIR}"
 
     # ZIP_ENABLE
+    get_env ZIP_ENABLE
     ZIP_ENABLE=$(echo "${ZIP_ENABLE}" | tr '[a-z]' '[A-Z]')
     if [[ "${ZIP_ENABLE}" == "FALSE" ]]; then
         ZIP_ENABLE="FALSE"
@@ -121,11 +169,11 @@ function init_env() {
     fi
 
     # ZIP_PASSWORD
-    if [[ -z "${ZIP_PASSWORD}" ]]; then
-        ZIP_PASSWORD="WHEREISMYPASSWORD?"
-    fi
+    get_env ZIP_PASSWORD
+    ZIP_PASSWORD="${ZIP_PASSWORD:-"WHEREISMYPASSWORD?"}"
 
     # ZIP_TYPE
+    get_env ZIP_TYPE
     ZIP_TYPE=$(echo "${ZIP_TYPE}" | tr '[A-Z]' '[a-z]')
     if [[ "${ZIP_TYPE}" == "7z" ]]; then
         ZIP_TYPE="7z"
@@ -134,24 +182,26 @@ function init_env() {
     fi
 
     # BACKUP_KEEP_DAYS
-    local BACKUP_KEEP_DAYS_DEFAULT="0"
-    if [[ -z "${BACKUP_KEEP_DAYS}" ]]; then
-        BACKUP_KEEP_DAYS="${BACKUP_KEEP_DAYS_DEFAULT}"
-    fi
+    get_env BACKUP_KEEP_DAYS
+    BACKUP_KEEP_DAYS="${BACKUP_KEEP_DAYS:-"0"}"
 
     # BACKUP_FILE_DATE_FORMAT
+    get_env BACKUP_FILE_DATE_SUFFIX
     BACKUP_FILE_DATE_FORMAT=$(echo "%Y%m%d${BACKUP_FILE_DATE_SUFFIX}" | sed 's/[^0-9a-zA-Z%_-]//g')
 
     # MAIL_SMTP_ENABLE
     # MAIL_TO
+    get_env MAIL_SMTP_ENABLE
+    get_env MAIL_TO
     MAIL_SMTP_ENABLE=$(echo "${MAIL_SMTP_ENABLE}" | tr '[a-z]' '[A-Z]')
-    if [[ "${MAIL_SMTP_ENABLE}" == "TRUE" && -n "${MAIL_TO}" ]]; then
+    if [[ "${MAIL_SMTP_ENABLE}" == "TRUE" && "${MAIL_TO}" ]]; then
         MAIL_SMTP_ENABLE="TRUE"
     else
         MAIL_SMTP_ENABLE="FALSE"
     fi
 
     # MAIL_WHEN_SUCCESS
+    get_env MAIL_WHEN_SUCCESS
     MAIL_WHEN_SUCCESS=$(echo "${MAIL_WHEN_SUCCESS}" | tr '[a-z]' '[A-Z]')
     if [[ "${MAIL_WHEN_SUCCESS}" == "FALSE" ]]; then
         MAIL_WHEN_SUCCESS="FALSE"
@@ -160,6 +210,7 @@ function init_env() {
     fi
 
     # MAIL_WHEN_FAILURE
+    get_env MAIL_WHEN_FAILURE
     MAIL_WHEN_FAILURE=$(echo "${MAIL_WHEN_FAILURE}" | tr '[a-z]' '[A-Z]')
     if [[ "${MAIL_WHEN_FAILURE}" == "FALSE" ]]; then
         MAIL_WHEN_FAILURE="FALSE"
@@ -168,6 +219,7 @@ function init_env() {
     fi
 
     # TIMEZONE
+    get_env TIMEZONE
     local TIMEZONE_MATCHED_COUNT=$(ls "/usr/share/zoneinfo/${TIMEZONE}" 2> /dev/null | wc -l)
     if [[ "${TIMEZONE_MATCHED_COUNT}" -ne 1 ]]; then
         TIMEZONE="UTC"
