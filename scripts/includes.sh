@@ -44,7 +44,7 @@ function check_rclone_connection() {
 ########################################
 function check_file_exist() {
     if [[ ! -f "$1" ]]; then
-        color red "cannot access $2: No such file"
+        color red "cannot access $1: No such file"
         exit 1
     fi
 }
@@ -56,7 +56,7 @@ function check_file_exist() {
 ########################################
 function check_dir_exist() {
     if [[ ! -d "$1" ]]; then
-        color red "cannot access $2: No such directory"
+        color red "cannot access $1: No such directory"
         exit 1
     fi
 }
@@ -162,6 +162,7 @@ function get_env() {
 ########################################
 function init_env() {
     # export
+    export_env_file
 
     init_env_dir
 
