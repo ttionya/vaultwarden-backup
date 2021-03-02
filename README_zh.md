@@ -62,6 +62,8 @@ docker run --rm -it \
 
 确保你的 bitwarden_rs 容器被命名为 `bitwardenrs`，否则你需要自行替换 docker run 的 `--volumes-from` 部分。
 
+默认情况下 bitwarden_rs 的数据文件夹是 `/data`，你需要显式使用环境变量 `DATA_DIR` 指定数据文件夹。
+
 使用默认设置启动容器（每小时的 05 分自动备份）。
 
 ```shell
@@ -70,7 +72,8 @@ docker run -d \
   --name bitwardenrs_backup \
   --volumes-from=bitwardenrs \
   --mount type=volume,source=bitwardenrs-rclone-data,target=/config/ \
-  -e RCLONE_REMOTE_NAME="YouRemoteName"
+  -e RCLONE_REMOTE_NAME="YouRemoteName" \
+  -e DATA_DIR="/data" \
   ttionya/bitwardenrs-backup:latest
 ```
 
@@ -104,7 +107,7 @@ docker-compose down
 
 首先进入备份文件所在目录。
 
-如果你使用的是自动备份，请确认 bitwarden_rs 卷的命名，并替换 `--mount` `source` 部分。
+如果你使用的是自动备份，请确认 bitwarden_rs 卷的命名，并替换 `--mount` `source` 部分。同时不要忘记使用环境变量 `DATA_DIR` 指定数据目录（`-e DATA_DIR="/data"`）。
 
 ```shell
 docker run --rm -it \
@@ -255,6 +258,26 @@ Rclone 远程名称，你可以自己修改命名。
 备份失败时发送邮件。
 
 默认值：`TRUE`
+
+#### DATA_DIR
+
+指定存放 bitwarden_rs 数据的目录。
+
+当使用 `Docker Compose` 时，你一般不需要修改它，但是当你使用自动备份时，你通常需要将它修改为 `/data`。
+
+默认值：`/bitwarden/data`
+
+#### DATA_DB
+
+指定 sqlite 数据库文件的路径，你不需要修改它。
+
+默认值：`${DATA_DIR}/db.sqlite3`
+
+#### DATA_ATTACHMENTS
+
+指定附件文件夹路径，你不需要修改它。
+
+默认值：`${DATA_DIR}/attachments`
 
 
 

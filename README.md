@@ -62,7 +62,9 @@ Note that you need to set the environment variable `RCLONE_REMOTE_NAME` to a rem
 
 Make sure that your bitwarden_rs container is named `bitwardenrs` otherwise you have to replace the container name in the `--volumes-from` section of the docker run call.
 
-Start backup container with default settings (automatic backup at 5 minute every hour)
+By default the data folder for bitwarden_rs is `/data`, you need to explicitly specify the data folder using the environment variable `DATA_DIR`.
+
+Start the backup container with default settings. (automatic backup at 5 minute every hour)
 
 ```shell
 docker run -d \
@@ -70,7 +72,8 @@ docker run -d \
   --name bitwardenrs_backup \
   --volumes-from=bitwardenrs \
   --mount type=volume,source=bitwardenrs-rclone-data,target=/config/ \
-  -e RCLONE_REMOTE_NAME="YouRemoteName"
+  -e RCLONE_REMOTE_NAME="YouRemoteName" \
+  -e DATA_DIR="/data" \
   ttionya/bitwardenrs-backup:latest
 ```
 
@@ -102,7 +105,7 @@ Because the host's files are not accessible in the Docker container, you need to
 
 And go to the directory where your backup files are located.
 
-If you are using automatic backups, please confirm the bitwarden_rs volume and replace the `--mount` `source` section.
+If you are using automatic backups, please confirm the bitwarden_rs volume and replace the `--mount` `source` section. Also don't forget to use the environment variable `DATA_DIR` to specify the data directory (`-e DATA_DIR="/data"`).
 
 ```shell
 docker run --rm -it \
@@ -254,6 +257,26 @@ Default: `TRUE`
 Send email when backup fails.
 
 Default: `TRUE`
+
+#### DATA_DIR
+
+The folder where bitwarden_rs stores its data.
+
+When using `Docker Compose`, you don't need to change it, but when using automatic backup, you need to change it to `/data`.
+
+Default: `/bitwarden/data`
+
+#### DATA_DB
+
+Set the sqlite database file path, you do not need to modify it.
+
+Default: `${DATA_DIR}/db.sqlite3`
+
+#### DATA_ATTACHMENTS
+
+Set the attachment folder path, you don't need to modify it.
+
+Default: `${DATA_DIR}/attachments`
 
 
 
