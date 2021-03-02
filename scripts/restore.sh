@@ -34,15 +34,15 @@ function restore_zip() {
     fi
 
     # get restore db file
-    FIND_FILE_DB="$( basename "$(ls ${RESTORE_EXTRACT_DIR}/db.*.sqlite3) 2>/dev/null" )"
+    FIND_FILE_DB="$( basename "$(ls ${RESTORE_EXTRACT_DIR}/db.*.sqlite3 2>/dev/null)" )"
     RESTORE_FILE_DB="${FIND_FILE_DB:-}"
 
     # get restore config file
-    FIND_FILE_CONFIG="$( basename "$(ls ${RESTORE_EXTRACT_DIR}/config.*.json) 2>/dev/null" )"
+    FIND_FILE_CONFIG="$( basename "$(ls ${RESTORE_EXTRACT_DIR}/config.*.json 2>/dev/null)" )"
     RESTORE_FILE_CONFIG="${FIND_FILE_CONFIG:-}"
 
     # get restore attachments file
-    FIND_FILE_ATTACHMENTS="$( basename "$(ls ${RESTORE_EXTRACT_DIR}/attachments.*.tar) 2>/dev/null" )"
+    FIND_FILE_ATTACHMENTS="$( basename "$(ls ${RESTORE_EXTRACT_DIR}/attachments.*.tar 2>/dev/null)" )"
     RESTORE_FILE_ATTACHMENTS="${FIND_FILE_ATTACHMENTS:-}"
 
     RESTORE_FILE_ZIP=""
@@ -79,14 +79,14 @@ function restore_attachments() {
 
     # When customizing the attachments folder, the root directory of the tar file
     # is the directory name at the time of packing
-    local RESTORE_FILE_ATTACHMENTS_DIRNAME=$(tar -tf "${DATA_ATTACHMENTS}" | head -n 1 | xargs basename)
+    local RESTORE_FILE_ATTACHMENTS_DIRNAME=$(tar -tf "${RESTORE_FILE_ATTACHMENTS}" | head -n 1 | xargs basename)
     local DATA_ATTACHMENTS_EXTRACT="${DATA_ATTACHMENTS}.extract"
 
-    rm -rf "${DATA_ATTACHMENTS}"
+    rm -rf "${DATA_ATTACHMENTS}" "${DATA_ATTACHMENTS_EXTRACT}"
     mkdir "${DATA_ATTACHMENTS_EXTRACT}"
     tar -x -C "${DATA_ATTACHMENTS_EXTRACT}" -f "${RESTORE_FILE_ATTACHMENTS}"
     mv "${DATA_ATTACHMENTS_EXTRACT}/${RESTORE_FILE_ATTACHMENTS_DIRNAME}" "${DATA_ATTACHMENTS}"
-    rf -rf "${DATA_ATTACHMENTS_EXTRACT}"
+    rm -rf "${DATA_ATTACHMENTS_EXTRACT}"
 
     if [[ $? == 0 ]]; then
         color green "restore bitwarden_rs attachments successful"

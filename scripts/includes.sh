@@ -287,7 +287,7 @@ function init_env_dir() {
 
     # DATA_ATTACHMENTS
     get_env DATA_ATTACHMENTS
-    DATA_ATTACHMENTS="$(realpath "${DATA_ATTACHMENTS:-"${DATA_DIR}/attachments"}")"
+    DATA_ATTACHMENTS="$(dirname "${DATA_ATTACHMENTS:-"${DATA_DIR}/attachments"}/useless")"
     DATA_ATTACHMENTS_DIRNAME="$(dirname "${DATA_ATTACHMENTS}")"
     DATA_ATTACHMENTS_BASENAME="$(basename "${DATA_ATTACHMENTS}")"
 }
