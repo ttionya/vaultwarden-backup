@@ -77,8 +77,16 @@ function restore_config() {
 function restore_attachments() {
     color blue "restore bitwarden_rs attachments"
 
+    # When customizing the attachments folder, the root directory of the tar file
+    # is the directory name at the time of packing
+    local RESTORE_FILE_ATTACHMENTS_DIRNAME=$(tar -tf "${DATA_ATTACHMENTS}" | head -n 1 | xargs basename)
+    local DATA_ATTACHMENTS_EXTRACT="${DATA_ATTACHMENTS}.extract"
+
     rm -rf "${DATA_ATTACHMENTS}"
-    tar -x -C "${DATA_DIR}" -f "${RESTORE_FILE_ATTACHMENTS}"
+    mkdir "${DATA_ATTACHMENTS_EXTRACT}"
+    tar -x -C "${DATA_ATTACHMENTS_EXTRACT}" -f "${RESTORE_FILE_ATTACHMENTS}"
+    mv "${DATA_ATTACHMENTS_EXTRACT}/${RESTORE_FILE_ATTACHMENTS_DIRNAME}" "${DATA_ATTACHMENTS}"
+    rf -rf "${DATA_ATTACHMENTS_EXTRACT}"
 
     if [[ $? == 0 ]]; then
         color green "restore bitwarden_rs attachments successful"
@@ -187,6 +195,7 @@ function restore() {
         esac
     done
 
+    init_env_dir
     check_empty_input
     check_data_dir_exist
 

@@ -1,10 +1,6 @@
 #!/bin/bash
 
 ENV_FILE="/.env"
-DATA_DIR="/bitwarden/data"
-DATA_DB="${DATA_DIR}/db.sqlite3"
-DATA_CONFIG="${DATA_DIR}/config.json"
-DATA_ATTACHMENTS="${DATA_DIR}/attachments"
 BACKUP_DIR="/bitwarden/backup"
 RESTORE_DIR="/bitwarden/restore"
 RESTORE_EXTRACT_DIR="/bitwarden/extract"
@@ -24,7 +20,7 @@ function color() {
         green)   echo -e "\033[32m$2\033[0m" ;;
         yellow)  echo -e "\033[33m$2\033[0m" ;;
         blue)    echo -e "\033[34m$2\033[0m" ;;
-        none)    echo $2 ;;
+        none)    echo "$2" ;;
     esac
 }
 
@@ -37,6 +33,30 @@ function check_rclone_connection() {
     rclone mkdir "${RCLONE_REMOTE}"
     if [[ $? != 0 ]]; then
         color red "storage system connection failure"
+        exit 1
+    fi
+}
+
+########################################
+# Check file is exist.
+# Arguments:
+#     file
+########################################
+function check_file_exist() {
+    if [[ ! -f "$1" ]]; then
+        color red "cannot access $2: No such file"
+        exit 1
+    fi
+}
+
+########################################
+# Check directory is exist.
+# Arguments:
+#     directory
+########################################
+function check_dir_exist() {
+    if [[ ! -d "$1" ]]; then
+        color red "cannot access $2: No such directory"
         exit 1
     fi
 }
@@ -142,7 +162,8 @@ function get_env() {
 ########################################
 function init_env() {
     # export
-    export_env_file
+
+    init_env_dir
 
     # CRON
     get_env CRON
@@ -226,6 +247,11 @@ function init_env() {
     fi
 
     color yellow "========================================"
+    color yellow "DATA_DIR: ${DATA_DIR}"
+    color yellow "DATA_DB: ${DATA_DB}"
+    color yellow "DATA_CONFIG: ${DATA_CONFIG}"
+    color yellow "DATA_ATTACHMENTS: ${DATA_ATTACHMENTS}"
+    color yellow "========================================"
     color yellow "CRON: ${CRON}"
     color yellow "RCLONE_REMOTE_NAME: ${RCLONE_REMOTE_NAME}"
     color yellow "RCLONE_REMOTE_DIR: ${RCLONE_REMOTE_DIR}"
@@ -243,4 +269,24 @@ function init_env() {
     fi
     color yellow "TIMEZONE: ${TIMEZONE}"
     color yellow "========================================"
+}
+
+function init_env_dir() {
+    # DATA_DIR
+    get_env DATA_DIR
+    DATA_DIR="${DATA_DIR:-"/bitwarden/data"}"
+    check_dir_exist "${DATA_DIR}"
+
+    # DATA_DB
+    get_env DATA_DB
+    DATA_DB="${DATA_DB:-"${DATA_DIR}/db.sqlite3"}"
+
+    # DATA_CONFIG
+    DATA_CONFIG="${DATA_DIR}/config.json"
+
+    # DATA_ATTACHMENTS
+    get_env DATA_ATTACHMENTS
+    DATA_ATTACHMENTS="$(realpath "${DATA_ATTACHMENTS:-"${DATA_DIR}/attachments"}")"
+    DATA_ATTACHMENTS_DIRNAME="$(dirname "${DATA_ATTACHMENTS}")"
+    DATA_ATTACHMENTS_BASENAME="$(basename "${DATA_ATTACHMENTS}")"
 }

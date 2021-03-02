@@ -32,7 +32,7 @@ function backup_config() {
     color blue "backup bitwarden_rs config"
 
     if [[ -f "${DATA_CONFIG}" ]]; then
-        cp -f "${DATA_DIR}/config.json" "${BACKUP_FILE_CONFIG}"
+        cp -f "${DATA_CONFIG}" "${BACKUP_FILE_CONFIG}"
     else
         color yellow "not found bitwarden_rs config, skipping"
     fi
@@ -41,10 +41,8 @@ function backup_config() {
 function backup_attachments() {
     color blue "backup bitwarden_rs attachments"
 
-    local DATA_ATTACHMENTS="attachments"
-
-    if [[ -d "${DATA_DIR}/${DATA_ATTACHMENTS}" ]]; then
-        tar -c -C "${DATA_DIR}" -f "${BACKUP_FILE_ATTACHMENTS}" "${DATA_ATTACHMENTS}"
+    if [[ -d "${DATA_ATTACHMENTS}" ]]; then
+        tar -c -C "${DATA_ATTACHMENTS_DIRNAME}" -f "${BACKUP_FILE_ATTACHMENTS}" "${DATA_ATTACHMENTS_BASENAME}"
 
         color blue "display attachments tar file list"
 
