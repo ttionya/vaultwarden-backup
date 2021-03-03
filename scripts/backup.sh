@@ -90,7 +90,7 @@ function upload() {
     color blue "upload backup file to storage system"
 
     # upload file not exist
-    if [[ ! -f "${UPLOAD_FILE}" ]]; then
+    if [[ ! -e "${UPLOAD_FILE}" ]]; then
         color red "upload file not found"
 
         send_mail_content "FALSE" "File upload failed at $(date +"%Y-%m-%d %H:%M:%S %Z"). Reason: Upload file not found."
