@@ -70,7 +70,7 @@ Start the backup container with default settings. (automatic backup at 5 minute 
 docker run -d \
   --restart=always \
   --name bitwardenrs_backup \
-  --volumes-from=bitwardenrs \
+  --volumes-from=bitwarden \
   --mount type=volume,source=bitwardenrs-rclone-data,target=/config/ \
   -e RCLONE_REMOTE_NAME="YouRemoteName" \
   -e DATA_DIR="/data" \
