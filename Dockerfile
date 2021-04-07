@@ -1,4 +1,4 @@
-FROM rclone/rclone:1.54.0
+FROM rclone/rclone:1.55.0
 
 LABEL "repository"="https://github.com/ttionya/BitwardenRS-Backup" \
   "homepage"="https://github.com/ttionya/BitwardenRS-Backup" \
