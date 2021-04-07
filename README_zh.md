@@ -60,7 +60,7 @@ docker run --rm -it \
 
 #### 自动备份
 
-确保你的 bitwarden_rs 容器被命名为 `bitwardenrs`，否则你需要自行替换 docker run 的 `--volumes-from` 部分。
+确保你的 bitwarden_rs 容器被命名为 `bitwarden`，否则你需要自行替换 docker run 的 `--volumes-from` 部分。
 
 默认情况下 bitwarden_rs 的数据文件夹是 `/data`，你需要显式使用环境变量 `DATA_DIR` 指定数据文件夹。
 
@@ -70,7 +70,7 @@ docker run --rm -it \
 docker run -d \
   --restart=always \
   --name bitwardenrs_backup \
-  --volumes-from=bitwardenrs \
+  --volumes-from=bitwarden \
   --mount type=volume,source=bitwardenrs-rclone-data,target=/config/ \
   -e RCLONE_REMOTE_NAME="YouRemoteName" \
   -e DATA_DIR="/data" \

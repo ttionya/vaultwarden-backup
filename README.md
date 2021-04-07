@@ -60,7 +60,7 @@ Note that you need to set the environment variable `RCLONE_REMOTE_NAME` to a rem
 
 #### Automatic Backups
 
-Make sure that your bitwarden_rs container is named `bitwardenrs` otherwise you have to replace the container name in the `--volumes-from` section of the docker run call.
+Make sure that your bitwarden_rs container is named `bitwarden` otherwise you have to replace the container name in the `--volumes-from` section of the docker run call.
 
 By default the data folder for bitwarden_rs is `/data`, you need to explicitly specify the data folder using the environment variable `DATA_DIR`.
 
@@ -70,7 +70,7 @@ Start the backup container with default settings. (automatic backup at 5 minute 
 docker run -d \
   --restart=always \
   --name bitwardenrs_backup \
-  --volumes-from=bitwardenrs \
+  --volumes-from=bitwarden \
   --mount type=volume,source=bitwardenrs-rclone-data,target=/config/ \
   -e RCLONE_REMOTE_NAME="YouRemoteName" \
   -e DATA_DIR="/data" \
