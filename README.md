@@ -18,6 +18,7 @@ This tool supports backing up the following files or directories.
 - `db.sqlite3`
 - `config.json`
 - `attachments` (directory)
+- `sends` (directory)
 
 
 
@@ -130,6 +131,10 @@ If you didn't set the `ZIP_ENABLE` environment variable to `TRUE` when you backe
 ##### --attachments-file
 
 If you didn't set the `ZIP_ENABLE` environment variable to `TRUE` when you backed up the file, you need to use this option to specify the `attachments.tar` file.
+
+##### --sends-file
+
+If you didn't set the `ZIP_ENABLE` environment variable to `TRUE` when you backed up the file, you need to use this option to specify the `sends.tar` file.
 
 ##### --zip-file
 
@@ -277,6 +282,12 @@ Default: `${DATA_DIR}/db.sqlite3`
 Set the attachment folder path, you don't need to modify it.
 
 Default: `${DATA_DIR}/attachments`
+
+#### DATA_SENDS
+
+Set the sends folder path, you don't need to modify it.
+
+Default: `${DATA_DIR}/sends`
 
 
 
