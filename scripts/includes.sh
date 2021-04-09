@@ -252,6 +252,7 @@ function init_env() {
     color yellow "DATA_DB: ${DATA_DB}"
     color yellow "DATA_CONFIG: ${DATA_CONFIG}"
     color yellow "DATA_ATTACHMENTS: ${DATA_ATTACHMENTS}"
+    color yellow "DATA_SENDS: ${DATA_SENDS}"
     color yellow "========================================"
     color yellow "CRON: ${CRON}"
     color yellow "RCLONE_REMOTE_NAME: ${RCLONE_REMOTE_NAME}"
@@ -290,4 +291,10 @@ function init_env_dir() {
     DATA_ATTACHMENTS="$(dirname "${DATA_ATTACHMENTS:-"${DATA_DIR}/attachments"}/useless")"
     DATA_ATTACHMENTS_DIRNAME="$(dirname "${DATA_ATTACHMENTS}")"
     DATA_ATTACHMENTS_BASENAME="$(basename "${DATA_ATTACHMENTS}")"
+
+    # DATA_SEND
+    get_env DATA_SENDS
+    DATA_SENDS="$(dirname "${DATA_SENDS:-"${DATA_DIR}/sends"}/useless")"
+    DATA_SENDS_DIRNAME="$(dirname "${DATA_SENDS}")"
+    DATA_SENDS_BASENAME="$(basename "${DATA_SENDS}")"
 }

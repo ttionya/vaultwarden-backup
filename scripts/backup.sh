@@ -14,6 +14,8 @@ function backup_init() {
     BACKUP_FILE_CONFIG="${BACKUP_DIR}/config.${NOW}.json"
     # backup bitwarden_rs attachments directory
     BACKUP_FILE_ATTACHMENTS="${BACKUP_DIR}/attachments.${NOW}.tar"
+    # backup bitwarden_rs sends directory
+    BACKUP_FILE_SENDS="${BACKUP_DIR}/sends.${NOW}.tar"
     # backup zip file
     BACKUP_FILE_ZIP="${BACKUP_DIR}/backup.${NOW}.${ZIP_TYPE}"
 }
@@ -52,12 +54,27 @@ function backup_attachments() {
     fi
 }
 
+function backup_sends() {
+    color blue "backup bitwarden_rs sends"
+
+    if [[ -d "${DATA_SENDS}" ]]; then
+        tar -c -C "${DATA_SENDS_DIRNAME}" -f "${BACKUP_FILE_SENDS}" "${DATA_SENDS_BASENAME}"
+
+        color blue "display sends tar file list"
+
+        tar -tf "${BACKUP_FILE_SENDS}"
+    else
+        color yellow "not found bitwarden_rs sends directory, skipping"
+    fi
+}
+
 function backup() {
     mkdir -p "${BACKUP_DIR}"
 
     backup_db
     backup_config
     backup_attachments
+    backup_sends
 
     ls -lah "${BACKUP_DIR}"
 }

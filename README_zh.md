@@ -18,6 +18,7 @@
 - `db.sqlite3`
 - `config.json`
 - `attachments` (directory)
+- `sends` (directory)
 
 
 
@@ -132,6 +133,10 @@ docker run --rm -it \
 ##### --attachments-file
 
 如果你在备份文件时没有将 `ZIP_ENABLE` 环境变量设置为 `TRUE`，那你需要用这个选项来指定 `attachments.tar` 文件。
+
+##### --sends-file
+
+如果你在备份文件时没有将 `ZIP_ENABLE` 环境变量设置为 `TRUE`，那你需要用这个选项来指定 `sends.tar` 文件。
 
 ##### --zip-file
 
@@ -278,6 +283,12 @@ Rclone 远程名称，你可以自己修改命名。
 指定附件文件夹路径，你不需要修改它。
 
 默认值：`${DATA_DIR}/attachments`
+
+#### DATA_SENDS
+
+指定 sends 文件夹路径，你不需要修改它。
+
+默认值：`${DATA_DIR}/sends`
 
 
 

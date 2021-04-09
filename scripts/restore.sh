@@ -5,6 +5,7 @@
 RESTORE_FILE_DB=""
 RESTORE_FILE_CONFIG=""
 RESTORE_FILE_ATTACHMENTS=""
+RESTORE_FILE_SENDS=""
 RESTORE_FILE_ZIP=""
 RESTORE_FILE_DIR="${RESTORE_DIR}"
 ZIP_PASSWORD=""
@@ -19,6 +20,7 @@ function restore_zip() {
     local FIND_FILE_DB
     local FIND_FILE_CONFIG
     local FIND_FILE_ATTACHMENTS
+    local FIND_FILE_SENDS
 
     if [[ -n "${ZIP_PASSWORD}" ]]; then
         7z e -aoa -p"${ZIP_PASSWORD}" -o"${RESTORE_EXTRACT_DIR}" "${RESTORE_FILE_ZIP}"
@@ -44,6 +46,10 @@ function restore_zip() {
     # get restore attachments file
     FIND_FILE_ATTACHMENTS="$( basename "$(ls ${RESTORE_EXTRACT_DIR}/attachments.*.tar 2>/dev/null)" )"
     RESTORE_FILE_ATTACHMENTS="${FIND_FILE_ATTACHMENTS:-}"
+
+    # get restore sends file
+    FIND_FILE_SENDS="$( basename "$(ls ${RESTORE_EXTRACT_DIR}/sends.*.tar 2>/dev/null)" )"
+    RESTORE_FILE_SENDS="${FIND_FILE_SENDS:-}"
 
     RESTORE_FILE_ZIP=""
     RESTORE_FILE_DIR="${RESTORE_EXTRACT_DIR}"
@@ -95,6 +101,27 @@ function restore_attachments() {
     fi
 }
 
+function restore_sends() {
+    color blue "restore bitwarden_rs sends"
+
+    # When customizing the sends folder, the root directory of the tar file
+    # is the directory name at the time of packing
+    local RESTORE_FILE_SENDS_DIRNAME=$(tar -tf "${RESTORE_FILE_SENDS}" | head -n 1 | xargs basename)
+    local DATA_SENDS_EXTRACT="${DATA_SENDS}.extract"
+
+    rm -rf "${DATA_SENDS}" "${DATA_SENDS_EXTRACT}"
+    mkdir "${DATA_SENDS_EXTRACT}"
+    tar -x -C "${DATA_SENDS_EXTRACT}" -f "${RESTORE_FILE_SENDS}"
+    mv "${DATA_SENDS_EXTRACT}/${RESTORE_FILE_SENDS_DIRNAME}" "${DATA_SENDS}"
+    rm -rf "${DATA_SENDS_EXTRACT}"
+
+    if [[ $? == 0 ]]; then
+        color green "restore bitwarden_rs sends successful"
+    else
+        color red "restore bitwarden_rs sends failed"
+    fi
+}
+
 function check_restore_file_exist() {
     if [[ ! -f "${RESTORE_FILE_DIR}/$1" ]]; then
         color red "$2: cannot access $1: No such file"
@@ -130,6 +157,12 @@ function restore_file() {
             RESTORE_FILE_ATTACHMENTS="${RESTORE_FILE_DIR}/${RESTORE_FILE_ATTACHMENTS}"
         fi
 
+        if [[ -n "${RESTORE_FILE_SENDS}" ]]; then
+            check_restore_file_exist "${RESTORE_FILE_SENDS}" "--sends-file"
+
+            RESTORE_FILE_SENDS="${RESTORE_FILE_DIR}/${RESTORE_FILE_SENDS}"
+        fi
+
         if [[ -n "${RESTORE_FILE_DB}" ]]; then
             restore_db
         fi
@@ -139,11 +172,14 @@ function restore_file() {
         if [[ -n "${RESTORE_FILE_ATTACHMENTS}" ]]; then
             restore_attachments
         fi
+        if [[ -n "${RESTORE_FILE_SENDS}" ]]; then
+            restore_sends
+        fi
     fi
 }
 
 function check_empty_input() {
-    if [[ -z "${RESTORE_FILE_ZIP}${RESTORE_FILE_DB}${RESTORE_FILE_CONFIG}${RESTORE_FILE_ATTACHMENTS}" ]]; then
+    if [[ -z "${RESTORE_FILE_ZIP}${RESTORE_FILE_DB}${RESTORE_FILE_CONFIG}${RESTORE_FILE_ATTACHMENTS}${RESTORE_FILE_SENDS}" ]]; then
         color yellow "Empty input"
         color none ""
         color none "Find out more at https://github.com/ttionya/BitwardenRS-Backup#restore"
@@ -186,6 +222,11 @@ function restore() {
             --attachments-file)
                 shift
                 RESTORE_FILE_ATTACHMENTS="$(basename "$1")"
+                shift
+                ;;
+            --sends-file)
+                shift
+                RESTORE_FILE_SENDS="$(basename "$1")"
                 shift
                 ;;
             *)
