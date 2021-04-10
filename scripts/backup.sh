@@ -12,6 +12,8 @@ function backup_init() {
     BACKUP_FILE_DB="${BACKUP_DIR}/db.${NOW}.sqlite3"
     # backup bitwarden_rs config file
     BACKUP_FILE_CONFIG="${BACKUP_DIR}/config.${NOW}.json"
+    # backup bitwarden_rs rsakey files
+    BACKUP_FILE_RSAKEY="${BACKUP_DIR}/rsakey.${NOW}.tar"
     # backup bitwarden_rs attachments directory
     BACKUP_FILE_ATTACHMENTS="${BACKUP_DIR}/attachments.${NOW}.tar"
     # backup bitwarden_rs sends directory
@@ -37,6 +39,23 @@ function backup_config() {
         cp -f "${DATA_CONFIG}" "${BACKUP_FILE_CONFIG}"
     else
         color yellow "not found bitwarden_rs config, skipping"
+    fi
+}
+
+function backup_rsakey() {
+    color blue "backup bitwarden_rs rsakey"
+
+    local FIND_RSAKEY=$(find "${DATA_RSAKEY_DIRNAME}" -name "${DATA_RSAKEY_BASENAME}*" -printf "%P\n")
+    local FIND_RSAKEY_COUNT=$(echo "${FIND_RSAKEY}" | wc -L)
+
+    if [[ "${FIND_RSAKEY_COUNT}" -gt 0 ]]; then
+        echo "${FIND_RSAKEY}" | tar -c -C "${DATA_RSAKEY_DIRNAME}" -f "${BACKUP_FILE_RSAKEY}" -T -
+
+        color blue "display rsakey tar file list"
+
+        tar -tf "${BACKUP_FILE_RSAKEY}"
+    else
+        color yellow "not found bitwarden_rs rsakey, skipping"
     fi
 }
 
@@ -73,6 +92,7 @@ function backup() {
 
     backup_db
     backup_config
+    backup_rsakey
     backup_attachments
     backup_sends
 

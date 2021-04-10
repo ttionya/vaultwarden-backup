@@ -251,6 +251,7 @@ function init_env() {
     color yellow "DATA_DIR: ${DATA_DIR}"
     color yellow "DATA_DB: ${DATA_DB}"
     color yellow "DATA_CONFIG: ${DATA_CONFIG}"
+    color yellow "DATA_RSAKEY: ${DATA_RSAKEY}"
     color yellow "DATA_ATTACHMENTS: ${DATA_ATTACHMENTS}"
     color yellow "DATA_SENDS: ${DATA_SENDS}"
     color yellow "========================================"
@@ -285,6 +286,12 @@ function init_env_dir() {
 
     # DATA_CONFIG
     DATA_CONFIG="${DATA_DIR}/config.json"
+
+    # DATA_RSAKEY
+    get_env DATA_RSAKEY
+    DATA_RSAKEY="${DATA_RSAKEY:-"${DATA_DIR}/rsa_key"}"
+    DATA_RSAKEY_DIRNAME="$(dirname "${DATA_RSAKEY}")"
+    DATA_RSAKEY_BASENAME="$(basename "${DATA_RSAKEY}")"
 
     # DATA_ATTACHMENTS
     get_env DATA_ATTACHMENTS
