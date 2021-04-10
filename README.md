@@ -17,6 +17,7 @@ This tool supports backing up the following files or directories.
 
 - `db.sqlite3`
 - `config.json`
+- `rsa_key*` (multiple files)
 - `attachments` (directory)
 - `sends` (directory)
 
@@ -127,6 +128,10 @@ If you didn't set the `ZIP_ENABLE` environment variable to `TRUE` when you backe
 ##### --config-file
 
 If you didn't set the `ZIP_ENABLE` environment variable to `TRUE` when you backed up the file, you need to use this option to specify the `config.json` file.
+
+##### --rsakey-file
+
+If you didn't set the `ZIP_ENABLE` environment variable to `TRUE` when you backed up the file, you need to use this option to specify the `rsakey.tar` file.
 
 ##### --attachments-file
 
@@ -276,6 +281,12 @@ Default: `/bitwarden/data`
 Set the sqlite database file path, you do not need to modify it.
 
 Default: `${DATA_DIR}/db.sqlite3`
+
+#### DATA_RSAKEY
+
+Set the rsa_key file path, you don't need to modify it.
+
+Default: `${DATA_DIR}/rsa_key`
 
 #### DATA_ATTACHMENTS
 

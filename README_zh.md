@@ -17,8 +17,9 @@
 
 - `db.sqlite3`
 - `config.json`
-- `attachments` (directory)
-- `sends` (directory)
+- `rsa_key*` (多个文件)
+- `attachments` (目录)
+- `sends` (目录)
 
 
 
@@ -129,6 +130,10 @@ docker run --rm -it \
 ##### --config-file
 
 如果你在备份文件时没有将 `ZIP_ENABLE` 环境变量设置为 `TRUE`，那你需要用这个选项来指定 `config.json` 文件。
+
+##### --rsakey-file
+
+如果你在备份文件时没有将 `ZIP_ENABLE` 环境变量设置为 `TRUE`，那你需要用这个选项来指定 `rsakey.tar` 文件。
 
 ##### --attachments-file
 
@@ -277,6 +282,12 @@ Rclone 远程名称，你可以自己修改命名。
 指定 sqlite 数据库文件的路径，你不需要修改它。
 
 默认值：`${DATA_DIR}/db.sqlite3`
+
+#### DATA_RSAKEY
+
+指定 rsa_key 文件的路径，你不需要修改它。
+
+默认值：`${DATA_DIR}/rsa_key`
 
 #### DATA_ATTACHMENTS
 
