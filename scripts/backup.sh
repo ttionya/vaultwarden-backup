@@ -45,8 +45,8 @@ function backup_config() {
 function backup_rsakey() {
     color blue "backup bitwarden_rs rsakey"
 
-    local FIND_RSAKEY=$(find "${DATA_RSAKEY_DIRNAME}" -name "${DATA_RSAKEY_BASENAME}*" -printf "%P\n")
-    local FIND_RSAKEY_COUNT=$(echo "${FIND_RSAKEY}" | wc -L)
+    local FIND_RSAKEY=$(find "${DATA_RSAKEY_DIRNAME}" -name "${DATA_RSAKEY_BASENAME}*" | xargs -I {} basename {})
+    local FIND_RSAKEY_COUNT=$(echo "${FIND_RSAKEY}" | wc -l)
 
     if [[ "${FIND_RSAKEY_COUNT}" -gt 0 ]]; then
         echo "${FIND_RSAKEY}" | tar -c -C "${DATA_RSAKEY_DIRNAME}" -f "${BACKUP_FILE_RSAKEY}" -T -
