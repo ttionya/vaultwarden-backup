@@ -123,29 +123,12 @@ docker run --rm -it \
 
 #### 选项
 
-##### --db-file
-
-如果你在备份文件时没有将 `ZIP_ENABLE` 环境变量设置为 `TRUE`，那你需要用这个选项来指定 `db.sqlite3` 文件。
-
-##### --config-file
-
-如果你在备份文件时没有将 `ZIP_ENABLE` 环境变量设置为 `TRUE`，那你需要用这个选项来指定 `config.json` 文件。
-
-##### --rsakey-file
-
-如果你在备份文件时没有将 `ZIP_ENABLE` 环境变量设置为 `TRUE`，那你需要用这个选项来指定 `rsakey.tar` 文件。
-
-##### --attachments-file
-
-如果你在备份文件时没有将 `ZIP_ENABLE` 环境变量设置为 `TRUE`，那你需要用这个选项来指定 `attachments.tar` 文件。
-
-##### --sends-file
-
-如果你在备份文件时没有将 `ZIP_ENABLE` 环境变量设置为 `TRUE`，那你需要用这个选项来指定 `sends.tar` 文件。
+<details>
+<summary>你有一个名为 <code>backup</code> 的压缩文件</summary>
 
 ##### --zip-file
 
-如果你在备份文件时将 `ZIP_ENABLE` 环境变量设置为 `TRUE`，则需要使用这个选项来指定 `backup.zip` 文件。
+你需要使用这个选项来指定 `backup` 压缩文件。
 
 请确保压缩文件中的文件名没有被更改。
 
@@ -153,9 +136,36 @@ docker run --rm -it \
 
 **这是不安全的！！**
 
-如果 `backup.zip` 文件设置了密码，你可以用这个选项指定备份文件的密码。
+如果 `backup` 压缩文件设置了密码，你可以用这个选项指定备份文件的密码。
 
 不建议使用该选项，因为在没有使用该选项且存在密码时，程序会交互式地询问密码。
+
+</details>
+
+<details>
+<summary>你有多个独立的备份文件</summary>
+
+##### --db-file
+
+你需要用这个选项来指定 `db.sqlite3` 文件。
+
+##### --config-file
+
+你需要用这个选项来指定 `config.json` 文件。
+
+##### --rsakey-file
+
+你需要用这个选项来指定 `rsakey.tar` 文件。
+
+##### --attachments-file
+
+你需要用这个选项来指定 `attachments.tar` 文件。
+
+##### --sends-file
+
+你需要用这个选项来指定 `sends.tar` 文件。
+
+</details>
 
 
 
@@ -277,29 +287,36 @@ Rclone 远程名称，你可以自己修改命名。
 
 默认值：`/bitwarden/data`
 
+<details>
+<summary>其他环境变量</summary>
+
+> **你无需修改这些环境变量，除非你知道你在做什么。**
+
 #### DATA_DB
 
-指定 sqlite 数据库文件的路径，你不需要修改它。
+指定 sqlite 数据库文件的路径。
 
 默认值：`${DATA_DIR}/db.sqlite3`
 
 #### DATA_RSAKEY
 
-指定 rsa_key 文件的路径，你不需要修改它。
+指定 rsa_key 文件的路径。
 
 默认值：`${DATA_DIR}/rsa_key`
 
 #### DATA_ATTACHMENTS
 
-指定附件文件夹路径，你不需要修改它。
+指定 attachments 文件夹路径。
 
 默认值：`${DATA_DIR}/attachments`
 
 #### DATA_SENDS
 
-指定 sends 文件夹路径，你不需要修改它。
+指定 sends 文件夹路径。
 
 默认值：`${DATA_DIR}/sends`
+
+</details>
 
 
 

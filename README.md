@@ -121,39 +121,49 @@ See [Options](#options) for options information.
 
 #### Options
 
-##### --db-file
-
-If you didn't set the `ZIP_ENABLE` environment variable to `TRUE` when you backed up the file, you need to use this option to specify the `db.sqlite3` file.
-
-##### --config-file
-
-If you didn't set the `ZIP_ENABLE` environment variable to `TRUE` when you backed up the file, you need to use this option to specify the `config.json` file.
-
-##### --rsakey-file
-
-If you didn't set the `ZIP_ENABLE` environment variable to `TRUE` when you backed up the file, you need to use this option to specify the `rsakey.tar` file.
-
-##### --attachments-file
-
-If you didn't set the `ZIP_ENABLE` environment variable to `TRUE` when you backed up the file, you need to use this option to specify the `attachments.tar` file.
-
-##### --sends-file
-
-If you didn't set the `ZIP_ENABLE` environment variable to `TRUE` when you backed up the file, you need to use this option to specify the `sends.tar` file.
+<details>
+<summary>You have the compressed file named <code>backup</code></summary>
 
 ##### --zip-file
 
-If you set the `ZIP_ENABLE` environment variable to `TRUE` when you backed up the file, you need to use this option to specify the `backup.zip` file.
+You need to use this option to specify the `backup` compressed package.
 
-Make sure the file name in the zip file has not been changed.
+Make sure the file name in the compressed package has not been changed.
 
 ##### -p / --password
 
 THIS IS INSECURE!
 
-If the `backup.zip` file has a password, you can use this option to set the password to unzip it.
+If the `backup` compressed package has a password, you can use this option to set the password to extract it.
 
 If not, the password will be asked for interactively.
+
+</details>
+
+<details>
+<summary>You have multiple independent backup files</summary>
+
+##### --db-file
+
+You need to use this option to specify the `db.sqlite3` file.
+
+##### --config-file
+
+You need to use this option to specify the `config.json` file.
+
+##### --rsakey-file
+
+You need to use this option to specify the `rsakey.tar` file.
+
+##### --attachments-file
+
+You need to use this option to specify the `attachments.tar` file.
+
+##### --sends-file
+
+You need to use this option to specify the `sends.tar` file.
+
+</details>
 
 
 
@@ -276,29 +286,36 @@ When using `Docker Compose`, you don't need to change it, but when using automat
 
 Default: `/bitwarden/data`
 
+<details>
+<summary>Other environment variables</summary>
+
+> **You don't need to change these environment variables unless you know what you're doing.**
+
 #### DATA_DB
 
-Set the sqlite database file path, you do not need to modify it.
+Set the sqlite database file path.
 
 Default: `${DATA_DIR}/db.sqlite3`
 
 #### DATA_RSAKEY
 
-Set the rsa_key file path, you don't need to modify it.
+Set the rsa_key file path.
 
 Default: `${DATA_DIR}/rsa_key`
 
 #### DATA_ATTACHMENTS
 
-Set the attachment folder path, you don't need to modify it.
+Set the attachment folder path.
 
 Default: `${DATA_DIR}/attachments`
 
 #### DATA_SENDS
 
-Set the sends folder path, you don't need to modify it.
+Set the sends folder path.
 
 Default: `${DATA_DIR}/sends`
+
+</details>
 
 
 
