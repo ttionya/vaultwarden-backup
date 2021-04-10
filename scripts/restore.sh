@@ -4,6 +4,7 @@
 
 RESTORE_FILE_DB=""
 RESTORE_FILE_CONFIG=""
+RESTORE_FILE_RSAKEY=""
 RESTORE_FILE_ATTACHMENTS=""
 RESTORE_FILE_SENDS=""
 RESTORE_FILE_ZIP=""
@@ -19,6 +20,7 @@ function restore_zip() {
 
     local FIND_FILE_DB
     local FIND_FILE_CONFIG
+    local FIND_FILE_RSAKEY
     local FIND_FILE_ATTACHMENTS
     local FIND_FILE_SENDS
 
@@ -42,6 +44,10 @@ function restore_zip() {
     # get restore config file
     FIND_FILE_CONFIG="$( basename "$(ls ${RESTORE_EXTRACT_DIR}/config.*.json 2>/dev/null)" )"
     RESTORE_FILE_CONFIG="${FIND_FILE_CONFIG:-}"
+
+    # get restore rsakey file
+    FIND_FILE_RSAKEY="$( basename "$(ls ${RESTORE_EXTRACT_DIR}/rsakey.*.json 2>/dev/null)" )"
+    RESTORE_FILE_RSAKEY="${FIND_FILE_RSAKEY:-}"
 
     # get restore attachments file
     FIND_FILE_ATTACHMENTS="$( basename "$(ls ${RESTORE_EXTRACT_DIR}/attachments.*.tar 2>/dev/null)" )"
@@ -77,6 +83,19 @@ function restore_config() {
         color green "restore bitwarden_rs config successful"
     else
         color red "restore bitwarden_rs config failed"
+    fi
+}
+
+function restore_rsakey() {
+    color blue "restore bitwarden_rs rsakey"
+
+    mkdir "${DATA_RSAKEY_DIRNAME}"
+    tar -x -C "${DATA_RSAKEY_DIRNAME}" -f "${RESTORE_FILE_RSAKEY}"
+
+    if [[ $? == 0 ]]; then
+        color green "restore bitwarden_rs rsakey successful"
+    else
+        color red "restore bitwarden_rs rsakey failed"
     fi
 }
 
@@ -151,6 +170,12 @@ function restore_file() {
             RESTORE_FILE_CONFIG="${RESTORE_FILE_DIR}/${RESTORE_FILE_CONFIG}"
         fi
 
+        if [[ -n "${RESTORE_FILE_RSAKEY}" ]]; then
+            check_restore_file_exist "${RESTORE_FILE_RSAKEY}" "--rsakey-file"
+
+            RESTORE_FILE_RSAKEY="${RESTORE_FILE_DIR}/${RESTORE_FILE_RSAKEY}"
+        fi
+
         if [[ -n "${RESTORE_FILE_ATTACHMENTS}" ]]; then
             check_restore_file_exist "${RESTORE_FILE_ATTACHMENTS}" "--attachments-file"
 
@@ -169,6 +194,9 @@ function restore_file() {
         if [[ -n "${RESTORE_FILE_CONFIG}" ]]; then
             restore_config
         fi
+        if [[ -n "${RESTORE_FILE_RSAKEY}" ]]; then
+            restore_rsakey
+        fi
         if [[ -n "${RESTORE_FILE_ATTACHMENTS}" ]]; then
             restore_attachments
         fi
@@ -179,7 +207,7 @@ function restore_file() {
 }
 
 function check_empty_input() {
-    if [[ -z "${RESTORE_FILE_ZIP}${RESTORE_FILE_DB}${RESTORE_FILE_CONFIG}${RESTORE_FILE_ATTACHMENTS}${RESTORE_FILE_SENDS}" ]]; then
+    if [[ -z "${RESTORE_FILE_ZIP}${RESTORE_FILE_DB}${RESTORE_FILE_CONFIG}${RESTORE_FILE_RSAKEY}${RESTORE_FILE_ATTACHMENTS}${RESTORE_FILE_SENDS}" ]]; then
         color yellow "Empty input"
         color none ""
         color none "Find out more at https://github.com/ttionya/BitwardenRS-Backup#restore"
@@ -217,6 +245,11 @@ function restore() {
             --config-file)
                 shift
                 RESTORE_FILE_CONFIG="$(basename "$1")"
+                shift
+                ;;
+            --rsakey-file)
+                shift
+                RESTORE_FILE_RSAKEY="$(basename "$1")"
                 shift
                 ;;
             --attachments-file)
