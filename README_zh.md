@@ -124,7 +124,7 @@ docker run --rm -it \
 #### 选项
 
 <details>
-<summary>你有一个名为 <code>backup</code> 的压缩文件</summary>
+<summary><strong>※ 你有一个名为 <code>backup</code> 的压缩文件</strong></summary>
 
 ##### --zip-file
 
@@ -143,7 +143,7 @@ docker run --rm -it \
 </details>
 
 <details>
-<summary>你有多个独立的备份文件</summary>
+<summary><strong>※ 你有多个独立的备份文件</strong></summary>
 
 ##### --db-file
 
@@ -288,7 +288,7 @@ Rclone 远程名称，你可以自己修改命名。
 默认值：`/bitwarden/data`
 
 <details>
-<summary>其他环境变量</summary>
+<summary><strong>※ 其他环境变量</strong></summary>
 
 > **你无需修改这些环境变量，除非你知道你在做什么。**
 

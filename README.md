@@ -122,7 +122,7 @@ See [Options](#options) for options information.
 #### Options
 
 <details>
-<summary>You have the compressed file named <code>backup</code></summary>
+<summary><strong>※ You have the compressed file named <code>backup</code></strong></summary>
 
 ##### --zip-file
 
@@ -141,7 +141,7 @@ If not, the password will be asked for interactively.
 </details>
 
 <details>
-<summary>You have multiple independent backup files</summary>
+<summary><strong>※ You have multiple independent backup files</strong></summary>
 
 ##### --db-file
 
@@ -287,7 +287,7 @@ When using `Docker Compose`, you don't need to change it, but when using automat
 Default: `/bitwarden/data`
 
 <details>
-<summary>Other environment variables</summary>
+<summary><strong>※ Other environment variables</strong></summary>
 
 > **You don't need to change these environment variables unless you know what you're doing.**
 
