@@ -2,8 +2,8 @@ version: '3.4'
 
 services:
 
-  bitwardenrs:
-    image: bitwardenrs/server:latest
+  vaultwarden:
+    image: vaultwarden/server:latest
     restart: always
     # environment:
     #   SIGNUPS_ALLOWED: 'false'
@@ -11,10 +11,10 @@ services:
     ports:
       - '127.0.0.1:8200:80'
     volumes:
-      - bitwardenrs-data:/data/
+      - vaultwarden-data:/data/
 
   backup:
-    image: ttionya/bitwardenrs-backup:latest
+    image: ttionya/vaultwarden-backup:latest
     restart: always
     # environment:
     #   RCLONE_REMOTE_NAME: 'BitwardenBackup'
@@ -32,12 +32,21 @@ services:
     #   MAIL_WHEN_FAILURE: 'TRUE'
     #   TIMEZONE: 'UTC'
     volumes:
-      - bitwardenrs-data:/bitwarden/data/
-      - bitwardenrs-rclone-data:/config/
+      - vaultwarden-data:/bitwarden/data/
+      - vaultwarden-rclone-data:/config/
     #   - /path/to/env:/.env
 
 volumes:
-  bitwardenrs-data:
-    name: bitwardenrs-data
-  bitwardenrs-rclone-data:
+  vaultwarden-data:
+    # Specify the name of the volume where you save the vaultwarden data,
+    # use vaultwarden-data for new users
+    # and bitwardenrs-data for migrated users
+    name: vaultwarden-data
+    # name: bitwardenrs-data
+  vaultwarden-rclone-data:
     external: true
+    # Specify the name of the volume where you save the rclone configuration,
+    # use vaultwarden-rclone-data for new users
+    # and bitwardenrs-rclone-data for migrated users
+    name: vaultwarden-rclone-data
+    # name: bitwardenrs-rclone-data
