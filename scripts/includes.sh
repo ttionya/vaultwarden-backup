@@ -95,12 +95,12 @@ function send_mail_content() {
 
     # successful
     if [[ "$1" == "TRUE" && "${MAIL_WHEN_SUCCESS}" == "TRUE" ]]; then
-        send_mail "BitwardenRS Backup Success" "$2"
+        send_mail "vaultwarden Backup Success" "$2"
     fi
 
     # failed
     if [[ "$1" == "FALSE" && "${MAIL_WHEN_FAILURE}" == "TRUE" ]]; then
-        send_mail "BitwardenRS Backup Failed" "$2"
+        send_mail "vaultwarden Backup Failed" "$2"
     fi
 }
 

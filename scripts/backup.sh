@@ -8,42 +8,42 @@ function clear_dir() {
 
 function backup_init() {
     NOW="$(date +"${BACKUP_FILE_DATE_FORMAT}")"
-    # backup bitwarden_rs database file
+    # backup vaultwarden database file
     BACKUP_FILE_DB="${BACKUP_DIR}/db.${NOW}.sqlite3"
-    # backup bitwarden_rs config file
+    # backup vaultwarden config file
     BACKUP_FILE_CONFIG="${BACKUP_DIR}/config.${NOW}.json"
-    # backup bitwarden_rs rsakey files
+    # backup vaultwarden rsakey files
     BACKUP_FILE_RSAKEY="${BACKUP_DIR}/rsakey.${NOW}.tar"
-    # backup bitwarden_rs attachments directory
+    # backup vaultwarden attachments directory
     BACKUP_FILE_ATTACHMENTS="${BACKUP_DIR}/attachments.${NOW}.tar"
-    # backup bitwarden_rs sends directory
+    # backup vaultwarden sends directory
     BACKUP_FILE_SENDS="${BACKUP_DIR}/sends.${NOW}.tar"
     # backup zip file
     BACKUP_FILE_ZIP="${BACKUP_DIR}/backup.${NOW}.${ZIP_TYPE}"
 }
 
 function backup_db() {
-    color blue "backup bitwarden_rs sqlite database"
+    color blue "backup vaultwarden sqlite database"
 
     if [[ -f "${DATA_DB}" ]]; then
         sqlite3 "${DATA_DB}" ".backup '${BACKUP_FILE_DB}'"
     else
-        color yellow "not found bitwarden_rs sqlite database, skipping"
+        color yellow "not found vaultwarden sqlite database, skipping"
     fi
 }
 
 function backup_config() {
-    color blue "backup bitwarden_rs config"
+    color blue "backup vaultwarden config"
 
     if [[ -f "${DATA_CONFIG}" ]]; then
         cp -f "${DATA_CONFIG}" "${BACKUP_FILE_CONFIG}"
     else
-        color yellow "not found bitwarden_rs config, skipping"
+        color yellow "not found vaultwarden config, skipping"
     fi
 }
 
 function backup_rsakey() {
-    color blue "backup bitwarden_rs rsakey"
+    color blue "backup vaultwarden rsakey"
 
     local FIND_RSAKEY=$(find "${DATA_RSAKEY_DIRNAME}" -name "${DATA_RSAKEY_BASENAME}*" | xargs -I {} basename {})
     local FIND_RSAKEY_COUNT=$(echo "${FIND_RSAKEY}" | wc -l)
@@ -55,12 +55,12 @@ function backup_rsakey() {
 
         tar -tf "${BACKUP_FILE_RSAKEY}"
     else
-        color yellow "not found bitwarden_rs rsakey, skipping"
+        color yellow "not found vaultwarden rsakey, skipping"
     fi
 }
 
 function backup_attachments() {
-    color blue "backup bitwarden_rs attachments"
+    color blue "backup vaultwarden attachments"
 
     if [[ -d "${DATA_ATTACHMENTS}" ]]; then
         tar -c -C "${DATA_ATTACHMENTS_DIRNAME}" -f "${BACKUP_FILE_ATTACHMENTS}" "${DATA_ATTACHMENTS_BASENAME}"
@@ -69,12 +69,12 @@ function backup_attachments() {
 
         tar -tf "${BACKUP_FILE_ATTACHMENTS}"
     else
-        color yellow "not found bitwarden_rs attachments directory, skipping"
+        color yellow "not found vaultwarden attachments directory, skipping"
     fi
 }
 
 function backup_sends() {
-    color blue "backup bitwarden_rs sends"
+    color blue "backup vaultwarden sends"
 
     if [[ -d "${DATA_SENDS}" ]]; then
         tar -c -C "${DATA_SENDS_DIRNAME}" -f "${BACKUP_FILE_SENDS}" "${DATA_SENDS_BASENAME}"
@@ -83,7 +83,7 @@ function backup_sends() {
 
         tar -tf "${BACKUP_FILE_SENDS}"
     else
-        color yellow "not found bitwarden_rs sends directory, skipping"
+        color yellow "not found vaultwarden sends directory, skipping"
     fi
 }
 

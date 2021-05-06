@@ -16,7 +16,7 @@ function clear_extract_dir() {
 }
 
 function restore_zip() {
-    color blue "restore bitwarden_rs backup zip file"
+    color blue "restore vaultwarden backup zip file"
 
     local FIND_FILE_DB
     local FIND_FILE_CONFIG
@@ -31,9 +31,9 @@ function restore_zip() {
     fi
 
     if [[ $? == 0 ]]; then
-        color green "extract bitwarden_rs backup zip file successful"
+        color green "extract vaultwarden backup zip file successful"
     else
-        color red "extract bitwarden_rs backup zip file failed"
+        color red "extract vaultwarden backup zip file failed"
         exit 1
     fi
 
@@ -63,44 +63,44 @@ function restore_zip() {
 }
 
 function restore_db() {
-    color blue "restore bitwarden_rs sqlite database"
+    color blue "restore vaultwarden sqlite database"
 
     cp -f "${RESTORE_FILE_DB}" "${DATA_DB}"
 
     if [[ $? == 0 ]]; then
-        color green "restore bitwarden_rs sqlite database successful"
+        color green "restore vaultwarden sqlite database successful"
     else
-        color red "restore bitwarden_rs sqlite database failed"
+        color red "restore vaultwarden sqlite database failed"
     fi
 }
 
 function restore_config() {
-    color blue "restore bitwarden_rs config"
+    color blue "restore vaultwarden config"
 
     cp -f "${RESTORE_FILE_CONFIG}" "${DATA_CONFIG}"
 
     if [[ $? == 0 ]]; then
-        color green "restore bitwarden_rs config successful"
+        color green "restore vaultwarden config successful"
     else
-        color red "restore bitwarden_rs config failed"
+        color red "restore vaultwarden config failed"
     fi
 }
 
 function restore_rsakey() {
-    color blue "restore bitwarden_rs rsakey"
+    color blue "restore vaultwarden rsakey"
 
     mkdir "${DATA_RSAKEY_DIRNAME}"
     tar -x -C "${DATA_RSAKEY_DIRNAME}" -f "${RESTORE_FILE_RSAKEY}"
 
     if [[ $? == 0 ]]; then
-        color green "restore bitwarden_rs rsakey successful"
+        color green "restore vaultwarden rsakey successful"
     else
-        color red "restore bitwarden_rs rsakey failed"
+        color red "restore vaultwarden rsakey failed"
     fi
 }
 
 function restore_attachments() {
-    color blue "restore bitwarden_rs attachments"
+    color blue "restore vaultwarden attachments"
 
     # When customizing the attachments folder, the root directory of the tar file
     # is the directory name at the time of packing
@@ -114,14 +114,14 @@ function restore_attachments() {
     rm -rf "${DATA_ATTACHMENTS_EXTRACT}"
 
     if [[ $? == 0 ]]; then
-        color green "restore bitwarden_rs attachments successful"
+        color green "restore vaultwarden attachments successful"
     else
-        color red "restore bitwarden_rs attachments failed"
+        color red "restore vaultwarden attachments failed"
     fi
 }
 
 function restore_sends() {
-    color blue "restore bitwarden_rs sends"
+    color blue "restore vaultwarden sends"
 
     # When customizing the sends folder, the root directory of the tar file
     # is the directory name at the time of packing
@@ -135,9 +135,9 @@ function restore_sends() {
     rm -rf "${DATA_SENDS_EXTRACT}"
 
     if [[ $? == 0 ]]; then
-        color green "restore bitwarden_rs sends successful"
+        color green "restore vaultwarden sends successful"
     else
-        color red "restore bitwarden_rs sends failed"
+        color red "restore vaultwarden sends failed"
     fi
 }
 
@@ -210,14 +210,14 @@ function check_empty_input() {
     if [[ -z "${RESTORE_FILE_ZIP}${RESTORE_FILE_DB}${RESTORE_FILE_CONFIG}${RESTORE_FILE_RSAKEY}${RESTORE_FILE_ATTACHMENTS}${RESTORE_FILE_SENDS}" ]]; then
         color yellow "Empty input"
         color none ""
-        color none "Find out more at https://github.com/ttionya/BitwardenRS-Backup#restore"
+        color none "Find out more at https://github.com/ttionya/vaultwarden-backup#restore"
         exit 0
     fi
 }
 
 function check_data_dir_exist() {
     if [[ ! -d "${DATA_DIR}" ]]; then
-        color red "Bitwarden data directory not found"
+        color red "vaultwarden data directory not found"
         exit 1
     fi
 }
