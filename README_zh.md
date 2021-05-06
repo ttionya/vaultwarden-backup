@@ -1,13 +1,25 @@
-# BitwardenRS Backup
+# vaultwarden backup
 
-[![Docker Image Version (latest by date)](https://img.shields.io/docker/v/ttionya/bitwardenrs-backup?label=Version&logo=docker)](https://hub.docker.com/r/ttionya/bitwardenrs-backup/tags) [![Docker Pulls](https://img.shields.io/docker/pulls/ttionya/bitwardenrs-backup?label=Docker%20Pulls&logo=docker)](https://hub.docker.com/r/ttionya/bitwardenrs-backup) [![GitHub](https://img.shields.io/github/license/ttionya/BitwardenRS-Backup?label=License&logo=github)](https://github.com/ttionya/BitwardenRS-Backup/blob/master/LICENSE)
+[![Docker Image Version (latest by date)](https://img.shields.io/docker/v/ttionya/vaultwarden-backup?label=Version&logo=docker)](https://hub.docker.com/r/ttionya/vaultwarden-backup/tags) [![Docker Pulls](https://img.shields.io/docker/pulls/ttionya/bitwardenrs-backup?label=Docker%20Pulls&logo=docker)](https://hub.docker.com/r/ttionya/vaultwarden-backup) [![Docker Pulls](https://img.shields.io/docker/pulls/ttionya/vaultwarden-backup?label=Docker%20Pulls&logo=docker)](https://hub.docker.com/r/ttionya/vaultwarden-backup) [![GitHub](https://img.shields.io/github/license/ttionya/vaultwarden-backup?label=License&logo=github)](https://github.com/ttionya/vaultwarden-backup/blob/master/LICENSE)
 
 [README](README.md) | [中文文档](README_zh.md)
 
-备份 [bitwarden_rs](https://github.com/dani-garcia/bitwarden_rs) 数据并通过 [Rclone](https://rclone.org/) 同步到其他存储系统。
+备份 [vaultwarden](https://github.com/dani-garcia/vaultwarden) (之前叫 `bitwarden_rs`) 数据并通过 [Rclone](https://rclone.org/) 同步到其他存储系统。
 
-- [Docker Hub](https://hub.docker.com/r/ttionya/bitwardenrs-backup)
-- [GitHub](https://github.com/ttionya/BitwardenRS-Backup)
+- [Docker Hub](https://hub.docker.com/r/ttionya/vaultwarden-backup)
+- [GitHub](https://github.com/ttionya/vaultwarden-backup)
+
+
+
+## 重命名
+
+**用 Rust 编写的非官方 Bitwarden 服务器，以前称为 `bitwarden_rs`，现在已经改名为 `vaultwarden`。**
+
+所以这个备份工具迁移到了 [ttionya/vaultwarden-backup](https://github.com/ttionya/vaultwarden-backup) 。
+
+旧的镜像仍然可以使用，只是 **deprecated** 了。建议迁移到新的镜像 [ttionya/vaultwarden-backup](https://hub.docker.com/r/ttionya/vaultwarden-backup) 。
+
+**请在[这里](#迁移)查看如何迁移**。
 
 
 
@@ -25,7 +37,7 @@
 
 ## 使用方法
 
-> **重要：** 我们假设你已经完整阅读了 `bitwarden_rs` [文档](https://github.com/dani-garcia/bitwarden_rs/wiki) 。
+> **重要：** 我们假设你已经完整阅读了 `vaultwarden` [文档](https://github.com/dani-garcia/vaultwarden/wiki) 。
 
 ### 备份
 
@@ -37,8 +49,8 @@
 
 ```shell
 docker run --rm -it \
-  --mount type=volume,source=bitwardenrs-rclone-data,target=/config/ \
-  ttionya/bitwardenrs-backup:latest \
+  --mount type=volume,source=vaultwarden-rclone-data,target=/config/ \
+  ttionya/vaultwarden-backup:latest \
   rclone config
 ```
 
@@ -46,8 +58,8 @@ docker run --rm -it \
 
 ```shell
 docker run --rm -it \
-  --mount type=volume,source=bitwardenrs-rclone-data,target=/config/ \
-  ttionya/bitwardenrs-backup:latest \
+  --mount type=volume,source=vaultwarden-rclone-data,target=/config/ \
+  ttionya/vaultwarden-backup:latest \
   rclone config show
 
 # Microsoft Onedrive Example
@@ -62,21 +74,21 @@ docker run --rm -it \
 
 #### 自动备份
 
-确保你的 bitwarden_rs 容器被命名为 `bitwarden`，否则你需要自行替换 docker run 的 `--volumes-from` 部分。
+确保你的 vaultwarden 容器被命名为 `vaultwarden`，否则你需要自行替换 docker run 的 `--volumes-from` 部分。
 
-默认情况下 bitwarden_rs 的数据文件夹是 `/data`，你需要显式使用环境变量 `DATA_DIR` 指定数据文件夹。
+默认情况下 vaultwarden 的数据文件夹是 `/data`，你需要显式使用环境变量 `DATA_DIR` 指定数据文件夹。
 
 使用默认设置启动容器（每小时的 05 分自动备份）。
 
 ```shell
 docker run -d \
   --restart=always \
-  --name bitwardenrs_backup \
-  --volumes-from=bitwarden \
-  --mount type=volume,source=bitwardenrs-rclone-data,target=/config/ \
+  --name vaultwarden_backup \
+  --volumes-from=vaultwarden \
+  --mount type=volume,source=vaultwarden-rclone-data,target=/config/ \
   -e RCLONE_REMOTE_NAME="YouRemoteName" \
   -e DATA_DIR="/data" \
-  ttionya/bitwardenrs-backup:latest
+  ttionya/vaultwarden-backup:latest
 ```
 
 #### 使用 Docker Compose
@@ -109,13 +121,13 @@ docker-compose down
 
 首先进入备份文件所在目录。
 
-如果你使用的是自动备份，请确认 bitwarden_rs 卷的命名，并替换 `--mount` `source` 部分。同时不要忘记使用环境变量 `DATA_DIR` 指定数据目录（`-e DATA_DIR="/data"`）。
+如果你使用的是自动备份，请确认 vaultwarden 卷的命名，并替换 `--mount` `source` 部分。同时不要忘记使用环境变量 `DATA_DIR` 指定数据目录（`-e DATA_DIR="/data"`）。
 
 ```shell
 docker run --rm -it \
-  --mount type=volume,source=bitwardenrs-data,target=/bitwarden/data/ \
+  --mount type=volume,source=vaultwarden-data,target=/bitwarden/data/ \
   --mount type=bind,source=$(pwd),target=/bitwarden/restore/ \
-  ttionya/bitwardenrs-backup:latest restore \
+  ttionya/vaultwarden-backup:latest restore \
   [OPTIONS]
 ```
 
@@ -207,7 +219,7 @@ Rclone 远程名称，你可以自己修改命名。
 
 因为 `zip` 格式安全性较低，我们为追求安全的人提供 `7z` 格式的存档。
 
-需要说明的是，bitwardenrs 的密码在发送到服务器前就已经加密了。服务器没有保存明文密码，所以 `zip` 格式已经可以满足基本的加密需求。
+需要说明的是，vaultwarden 的密码在发送到服务器前就已经加密了。服务器没有保存明文密码，所以 `zip` 格式已经可以满足基本的加密需求。
 
 默认值：`zip` (只支持 `zip` 和 `7z` 格式)
 
@@ -281,7 +293,7 @@ Rclone 远程名称，你可以自己修改命名。
 
 #### DATA_DIR
 
-指定存放 bitwarden_rs 数据的目录。
+指定存放 vaultwarden 数据的目录。
 
 当使用 `Docker Compose` 时，你一般不需要修改它，但是当你使用自动备份时，你通常需要将它修改为 `/data`。
 
@@ -327,7 +339,7 @@ Rclone 远程名称，你可以自己修改命名。
 ```shell
 docker run -d \
   --mount type=bind,source=/path/to/env,target=/.env \
-  ttionya/bitwardenrs-backup:latest
+  ttionya/vaultwarden-backup:latest
 ```
 
 
@@ -339,7 +351,7 @@ docker run -d \
 ```shell
 docker run -d \
   -e ZIP_PASSWORD_FILE=/run/secrets/zip-password \
-  ttionya/bitwardenrs-backup:latest
+  ttionya/vaultwarden-backup:latest
 ```
 
 
@@ -355,12 +367,22 @@ docker run -d \
 你可以使用下面的命令来测试邮件的发送。记得替换你的 SMTP 变量。
 
 ```shell
-docker run --rm -it -e MAIL_SMTP_VARIABLES='<your smtp variables>' ttionya/bitwardenrs-backup:latest mail <mail send to>
+docker run --rm -it -e MAIL_SMTP_VARIABLES='<your smtp variables>' ttionya/vaultwarden-backup:latest mail <mail send to>
 
 # Or
 
-docker run --rm -it -e MAIL_SMTP_VARIABLES='<your smtp variables>' -e MAIL_TO='<mail send to>' ttionya/bitwardenrs-backup:latest mail
+docker run --rm -it -e MAIL_SMTP_VARIABLES='<your smtp variables>' -e MAIL_TO='<mail send to>' ttionya/vaultwarden-backup:latest mail
 ```
+
+
+
+## 迁移
+
+如果你使用自动备份，你只需要把镜像名改为 `ttionya/vaultwarden-backup`。注意你的卷的名称。
+
+如果你使用 `docker-compose`，你需要将 `bitwardenrs/server` 更新为 `vaultwarden/server`，`ttionya/bitwardenrs-backup` 更新为 `ttionya/vaultwarden-backup`。
+
+我们建议重新下载 `docker-compose.yml` 文件，替换你的环境变量，并注意 `volumes` 一节，你可能需要改变它。
 
 
 

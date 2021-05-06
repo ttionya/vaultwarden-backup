@@ -1,13 +1,25 @@
-# BitwardenRS Backup
+# vaultwarden backup
 
-[![Docker Image Version (latest by date)](https://img.shields.io/docker/v/ttionya/bitwardenrs-backup?label=Version&logo=docker)](https://hub.docker.com/r/ttionya/bitwardenrs-backup/tags) [![Docker Pulls](https://img.shields.io/docker/pulls/ttionya/bitwardenrs-backup?label=Docker%20Pulls&logo=docker)](https://hub.docker.com/r/ttionya/bitwardenrs-backup) [![GitHub](https://img.shields.io/github/license/ttionya/BitwardenRS-Backup?label=License&logo=github)](https://github.com/ttionya/BitwardenRS-Backup/blob/master/LICENSE)
+[![Docker Image Version (latest by date)](https://img.shields.io/docker/v/ttionya/vaultwarden-backup?label=Version&logo=docker)](https://hub.docker.com/r/ttionya/vaultwarden-backup/tags) [![Docker Pulls](https://img.shields.io/docker/pulls/ttionya/bitwardenrs-backup?label=Docker%20Pulls&logo=docker)](https://hub.docker.com/r/ttionya/vaultwarden-backup) [![Docker Pulls](https://img.shields.io/docker/pulls/ttionya/vaultwarden-backup?label=Docker%20Pulls&logo=docker)](https://hub.docker.com/r/ttionya/vaultwarden-backup) [![GitHub](https://img.shields.io/github/license/ttionya/vaultwarden-backup?label=License&logo=github)](https://github.com/ttionya/vaultwarden-backup/blob/master/LICENSE)
 
 [README](README.md) | [中文文档](README_zh.md)
 
-Docker containers for [bitwarden_rs](https://github.com/dani-garcia/bitwarden_rs) backup to remote.
+Docker containers for [vaultwarden](https://github.com/dani-garcia/vaultwarden) (formerly known as **`bitwarden_rs`**) backup to remote.
 
-- [Docker Hub](https://hub.docker.com/r/ttionya/bitwardenrs-backup)
-- [GitHub](https://github.com/ttionya/BitwardenRS-Backup)
+- [Docker Hub](https://hub.docker.com/r/ttionya/vaultwarden-backup)
+- [GitHub](https://github.com/ttionya/vaultwarden-backup)
+
+
+
+## Rename
+
+**Unofficial Bitwarden compatible server written in Rust, formerly known as `bitwarden_rs`, renamed to `vaultwarden`.**
+
+For this reason, the backup tool was migrated to [ttionya/vaultwarden-backup](https://github.com/ttionya/vaultwarden-backup).
+
+The old image can still be used, just **deprecated**. It is recommended to migrate to new image [ttionya/vaultwarden-backup](https://hub.docker.com/r/ttionya/vaultwarden-backup).
+
+**See how to migrate [here](#migration).**
 
 
 
@@ -25,7 +37,7 @@ This tool supports backing up the following files or directories.
 
 ## Usage
 
-> **Important:** We assume you already read the `bitwarden_rs` [documentation](https://github.com/dani-garcia/bitwarden_rs/wiki).
+> **Important:** We assume you already read the `vaultwarden` [documentation](https://github.com/dani-garcia/vaultwarden/wiki).
 
 ### Backup
 
@@ -37,8 +49,8 @@ You can get the token by the following command.
 
 ```shell
 docker run --rm -it \
-  --mount type=volume,source=bitwardenrs-rclone-data,target=/config/ \
-  ttionya/bitwardenrs-backup:latest \
+  --mount type=volume,source=vaultwarden-rclone-data,target=/config/ \
+  ttionya/vaultwarden-backup:latest \
   rclone config
 ```
 
@@ -46,8 +58,8 @@ After setting, check the configuration content by the following command.
 
 ```shell
 docker run --rm -it \
-  --mount type=volume,source=bitwardenrs-rclone-data,target=/config/ \
-  ttionya/bitwardenrs-backup:latest \
+  --mount type=volume,source=vaultwarden-rclone-data,target=/config/ \
+  ttionya/vaultwarden-backup:latest \
   rclone config show
 
 # Microsoft Onedrive Example
@@ -62,21 +74,21 @@ Note that you need to set the environment variable `RCLONE_REMOTE_NAME` to a rem
 
 #### Automatic Backups
 
-Make sure that your bitwarden_rs container is named `bitwarden` otherwise you have to replace the container name in the `--volumes-from` section of the docker run call.
+Make sure that your vaultwarden container is named `vaultwarden` otherwise you have to replace the container name in the `--volumes-from` section of the docker run call.
 
-By default the data folder for bitwarden_rs is `/data`, you need to explicitly specify the data folder using the environment variable `DATA_DIR`.
+By default the data folder for vaultwarden is `/data`, you need to explicitly specify the data folder using the environment variable `DATA_DIR`.
 
 Start the backup container with default settings. (automatic backup at 5 minute every hour)
 
 ```shell
 docker run -d \
   --restart=always \
-  --name bitwardenrs_backup \
-  --volumes-from=bitwarden \
-  --mount type=volume,source=bitwardenrs-rclone-data,target=/config/ \
+  --name vaultwarden_backup \
+  --volumes-from=vaultwarden \
+  --mount type=volume,source=vaultwarden-rclone-data,target=/config/ \
   -e RCLONE_REMOTE_NAME="YouRemoteName" \
   -e DATA_DIR="/data" \
-  ttionya/bitwardenrs-backup:latest
+  ttionya/vaultwarden-backup:latest
 ```
 
 #### Use Docker Compose
@@ -107,13 +119,13 @@ Because the host's files are not accessible in the Docker container, you need to
 
 And go to the directory where your backup files are located.
 
-If you are using automatic backups, please confirm the bitwarden_rs volume and replace the `--mount` `source` section. Also don't forget to use the environment variable `DATA_DIR` to specify the data directory (`-e DATA_DIR="/data"`).
+If you are using automatic backups, please confirm the vaultwarden volume and replace the `--mount` `source` section. Also don't forget to use the environment variable `DATA_DIR` to specify the data directory (`-e DATA_DIR="/data"`).
 
 ```shell
 docker run --rm -it \
-  --mount type=volume,source=bitwardenrs-data,target=/bitwarden/data/ \
+  --mount type=volume,source=vaultwarden-data,target=/bitwarden/data/ \
   --mount type=bind,source=$(pwd),target=/bitwarden/restore/ \
-  ttionya/bitwardenrs-backup:latest restore \
+  ttionya/vaultwarden-backup:latest restore \
   [OPTIONS]
 ```
 
@@ -205,7 +217,7 @@ Default: `WHEREISMYPASSWORD?`
 
 Because the `zip` format is less secure, we offer archives in `7z` format for those who seek security.
 
-It should be noted that the password for bitwardenrs is encrypted before it is sent to the server. The server does not have plaintext passwords, so the `zip` format is good enough for basic encryption needs.
+It should be noted that the password for vaultwarden is encrypted before it is sent to the server. The server does not have plaintext passwords, so the `zip` format is good enough for basic encryption needs.
 
 Default: `zip` (only support `zip` and `7z` format)
 
@@ -280,7 +292,7 @@ Default: `TRUE`
 
 #### DATA_DIR
 
-The folder where bitwarden_rs stores its data.
+The folder where vaultwarden stores its data.
 
 When using `Docker Compose`, you don't need to change it, but when using automatic backup, you need to change it to `/data`.
 
@@ -326,7 +338,7 @@ If you prefer to use env file instead of environment variables, you can map the 
 ```shell
 docker run -d \
   --mount type=bind,source=/path/to/env,target=/.env \
-  ttionya/bitwardenrs-backup:latest
+  ttionya/vaultwarden-backup:latest
 ```
 
 
@@ -338,7 +350,7 @@ As an alternative to passing sensitive information via environment variables, `_
 ```shell
 docker run -d \
   -e ZIP_PASSWORD_FILE=/run/secrets/zip-password \
-  ttionya/bitwardenrs-backup:latest
+  ttionya/vaultwarden-backup:latest
 ```
 
 
@@ -354,12 +366,22 @@ We will use the environment variables first, then the contents of the file endin
 You can use the following command to test the mail sending. Remember to replace your smtp variables.
 
 ```shell
-docker run --rm -it -e MAIL_SMTP_VARIABLES='<your smtp variables>' ttionya/bitwardenrs-backup:latest mail <mail send to>
+docker run --rm -it -e MAIL_SMTP_VARIABLES='<your smtp variables>' ttionya/vaultwarden-backup:latest mail <mail send to>
 
 # Or
 
-docker run --rm -it -e MAIL_SMTP_VARIABLES='<your smtp variables>' -e MAIL_TO='<mail send to>' ttionya/bitwardenrs-backup:latest mail
+docker run --rm -it -e MAIL_SMTP_VARIABLES='<your smtp variables>' -e MAIL_TO='<mail send to>' ttionya/vaultwarden-backup:latest mail
 ```
+
+
+
+## Migration
+
+If you use automatic backups, you just need to replace the image with `ttionya/vaultwarden-backup`. Note the name of your volume.
+
+If you are using `docker-compose`, you need to update `bitwardenrs/server` to `vaultwarden/server` and `ttionya/bitwardenrs-backup` to `ttionya/vaultwarden-backup`.
+
+We recommend re-downloading the `docker-compose.yml` file, replacing your environment variables, and noting the `volumes` section, which you may need to change.
 
 
 
