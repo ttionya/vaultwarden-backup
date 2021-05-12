@@ -9,6 +9,8 @@
 - [Docker Hub](https://hub.docker.com/r/ttionya/vaultwarden-backup)
 - [GitHub](https://github.com/ttionya/vaultwarden-backup)
 
+<br>
+
 
 
 ## 重命名
@@ -20,6 +22,8 @@
 旧的镜像仍然可以使用，只是 **deprecated** 了。建议迁移到新的镜像 [ttionya/vaultwarden-backup](https://hub.docker.com/r/ttionya/vaultwarden-backup) 。
 
 **请在[这里](#迁移)查看如何迁移**。
+
+<br>
 
 
 
@@ -33,6 +37,8 @@
 - `attachments` (目录)
 - `sends` (目录)
 
+<br>
+
 
 
 ## 使用方法
@@ -42,6 +48,8 @@
 ### 备份
 
 我们通过 [Rclone](https://rclone.org/) 同步备份文件到远程存储系统。
+
+> **你需要先配置 Rclone，否则备份工具不会工作。**
 
 访问 [GitHub](https://github.com/rclone/rclone) 了解更多存储系统使用教程，不同的系统获得 Token 的方式不同。
 
@@ -178,6 +186,8 @@ docker run --rm -it \
 你需要用这个选项来指定 `sends.tar` 文件。
 
 </details>
+
+<br>
 
 
 
@@ -330,6 +340,8 @@ Rclone 远程名称，你可以自己修改命名。
 
 </details>
 
+<br>
+
 
 
 ## Use `.env` file
@@ -341,6 +353,8 @@ docker run -d \
   --mount type=bind,source=/path/to/env,target=/.env \
   ttionya/vaultwarden-backup:latest
 ```
+
+<br>
 
 
 
@@ -354,11 +368,15 @@ docker run -d \
   ttionya/vaultwarden-backup:latest
 ```
 
+<br>
+
 
 
 ## 关于优先级
 
 我们会优先使用环境变量，然后是环境变量定义的 `_FILE` 结尾的文件内容，之后是 `.env` 文件中定义的 `_FILE` 结尾的文件内容，最后才是 `.env` 文件的值。
+
+<br>
 
 
 
@@ -374,6 +392,8 @@ docker run --rm -it -e MAIL_SMTP_VARIABLES='<your smtp variables>' ttionya/vault
 docker run --rm -it -e MAIL_SMTP_VARIABLES='<your smtp variables>' -e MAIL_TO='<mail send to>' ttionya/vaultwarden-backup:latest mail
 ```
 
+<br>
+
 
 
 ## 迁移
@@ -383,6 +403,8 @@ docker run --rm -it -e MAIL_SMTP_VARIABLES='<your smtp variables>' -e MAIL_TO='<
 如果你使用 `docker-compose`，你需要将 `bitwardenrs/server` 更新为 `vaultwarden/server`，`ttionya/bitwardenrs-backup` 更新为 `ttionya/vaultwarden-backup`。
 
 我们建议重新下载 `docker-compose.yml` 文件，替换你的环境变量，并注意 `volumes` 一节，你可能需要改变它。
+
+<br>
 
 
 

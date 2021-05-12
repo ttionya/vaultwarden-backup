@@ -9,6 +9,8 @@ Docker containers for [vaultwarden](https://github.com/dani-garcia/vaultwarden) 
 - [Docker Hub](https://hub.docker.com/r/ttionya/vaultwarden-backup)
 - [GitHub](https://github.com/ttionya/vaultwarden-backup)
 
+<br>
+
 
 
 ## Rename
@@ -20,6 +22,8 @@ For this reason, the backup tool was migrated to [ttionya/vaultwarden-backup](ht
 The old image can still be used, just **deprecated**. It is recommended to migrate to new image [ttionya/vaultwarden-backup](https://hub.docker.com/r/ttionya/vaultwarden-backup).
 
 **See how to migrate [here](#migration).**
+
+<br>
 
 
 
@@ -33,6 +37,8 @@ This tool supports backing up the following files or directories.
 - `attachments` (directory)
 - `sends` (directory)
 
+<br>
+
 
 
 ## Usage
@@ -42,6 +48,8 @@ This tool supports backing up the following files or directories.
 ### Backup
 
 We upload the backup files to the storage system by [Rclone](https://rclone.org/).
+
+> **You need to configure Rclone first, otherwise the backup tool will not work.**
 
 Visit [GitHub](https://github.com/rclone/rclone) for more storage system tutorials. Different systems get tokens differently.
 
@@ -176,6 +184,8 @@ You need to use this option to specify the `attachments.tar` file.
 You need to use this option to specify the `sends.tar` file.
 
 </details>
+
+<br>
 
 
 
@@ -329,6 +339,8 @@ Default: `${DATA_DIR}/sends`
 
 </details>
 
+<br>
+
 
 
 ## Use `.env` file
@@ -340,6 +352,8 @@ docker run -d \
   --mount type=bind,source=/path/to/env,target=/.env \
   ttionya/vaultwarden-backup:latest
 ```
+
+<br>
 
 
 
@@ -353,11 +367,15 @@ docker run -d \
   ttionya/vaultwarden-backup:latest
 ```
 
+<br>
+
 
 
 ## About Priority
 
 We will use the environment variables first, then the contents of the file ending in `_FILE` as defined by the environment variables, followed by the contents of the file ending in `_FILE` as defined in the `.env` file, and finally the `.env` file values.
+
+<br>
 
 
 
@@ -373,6 +391,8 @@ docker run --rm -it -e MAIL_SMTP_VARIABLES='<your smtp variables>' ttionya/vault
 docker run --rm -it -e MAIL_SMTP_VARIABLES='<your smtp variables>' -e MAIL_TO='<mail send to>' ttionya/vaultwarden-backup:latest mail
 ```
 
+<br>
+
 
 
 ## Migration
@@ -382,6 +402,8 @@ If you use automatic backups, you just need to replace the image with `ttionya/v
 If you are using `docker-compose`, you need to update `bitwardenrs/server` to `vaultwarden/server` and `ttionya/bitwardenrs-backup` to `ttionya/vaultwarden-backup`.
 
 We recommend re-downloading the `docker-compose.yml` file, replacing your environment variables, and noting the `volumes` section, which you may need to change.
+
+<br>
 
 
 
