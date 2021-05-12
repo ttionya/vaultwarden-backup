@@ -30,6 +30,13 @@ function color() {
 #     None
 ########################################
 function check_rclone_connection() {
+    rclone config show "${RCLONE_REMOTE_NAME}" > /dev/null 2>&1
+    if [[ $? != 0 ]]; then
+        color red "rclone configuration information not found"
+        color blue "Please configure rclone first, check https://github.com/ttionya/vaultwarden-backup/blob/master/README.md#backup"
+        exit 1
+    fi
+
     rclone mkdir "${RCLONE_REMOTE}"
     if [[ $? != 0 ]]; then
         color red "storage system connection failure"
