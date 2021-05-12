@@ -49,7 +49,7 @@
 
 我们通过 [Rclone](https://rclone.org/) 同步备份文件到远程存储系统。
 
-> **你需要先配置 Rclone，否则备份工具不会工作。**
+**你需要先配置 Rclone，否则备份工具不会工作。**
 
 访问 [GitHub](https://github.com/rclone/rclone) 了解更多存储系统使用教程，不同的系统获得 Token 的方式不同。
 

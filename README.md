@@ -49,7 +49,7 @@ This tool supports backing up the following files or directories.
 
 We upload the backup files to the storage system by [Rclone](https://rclone.org/).
 
-> **You need to configure Rclone first, otherwise the backup tool will not work.**
+**You need to configure Rclone first, otherwise the backup tool will not work.**
 
 Visit [GitHub](https://github.com/rclone/rclone) for more storage system tutorials. Different systems get tokens differently.
 
