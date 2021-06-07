@@ -112,6 +112,19 @@ function send_mail_content() {
 }
 
 ########################################
+# Send health check ping.
+# Arguments:
+#     None
+########################################
+function send_ping() {
+    if [[ -z "${PING_URL}" ]]; then
+        return
+    fi
+
+    wget "${PING_URL}" -T 10 -t 5 -O /dev/null -q
+}
+
+########################################
 # Export variables from .env file.
 # Arguments:
 #     None
@@ -218,6 +231,10 @@ function init_env() {
     get_env BACKUP_FILE_DATE_SUFFIX
     BACKUP_FILE_DATE_FORMAT=$(echo "%Y%m%d${BACKUP_FILE_DATE_SUFFIX}" | sed 's/[^0-9a-zA-Z%_-]//g')
 
+    # PING_URL
+    get_env PING_URL
+    PING_URL="${PING_URL:-""}"
+
     # MAIL_SMTP_ENABLE
     # MAIL_TO
     get_env MAIL_SMTP_ENABLE
@@ -271,6 +288,9 @@ function init_env() {
     color yellow "ZIP_TYPE: ${ZIP_TYPE}"
     color yellow "BACKUP_FILE_DATE_FORMAT: ${BACKUP_FILE_DATE_FORMAT}"
     color yellow "BACKUP_KEEP_DAYS: ${BACKUP_KEEP_DAYS}"
+    if [[ -n "${PING_URL}" ]]; then
+        color yellow "PING_URL: ${PING_URL}"
+    fi
     color yellow "MAIL_SMTP_ENABLE: ${MAIL_SMTP_ENABLE}"
     if [[ "${MAIL_SMTP_ENABLE}" == "TRUE" ]]; then
         color yellow "MAIL_TO: ${MAIL_TO}"

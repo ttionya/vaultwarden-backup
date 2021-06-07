@@ -176,6 +176,7 @@ upload
 clear_dir
 clear_history
 
+send_ping
 send_mail_content "TRUE" "The file was successfully uploaded at $(date +"%Y-%m-%d %H:%M:%S %Z")."
 
 color none ""
