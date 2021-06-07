@@ -257,6 +257,10 @@ Rclone 远程名称，你可以自己修改命名。
 
 默认值：`UTC`
 
+#### PING_URL
+
+使用 [healthcheck.io](https://healthchecks.io/) 地址或者其他类似的 cron 监控，以便在备份**成功**后执行 `GET` 请求。
+
 #### MAIL_SMTP_ENABLE
 
 本工具使用 [heirloom-mailx](https://www.systutorials.com/docs/linux/man/1-heirloom-mailx/) 发送邮件。

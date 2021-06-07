@@ -256,6 +256,10 @@ Here is timezone list at [wikipedia](https://en.wikipedia.org/wiki/List_of_tz_da
 
 Default: `UTC`
 
+#### PING_URL
+
+Use [healthcheck.io](https://healthchecks.io/) url or similar cron monitoring to perform `GET` requests after a **successful** backup.
+
 #### MAIL_SMTP_ENABLE
 
 The tool uses [heirloom-mailx](https://www.systutorials.com/docs/linux/man/1-heirloom-mailx/) to send mail.
