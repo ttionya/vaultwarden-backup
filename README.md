@@ -37,6 +37,11 @@ This tool supports backing up the following files or directories.
 - `attachments` (directory)
 - `sends` (directory)
 
+And the following ways of notifying backup results are supported.
+
+- Ping (only send on success)
+- Mail (SMTP based, send on success and on failure)
+
 <br>
 
 
