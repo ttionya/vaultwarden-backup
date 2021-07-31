@@ -4,7 +4,7 @@
 
 ### Feature
 
-- Update Dockerfile base image to `rclone/rclone:1.56.0`
+- Update Dockerfile base image to `rclone/rclone:1.56.0` (close [#31](https://github.com/ttionya/vaultwarden-backup/issues/31))
 
 <br>
 
