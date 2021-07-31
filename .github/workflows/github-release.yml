@@ -20,3 +20,5 @@ jobs:
           release_name: ${{ github.ref }}
           draft: false
           prerelease: false
+          body: |
+            [CHANGELOG](https://github.com/ttionya/vaultwarden-backup/blob/master/CHANGELOG.md)

@@ -417,6 +417,14 @@ docker run --rm -it -e MAIL_SMTP_VARIABLES='<your smtp variables>' -e MAIL_TO='<
 
 
 
+## 更新日志
+
+请查看 [CHANGELOG](CHANGELOG.md) 文件。
+
+<br>
+
+
+
 ## 许可证
 
 MIT

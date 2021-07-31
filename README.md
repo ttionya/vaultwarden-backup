@@ -416,6 +416,14 @@ We recommend re-downloading the `docker-compose.yml` file, replacing your enviro
 
 
 
+## Changelog
+
+Check out [CHANGELOG](CHANGELOG.md) file.
+
+<br>
+
+
+
 ## License
 
 MIT
