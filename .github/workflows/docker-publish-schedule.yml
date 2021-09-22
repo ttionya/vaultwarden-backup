@@ -2,7 +2,7 @@ name: 'Docker Publish Schedule'
 
 on:
   schedule:
-    - cron: '10 * * * *'
+    - cron: '0 0 10,20,30 * *'
 
 jobs:
   publish:
@@ -48,5 +48,7 @@ jobs:
           platforms: 'linux/amd64,linux/arm64,linux/arm/v7'
           push: true
           tags: |
-            ttionya/vaultwarden-backup:${{ steps.pre.outputs.tag }}-test
-            ttionya/bitwardenrs-backup:${{ steps.pre.outputs.tag }}-test
+            ttionya/vaultwarden-backup:latest
+            ttionya/vaultwarden-backup:${{ steps.pre.outputs.tag }}
+            ttionya/bitwardenrs-backup:latest
+            ttionya/bitwardenrs-backup:${{ steps.pre.outputs.tag }}
