@@ -1,5 +1,19 @@
 # Changelog
 
+## v1.9.3
+
+### Feature
+
+- Update Dockerfile base image to `rclone/rclone:1.56.1`
+
+### Chore
+
+- On the 10th, 20th and 30th of every month, republish the Docker image to update the alpine packages
+
+<br>
+
+
+
 ## v1.9.2
 
 ### Feature
