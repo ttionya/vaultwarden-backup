@@ -46,7 +46,7 @@ function restore_zip() {
     RESTORE_FILE_CONFIG="${FIND_FILE_CONFIG:-}"
 
     # get restore rsakey file
-    FIND_FILE_RSAKEY="$( basename "$(ls ${RESTORE_EXTRACT_DIR}/rsakey.*.json 2>/dev/null)" )"
+    FIND_FILE_RSAKEY="$( basename "$(ls ${RESTORE_EXTRACT_DIR}/rsakey.*.tar 2>/dev/null)" )"
     RESTORE_FILE_RSAKEY="${FIND_FILE_RSAKEY:-}"
 
     # get restore attachments file
@@ -89,7 +89,7 @@ function restore_config() {
 function restore_rsakey() {
     color blue "restore vaultwarden rsakey"
 
-    mkdir "${DATA_RSAKEY_DIRNAME}"
+    mkdir -p "${DATA_RSAKEY_DIRNAME}"
     tar -x -C "${DATA_RSAKEY_DIRNAME}" -f "${RESTORE_FILE_RSAKEY}"
 
     if [[ $? == 0 ]]; then
@@ -108,7 +108,7 @@ function restore_attachments() {
     local DATA_ATTACHMENTS_EXTRACT="${DATA_ATTACHMENTS}.extract"
 
     rm -rf "${DATA_ATTACHMENTS}" "${DATA_ATTACHMENTS_EXTRACT}"
-    mkdir "${DATA_ATTACHMENTS_EXTRACT}"
+    mkdir -p "${DATA_ATTACHMENTS_EXTRACT}"
     tar -x -C "${DATA_ATTACHMENTS_EXTRACT}" -f "${RESTORE_FILE_ATTACHMENTS}"
     mv "${DATA_ATTACHMENTS_EXTRACT}/${RESTORE_FILE_ATTACHMENTS_DIRNAME}" "${DATA_ATTACHMENTS}"
     rm -rf "${DATA_ATTACHMENTS_EXTRACT}"
@@ -129,7 +129,7 @@ function restore_sends() {
     local DATA_SENDS_EXTRACT="${DATA_SENDS}.extract"
 
     rm -rf "${DATA_SENDS}" "${DATA_SENDS_EXTRACT}"
-    mkdir "${DATA_SENDS_EXTRACT}"
+    mkdir -p "${DATA_SENDS_EXTRACT}"
     tar -x -C "${DATA_SENDS_EXTRACT}" -f "${RESTORE_FILE_SENDS}"
     mv "${DATA_SENDS_EXTRACT}/${RESTORE_FILE_SENDS_DIRNAME}" "${DATA_SENDS}"
     rm -rf "${DATA_SENDS_EXTRACT}"
