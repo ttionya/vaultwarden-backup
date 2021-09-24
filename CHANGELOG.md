@@ -1,5 +1,15 @@
 # Changelog
 
+## v1.9.4
+
+### Fixed
+
+- Fix the wrong rsa_key compressed file name for searching when restoring (fixed [#32](https://github.com/ttionya/vaultwarden-backup/issues/32))
+
+<br>
+
+
+
 ## v1.9.3
 
 ### Feature
