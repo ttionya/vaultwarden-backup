@@ -1,5 +1,16 @@
 # Changelog
 
+## v1.9.6
+
+### Feature
+
+- Update Dockerfile base image to `rclone/rclone:1.57.0`
+- Display the time of running the backup program
+
+<br>
+
+
+
 ## v1.9.5
 
 ### Feature
