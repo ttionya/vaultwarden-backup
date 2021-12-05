@@ -115,7 +115,7 @@ function backup_package() {
 
         color blue "display backup ${ZIP_TYPE} file list"
 
-        7z l "${BACKUP_FILE_ZIP}"
+        7z l -p"${ZIP_PASSWORD}" "${BACKUP_FILE_ZIP}"
     else
         color yellow "skip package backup files"
 
