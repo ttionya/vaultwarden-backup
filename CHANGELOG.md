@@ -1,5 +1,20 @@
 # Changelog
 
+## v1.10.0
+
+### Feature
+
+- Encrypt file/dirname for 7z format
+
+### Fixed
+
+- Fix Mail Test error
+- Fix the problem that `MAIL_SMTP_VARIABLES` does not work with `.env` files (fixed [#36](https://github.com/ttionya/vaultwarden-backup/issues/36), fixed [#38](https://github.com/ttionya/vaultwarden-backup/issues/38))
+
+<br>
+
+
+
 ## v1.9.6
 
 ### Feature
