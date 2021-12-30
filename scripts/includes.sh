@@ -322,6 +322,10 @@ function init_env_mail() {
         MAIL_SMTP_ENABLE="FALSE"
     fi
 
+    # MAIL_SMTP_VARIABLES
+    get_env MAIL_SMTP_VARIABLES
+    MAIL_SMTP_VARIABLES="${MAIL_SMTP_VARIABLES:-""}"
+
     # MAIL_WHEN_SUCCESS
     get_env MAIL_WHEN_SUCCESS
     MAIL_WHEN_SUCCESS=$(echo "${MAIL_WHEN_SUCCESS}" | tr '[a-z]' '[A-Z]')
