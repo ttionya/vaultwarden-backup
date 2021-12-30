@@ -190,6 +190,7 @@ function init_env() {
     export_env_file
 
     init_env_dir
+    init_env_mail
 
     # CRON
     get_env CRON
@@ -239,35 +240,6 @@ function init_env() {
     # PING_URL
     get_env PING_URL
     PING_URL="${PING_URL:-""}"
-
-    # MAIL_SMTP_ENABLE
-    # MAIL_TO
-    get_env MAIL_SMTP_ENABLE
-    get_env MAIL_TO
-    MAIL_SMTP_ENABLE=$(echo "${MAIL_SMTP_ENABLE}" | tr '[a-z]' '[A-Z]')
-    if [[ "${MAIL_SMTP_ENABLE}" == "TRUE" && "${MAIL_TO}" ]]; then
-        MAIL_SMTP_ENABLE="TRUE"
-    else
-        MAIL_SMTP_ENABLE="FALSE"
-    fi
-
-    # MAIL_WHEN_SUCCESS
-    get_env MAIL_WHEN_SUCCESS
-    MAIL_WHEN_SUCCESS=$(echo "${MAIL_WHEN_SUCCESS}" | tr '[a-z]' '[A-Z]')
-    if [[ "${MAIL_WHEN_SUCCESS}" == "FALSE" ]]; then
-        MAIL_WHEN_SUCCESS="FALSE"
-    else
-        MAIL_WHEN_SUCCESS="TRUE"
-    fi
-
-    # MAIL_WHEN_FAILURE
-    get_env MAIL_WHEN_FAILURE
-    MAIL_WHEN_FAILURE=$(echo "${MAIL_WHEN_FAILURE}" | tr '[a-z]' '[A-Z]')
-    if [[ "${MAIL_WHEN_FAILURE}" == "FALSE" ]]; then
-        MAIL_WHEN_FAILURE="FALSE"
-    else
-        MAIL_WHEN_FAILURE="TRUE"
-    fi
 
     # TIMEZONE
     get_env TIMEZONE
@@ -336,4 +308,35 @@ function init_env_dir() {
     DATA_SENDS="$(dirname "${DATA_SENDS:-"${DATA_DIR}/sends"}/useless")"
     DATA_SENDS_DIRNAME="$(dirname "${DATA_SENDS}")"
     DATA_SENDS_BASENAME="$(basename "${DATA_SENDS}")"
+}
+
+function init_env_mail() {
+    # MAIL_SMTP_ENABLE
+    # MAIL_TO
+    get_env MAIL_SMTP_ENABLE
+    get_env MAIL_TO
+    MAIL_SMTP_ENABLE=$(echo "${MAIL_SMTP_ENABLE}" | tr '[a-z]' '[A-Z]')
+    if [[ "${MAIL_SMTP_ENABLE}" == "TRUE" && "${MAIL_TO}" ]]; then
+        MAIL_SMTP_ENABLE="TRUE"
+    else
+        MAIL_SMTP_ENABLE="FALSE"
+    fi
+
+    # MAIL_WHEN_SUCCESS
+    get_env MAIL_WHEN_SUCCESS
+    MAIL_WHEN_SUCCESS=$(echo "${MAIL_WHEN_SUCCESS}" | tr '[a-z]' '[A-Z]')
+    if [[ "${MAIL_WHEN_SUCCESS}" == "FALSE" ]]; then
+        MAIL_WHEN_SUCCESS="FALSE"
+    else
+        MAIL_WHEN_SUCCESS="TRUE"
+    fi
+
+    # MAIL_WHEN_FAILURE
+    get_env MAIL_WHEN_FAILURE
+    MAIL_WHEN_FAILURE=$(echo "${MAIL_WHEN_FAILURE}" | tr '[a-z]' '[A-Z]')
+    if [[ "${MAIL_WHEN_FAILURE}" == "FALSE" ]]; then
+        MAIL_WHEN_FAILURE="FALSE"
+    else
+        MAIL_WHEN_FAILURE="TRUE"
+    fi
 }

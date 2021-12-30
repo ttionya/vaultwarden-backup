@@ -11,14 +11,15 @@ fi
 
 # mailx test
 if [[ "$1" == "mail" ]]; then
+    export_env_file
+    init_env_mail
+
     MAIL_SMTP_ENABLE="TRUE"
     MAIL_DEBUG="TRUE"
 
     if [[ -n "$2" ]]; then
         MAIL_TO="$2"
     fi
-
-    init_env
 
     send_mail "vaultwarden Backup Test" "Your SMTP looks configured correctly."
 
