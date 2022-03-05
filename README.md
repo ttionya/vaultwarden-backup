@@ -85,7 +85,31 @@ docker run --rm -it \
 
 Note that you need to set the environment variable `RCLONE_REMOTE_NAME` to a remote name like `YouRemoteName`.
 
+#### Use Docker Compose (Recommend)
+
+If you are a new user or are rebuilding vaultwarden, it is recommended to use the `docker-compose.yml` from the project.
+
+Download `docker-compose.yml` to you machine, edit environment variables and start it.
+
+You need to go to the directory where the `docker-compose.yml` file is saved.
+
+```shell
+# Start
+docker-compose up -d
+
+# Stop
+docker-compose stop
+
+# Restart
+docker-compose restart
+
+# Remove
+docker-compose down
+```
+
 #### Automatic Backups
+
+If you have a running vaultwarden but don't want to use `docker-compose.yml`, we also provide a backup method for you.
 
 Make sure that your vaultwarden container is named `vaultwarden` otherwise you have to replace the container name in the `--volumes-from` section of the docker run call.
 
@@ -104,24 +128,6 @@ docker run -d \
   ttionya/vaultwarden-backup:latest
 ```
 
-#### Use Docker Compose
-
-Download `docker-compose.yml` to you machine, edit environment variables and start it. You need to go to the directory where the `docker-compose.yml` file is saved.
-
-```shell
-# Start
-docker-compose up -d
-
-# Stop
-docker-compose stop
-
-# Restart
-docker-compose restart
-
-# Remove
-docker-compose down
-```
-
 ### Restore
 
 > **Important:** Restore will overwrite the existing files.
@@ -132,12 +138,28 @@ Because the host's files are not accessible in the Docker container, you need to
 
 And go to the directory where your backup files are located.
 
-If you are using automatic backups, please confirm the vaultwarden volume and replace the `--mount` `source` section. Also don't forget to use the environment variable `DATA_DIR` to specify the data directory (`-e DATA_DIR="/data"`).
+If you use the `docker-compose.yml` provided with this project, you can use the following command.
 
 ```shell
 docker run --rm -it \
   --mount type=volume,source=vaultwarden-data,target=/bitwarden/data/ \
   --mount type=bind,source=$(pwd),target=/bitwarden/restore/ \
+  ttionya/vaultwarden-backup:latest restore \
+  [OPTIONS]
+```
+
+If you are using "automatic backups", please confirm the vaultwarden volume and replace the `--mount` `source` section.
+
+Also don't forget to use the environment variable `DATA_DIR` to specify the data directory (`-e DATA_DIR="/data"`).
+
+```shell
+docker run --rm -it \
+  \ # If you are mapping the local folder to a docker container, like `vw-data`
+  --mount type=bind,source="the absolution path to your local folder",target=/data/ \
+  \ # If you are using docker volume
+  --mount type=volume,source="docker volume name",target=/data/ \
+  --mount type=bind,source=$(pwd),target=/bitwarden/restore/ \
+  -e DATA_DIR="/data" \
   ttionya/vaultwarden-backup:latest restore \
   [OPTIONS]
 ```
