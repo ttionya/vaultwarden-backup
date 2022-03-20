@@ -30,14 +30,14 @@ function color() {
 #     None
 ########################################
 function check_rclone_connection() {
-    rclone config show "${RCLONE_REMOTE_NAME}" > /dev/null 2>&1
+    rclone ${RCLONE_GLOBAL_FLAG} config show "${RCLONE_REMOTE_NAME}" > /dev/null 2>&1
     if [[ $? != 0 ]]; then
         color red "rclone configuration information not found"
         color blue "Please configure rclone first, check https://github.com/ttionya/vaultwarden-backup/blob/master/README.md#backup"
         exit 1
     fi
 
-    rclone mkdir "${RCLONE_REMOTE}"
+    rclone ${RCLONE_GLOBAL_FLAG} mkdir "${RCLONE_REMOTE}"
     if [[ $? != 0 ]]; then
         color red "storage system connection failure"
         exit 1
@@ -207,6 +207,10 @@ function init_env() {
     # RCLONE_REMOTE
     RCLONE_REMOTE=$(echo "${RCLONE_REMOTE_NAME}:${RCLONE_REMOTE_DIR}" | sed 's@\(/*\)$@@')
 
+    # RCLONE_GLOBAL_FLAG
+    get_env RCLONE_GLOBAL_FLAG
+    RCLONE_GLOBAL_FLAG="${RCLONE_GLOBAL_FLAG:-""}"
+
     # ZIP_ENABLE
     get_env ZIP_ENABLE
     ZIP_ENABLE=$(echo "${ZIP_ENABLE}" | tr '[a-z]' '[A-Z]')
@@ -260,6 +264,7 @@ function init_env() {
     color yellow "RCLONE_REMOTE_NAME: ${RCLONE_REMOTE_NAME}"
     color yellow "RCLONE_REMOTE_DIR: ${RCLONE_REMOTE_DIR}"
     color yellow "RCLONE_REMOTE: ${RCLONE_REMOTE}"
+    color yellow "RCLONE_GLOBAL_FLAG: ${RCLONE_GLOBAL_FLAG}"
     color yellow "ZIP_ENABLE: ${ZIP_ENABLE}"
     color yellow "ZIP_PASSWORD: ${#ZIP_PASSWORD} Chars"
     color yellow "ZIP_TYPE: ${ZIP_TYPE}"

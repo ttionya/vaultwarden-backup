@@ -232,6 +232,14 @@ Folder for storing backup files in the storage system.
 
 Default: `/BitwardenBackup/`
 
+#### RCLONE_GLOBAL_FLAG
+
+Rclone global flags, see [flags](https://rclone.org/flags/).
+
+**Do not add flags that change the output, such as `-P`, which will affect the deletion of outdated backup files.**
+
+Default: `''`
+
 #### CRON
 
 Schedule run backup script, based on Linux `crond`. You can test the rules [here](https://crontab.guru/#5_*_*_*_*).

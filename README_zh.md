@@ -232,6 +232,14 @@ Rclone 远程名称，你可以自己修改命名。
 
 默认值：`/BitwardenBackup/`
 
+#### RCLONE_GLOBAL_FLAG
+
+Rclone 全局参数，详见 [flags](https://rclone.org/flags/)。
+
+**不要添加会改变输出的全局参数，比如 `-P`，它会影响删除过期备份文件的操作。**
+
+默认值：`''`
+
 #### CRON
 
 `crond` 的规则，它基于 Linux `crond`。你可以在 [这里](https://crontab.guru/#5_*_*_*_*) 进行测试。
