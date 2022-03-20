@@ -1,5 +1,16 @@
 # Changelog
 
+## v1.11.0
+
+### Feature
+
+- Update Dockerfile base image to `rclone/rclone:1.58.0`
+- support Rclone global flags (close [#49](https://github.com/ttionya/vaultwarden-backup/issues/49))
+
+<br>
+
+
+
 ## v1.10.0
 
 ### Feature
