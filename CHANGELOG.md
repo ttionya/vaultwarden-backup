@@ -1,5 +1,19 @@
 # Changelog
 
+## v1.11.1
+
+### Feature
+
+- Update Dockerfile base image to `rclone/rclone:1.58.1`
+
+### Chore
+
+- add dependabot
+
+<br>
+
+
+
 ## v1.11.0
 
 ### Feature
