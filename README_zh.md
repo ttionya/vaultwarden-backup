@@ -85,26 +85,9 @@ docker run --rm -it \
 
 需要注意的是，你要将环境变量 `RCLONE_REMOTE_NAME` 设置为远程名称，比如上面的 `YouRemoteName`。
 
-#### 自动备份
+#### 使用 Docker Compose (推荐)
 
-确保你的 vaultwarden 容器被命名为 `vaultwarden`，否则你需要自行替换 docker run 的 `--volumes-from` 部分。
-
-默认情况下 vaultwarden 的数据文件夹是 `/data`，你需要显式使用环境变量 `DATA_DIR` 指定数据文件夹。
-
-使用默认设置启动容器（每小时的 05 分自动备份）。
-
-```shell
-docker run -d \
-  --restart=always \
-  --name vaultwarden_backup \
-  --volumes-from=vaultwarden \
-  --mount type=volume,source=vaultwarden-rclone-data,target=/config/ \
-  -e RCLONE_REMOTE_NAME="YouRemoteName" \
-  -e DATA_DIR="/data" \
-  ttionya/vaultwarden-backup:latest
-```
-
-#### 使用 Docker Compose
+如果你是新用户或正在重新搭建 vaultwarden，推荐使用项目中的 `docker-compose.yml`.
 
 下载 `docker-compose.yml`，根据实际情况编辑环境变量后启动它。
 
@@ -124,6 +107,27 @@ docker-compose restart
 docker-compose down
 ```
 
+#### 自动备份
+
+如果你有一个正在运行的 vaultwarden，但是不想使用 `docker-compose.yml`，我们同样为你提供了备份方法。
+
+确保你的 vaultwarden 容器被命名为 `vaultwarden`，否则你需要自行替换 docker run 的 `--volumes-from` 部分。
+
+默认情况下 vaultwarden 的数据文件夹是 `/data`，你需要显式使用环境变量 `DATA_DIR` 指定数据文件夹。
+
+使用默认设置启动容器（每小时的 05 分自动备份）。
+
+```shell
+docker run -d \
+  --restart=always \
+  --name vaultwarden_backup \
+  --volumes-from=vaultwarden \
+  --mount type=volume,source=vaultwarden-rclone-data,target=/config/ \
+  -e RCLONE_REMOTE_NAME="YouRemoteName" \
+  -e DATA_DIR="/data" \
+  ttionya/vaultwarden-backup:latest
+```
+
 ### 还原备份
 
 > **重要：** 还原备份会覆盖已存在的文件。
@@ -134,12 +138,28 @@ docker-compose down
 
 首先进入备份文件所在目录。
 
-如果你使用的是自动备份，请确认 vaultwarden 卷的命名，并替换 `--mount` `source` 部分。同时不要忘记使用环境变量 `DATA_DIR` 指定数据目录（`-e DATA_DIR="/data"`）。
+如果你使用的是本项目提供的 `docker-compose.yml`，你可以执行下面的命令。
 
 ```shell
 docker run --rm -it \
   --mount type=volume,source=vaultwarden-data,target=/bitwarden/data/ \
   --mount type=bind,source=$(pwd),target=/bitwarden/restore/ \
+  ttionya/vaultwarden-backup:latest restore \
+  [OPTIONS]
+```
+
+如果你使用的是“自动备份”，请确认 vaultwarden 卷的命名，并替换 `--mount` `source` 部分。
+
+同时不要忘记使用环境变量 `DATA_DIR` 指定数据目录（`-e DATA_DIR="/data"`）。
+
+```shell
+docker run --rm -it \
+  \ # 如果你将本地目录映射到 Docker 容器中，就像 `vw-data` 一样
+  --mount type=bind,source="本地目录的绝对路径",target=/data/ \
+  \ # 如果你使用 Docker 卷
+  --mount type=volume,source="Docker 卷名称",target=/data/ \
+  --mount type=bind,source=$(pwd),target=/bitwarden/restore/ \
+  -e DATA_DIR="/data" \
   ttionya/vaultwarden-backup:latest restore \
   [OPTIONS]
 ```
@@ -211,6 +231,14 @@ Rclone 远程名称，你可以自己修改命名。
 远程存储系统中存放备份文件的文件夹路径。
 
 默认值：`/BitwardenBackup/`
+
+#### RCLONE_GLOBAL_FLAG
+
+Rclone 全局参数，详见 [flags](https://rclone.org/flags/)。
+
+**不要添加会改变输出的全局参数，比如 `-P`，它会影响删除过期备份文件的操作。**
+
+默认值：`''`
 
 #### CRON
 
