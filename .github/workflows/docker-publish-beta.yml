@@ -40,14 +40,3 @@ jobs:
           tags: |
             ttionya/vaultwarden-backup:${{ steps.pre.outputs.tag }}
             ttionya/bitwardenrs-backup:${{ steps.pre.outputs.tag }}
-      -
-        name: Build and push (for arm/v6)
-        uses: docker/build-push-action@v2
-        with:
-          context: '.'
-          file: './Dockerfile.alpine'
-          platforms: 'linux/arm/v6'
-          push: true
-          tags: |
-            ttionya/vaultwarden-backup:${{ steps.pre.outputs.tag }}
-            ttionya/bitwardenrs-backup:${{ steps.pre.outputs.tag }}
