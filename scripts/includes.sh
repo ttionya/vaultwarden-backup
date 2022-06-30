@@ -1,6 +1,7 @@
 #!/bin/bash
 
 ENV_FILE="/.env"
+CRON_CONFIG_FILE="${HOME}/crontabs"
 BACKUP_DIR="/bitwarden/backup"
 RESTORE_DIR="/bitwarden/restore"
 RESTORE_EXTRACT_DIR="/bitwarden/extract"
