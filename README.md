@@ -218,11 +218,23 @@ You need to use this option to specify the `sends.tar` file.
 
 ## Environment Variables
 
-> **Note:** All environment variables have default values, and you can use the docker image without setting environment variables.
+> **Note:** All environment variables have default values, you can use the docker image without setting any environment variables.
 
 #### RCLONE_REMOTE_NAME
 
-Rclone remote name, you can name it yourself.
+Rclone remote name, which needs to be consistent with the remote name in the rclone config.
+
+You can view the current remote name with the following command.
+
+```shell
+docker run --rm -it \
+  --mount type=volume,source=vaultwarden-rclone-data,target=/config/ \
+  ttionya/vaultwarden-backup:latest \
+  rclone config show
+
+# [BitwardenBackup] <- this
+# ...
+```
 
 Default: `BitwardenBackup`
 
@@ -236,25 +248,25 @@ Default: `/BitwardenBackup/`
 
 Rclone global flags, see [flags](https://rclone.org/flags/).
 
-**Do not add flags that change the output, such as `-P`, which will affect the deletion of outdated backup files.**
+**Do not add flags that will change the output, such as `-P`, which will affect the deletion of outdated backup files.**
 
 Default: `''`
 
 #### CRON
 
-Schedule run backup script, based on Linux `crond`. You can test the rules [here](https://crontab.guru/#5_*_*_*_*).
+Schedule run backup script, based on [`supercronic`](https://github.com/aptible/supercronic). You can test the rules [here](https://crontab.guru/#5_*_*_*_*).
 
 Default: `5 * * * *` (run the script at 5 minute every hour)
 
 #### ZIP_ENABLE
 
-Compress the backup file as Zip archive. When set to `'FALSE'`, only upload `.sqlite3` files without compression.
+Pack all backup files into a compressed file. When set to `'FALSE'`, each backup file will be uploaded independently.
 
 Default: `TRUE`
 
 #### ZIP_PASSWORD
 
-Set your password to encrypt Zip archive. Note that the password will always be used when compressing the backup file.
+Password for compressed file. Note that the password will always be used when packing the backup files.
 
 Default: `WHEREISMYPASSWORD?`
 
