@@ -10,7 +10,7 @@ You can use the built-in non-root user and group, named `backuptool`, uid and gi
 
 ## Backup
 
-1. Make sure that the rclone config file in the mounted `vaultwarden-rclone-data` volume is writable by the user.
+1. Make sure that the rclone config file in the mounted `vaultwarden-rclone-data` volume is writable by `backuptool` user.
 
 ```shell
 # enter the container
@@ -26,7 +26,7 @@ chown -R 1100:1100 /config/
 exit
 ```
 
-2. If you want a full backup of the `rsa_key.*`, you need to allow `backuptool` user to read the `rsa_key.*`.
+2. If you want a full backup of the `rsa_key*`, you need to allow `backuptool` user to read the `rsa_key*`.
 
 **With Docker Compose**
 
@@ -37,7 +37,7 @@ docker run --rm -it \
   --entrypoint=bash \
   ttionya/vaultwarden-backup:latest
 
-# make files readable for all users
+# make files readable for all users in the container
 chmod -R +r /bitwarden/data/
 
 # exit the container
@@ -53,7 +53,7 @@ docker run --rm -it \
   --entrypoint=bash \
   ttionya/vaultwarden-backup:latest
 
-# make files readable for all users
+# make files readable for all users in the container
 chmod -R +r /data/
 
 # exit the container
