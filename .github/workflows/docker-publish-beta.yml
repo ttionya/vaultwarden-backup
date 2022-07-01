@@ -39,4 +39,3 @@ jobs:
           push: true
           tags: |
             ttionya/vaultwarden-backup:${{ steps.pre.outputs.tag }}
-            ttionya/bitwardenrs-backup:${{ steps.pre.outputs.tag }}
