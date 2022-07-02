@@ -1,5 +1,16 @@
 # Changelog
 
+## v1.12.0
+
+### Feature
+
+- Support start the container as non-root user (close [#45](https://github.com/ttionya/vaultwarden-backup/issues/45), close [#47](https://github.com/ttionya/vaultwarden-backup/issues/47))
+- Cron tool switched from BusyBox `crond` to [`supercronic`](https://github.com/aptible/supercronic)
+
+<br>
+
+
+
 ## v1.11.1
 
 ### Feature
@@ -8,7 +19,7 @@
 
 ### Chore
 
-- add dependabot
+- Add dependabot
 
 <br>
 
