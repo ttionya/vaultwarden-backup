@@ -218,11 +218,23 @@ docker run --rm -it \
 
 ## 环境变量
 
-> **注意：** 所有的环境变量都有默认值，你可以在不设置环境变量的情况下使用 Docker 镜像。
+> **注意：** 所有的环境变量都有默认值，你可以在不设置任何环境变量的情况下使用 Docker 镜像。
 
 #### RCLONE_REMOTE_NAME
 
-Rclone 远程名称，你可以自己修改命名。
+Rclone 远程名称，它需要和 rclone config 中的远程名称保持一致。
+
+你可以通过以下命令查看当前远程名称。
+
+```shell
+docker run --rm -it \
+  --mount type=volume,source=vaultwarden-rclone-data,target=/config/ \
+  ttionya/vaultwarden-backup:latest \
+  rclone config show
+
+# [BitwardenBackup] <- 就是它
+# ...
+```
 
 默认值：`BitwardenBackup`
 
@@ -242,19 +254,19 @@ Rclone 全局参数，详见 [flags](https://rclone.org/flags/)。
 
 #### CRON
 
-`crond` 的规则，它基于 Linux `crond`。你可以在 [这里](https://crontab.guru/#5_*_*_*_*) 进行测试。
+`crond` 的规则，它基于 [`supercronic`](https://github.com/aptible/supercronic)。你可以在 [这里](https://crontab.guru/#5_*_*_*_*) 进行测试。
 
 默认值：`5 * * * *` (每小时的 05 分自动备份)
 
 #### ZIP_ENABLE
 
-将备份文件打包为 Zip 文件。当设置为 `'FALSE'` 时，会单独上传备份文件。
+将所有备份文件打包为压缩文件。当设置为 `'FALSE'` 时，会单独上传每个备份文件。
 
 默认值：`TRUE`
 
 #### ZIP_PASSWORD
 
-使用密码加密打包的备份文件。请注意，打包备份文件时将始终使用密码。
+压缩文件的密码。请注意，打包备份文件时始终会使用密码。
 
 默认值：`WHEREISMYPASSWORD?`
 
