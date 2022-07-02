@@ -37,7 +37,7 @@ if [[ "$1" == "restore" ]]; then
 fi
 
 function configure_timezone() {
-    ln -sf "/usr/share/zoneinfo/${TIMEZONE}" /tmp/localtime
+    ln -sf "/usr/share/zoneinfo/${TIMEZONE}" "${LOCALTIME_FILE}"
 }
 
 function configure_cron() {
