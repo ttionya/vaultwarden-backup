@@ -19,7 +19,7 @@ Docker containers for [vaultwarden](https://github.com/dani-garcia/vaultwarden) 
 
 For this reason, the backup tool was migrated to [ttionya/vaultwarden-backup](https://github.com/ttionya/vaultwarden-backup).
 
-The old image can still be used, just **deprecated**. It is recommended to migrate to new image [ttionya/vaultwarden-backup](https://hub.docker.com/r/ttionya/vaultwarden-backup).
+The old image can still be used, just **DEPRECATED**. It is recommended to migrate to new image [ttionya/vaultwarden-backup](https://hub.docker.com/r/ttionya/vaultwarden-backup).
 
 **See how to migrate [here](#migration).**
 
@@ -50,13 +50,17 @@ And the following ways of notifying backup results are supported.
 
 > **Important:** We assume you already read the `vaultwarden` [documentation](https://github.com/dani-garcia/vaultwarden/wiki).
 
-### Backup
+### Configure Rclone (⚠️ MUST READ ⚠️)
+
+> **For backup, you need to configure Rclone first, otherwise the backup tool will not work.**
+> 
+> **For restore, it is not necessary.**
 
 We upload the backup files to the storage system by [Rclone](https://rclone.org/).
 
-**You need to configure Rclone first, otherwise the backup tool will not work.**
-
 Visit [GitHub](https://github.com/rclone/rclone) for more storage system tutorials. Different systems get tokens differently.
+
+#### Configure and Check
 
 You can get the token by the following command.
 
@@ -67,6 +71,8 @@ docker run --rm -it \
   rclone config
 ```
 
+**We recommend setting the remote name to `BitwardenBackup`, otherwise you need to specify the environment variable `RCLONE_REMOTE_NAME` as the remote name you set.**
+
 After setting, check the configuration content by the following command.
 
 ```shell
@@ -76,14 +82,18 @@ docker run --rm -it \
   rclone config show
 
 # Microsoft Onedrive Example
-# [YouRemoteName]
+# [BitwardenBackup]
 # type = onedrive
 # token = {"access_token":"access token","token_type":"token type","refresh_token":"refresh token","expiry":"expiry time"}
 # drive_id = driveid
 # drive_type = personal
 ```
 
-Note that you need to set the environment variable `RCLONE_REMOTE_NAME` to a remote name like `YouRemoteName`.
+<br>
+
+
+
+### Backup
 
 #### Use Docker Compose (Recommend)
 
@@ -123,10 +133,13 @@ docker run -d \
   --name vaultwarden_backup \
   --volumes-from=vaultwarden \
   --mount type=volume,source=vaultwarden-rclone-data,target=/config/ \
-  -e RCLONE_REMOTE_NAME="YouRemoteName" \
   -e DATA_DIR="/data" \
   ttionya/vaultwarden-backup:latest
 ```
+
+<br>
+
+
 
 ### Restore
 
@@ -134,9 +147,11 @@ docker run -d \
 
 You need to stop the Docker container before the restore.
 
+You also need to download the backup files to your local machine.
+
 Because the host's files are not accessible in the Docker container, you need to map the directory where the backup files that need to be restored are located to the docker container.
 
-And go to the directory where your backup files are located.
+**And go to the directory where your backup files to be restored are located.**
 
 If you use the `docker-compose.yml` provided with this project, you can use the following command.
 

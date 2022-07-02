@@ -19,7 +19,7 @@
 
 所以这个备份工具迁移到了 [ttionya/vaultwarden-backup](https://github.com/ttionya/vaultwarden-backup) 。
 
-旧的镜像仍然可以使用，只是 **deprecated** 了。建议迁移到新的镜像 [ttionya/vaultwarden-backup](https://hub.docker.com/r/ttionya/vaultwarden-backup) 。
+旧的镜像仍然可以使用，只是 **DEPRECATED** 了。建议迁移到新的镜像 [ttionya/vaultwarden-backup](https://hub.docker.com/r/ttionya/vaultwarden-backup) 。
 
 **请在[这里](#迁移)查看如何迁移**。
 
@@ -50,13 +50,17 @@
 
 > **重要：** 我们假设你已经完整阅读了 `vaultwarden` [文档](https://github.com/dani-garcia/vaultwarden/wiki) 。
 
-### 备份
+### 配置 Rclone (⚠️ 必读 ⚠️)
+
+> **对于备份，你需要先配置 Rclone，否则备份工具不会工作。**
+> 
+> **对于还原，它不是必要的。**
 
 我们通过 [Rclone](https://rclone.org/) 同步备份文件到远程存储系统。
 
-**你需要先配置 Rclone，否则备份工具不会工作。**
-
 访问 [GitHub](https://github.com/rclone/rclone) 了解更多存储系统使用教程，不同的系统获得 Token 的方式不同。
+
+#### 配置和检查
 
 你可以通过下面的命令获得 Token。
 
@@ -67,6 +71,8 @@ docker run --rm -it \
   rclone config
 ```
 
+**我们建议将远程名称设置为 `BitwardenBackup`，否则你需要指定环境变量 `RCLONE_REMOTE_NAME` 为你设置的远程名称。**
+
 完成设置后，可以通过以下命令检查配置情况。
 
 ```shell
@@ -76,14 +82,18 @@ docker run --rm -it \
   rclone config show
 
 # Microsoft Onedrive Example
-# [YouRemoteName]
+# [BitwardenBackup]
 # type = onedrive
 # token = {"access_token":"access token","token_type":"token type","refresh_token":"refresh token","expiry":"expiry time"}
 # drive_id = driveid
 # drive_type = personal
 ```
 
-需要注意的是，你要将环境变量 `RCLONE_REMOTE_NAME` 设置为远程名称，比如上面的 `YouRemoteName`。
+<br>
+
+
+
+### 备份
 
 #### 使用 Docker Compose (推荐)
 
@@ -123,10 +133,13 @@ docker run -d \
   --name vaultwarden_backup \
   --volumes-from=vaultwarden \
   --mount type=volume,source=vaultwarden-rclone-data,target=/config/ \
-  -e RCLONE_REMOTE_NAME="YouRemoteName" \
   -e DATA_DIR="/data" \
   ttionya/vaultwarden-backup:latest
 ```
+
+<br>
+
+
 
 ### 还原备份
 
@@ -134,9 +147,11 @@ docker run -d \
 
 你需要在还原备份前停止 Docker 容器。
 
+你也需要下载备份文件到本地计算机。
+
 因为主机的文件无法在 Docker 容器中直接访问，所以要将需要还原的备份文件所在目录映射到 Docker 容器中。
 
-首先进入备份文件所在目录。
+**首先进入待还原的备份文件所在目录。**
 
 如果你使用的是本项目提供的 `docker-compose.yml`，你可以执行下面的命令。
 
