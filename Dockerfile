@@ -1,4 +1,4 @@
-FROM rclone/rclone:1.58.1
+FROM rclone/rclone:1.59.0
 
 LABEL "repository"="https://github.com/ttionya/vaultwarden-backup" \
   "homepage"="https://github.com/ttionya/vaultwarden-backup" \
