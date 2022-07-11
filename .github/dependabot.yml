@@ -8,3 +8,10 @@ updates:
       interval: daily
     commit-message:
       prefix: 'feat:'
+
+  - package-ecosystem: 'github-actions'
+    directory: /
+    schedule:
+      interval: monthly
+    commit-message:
+      prefix: 'chore:'
