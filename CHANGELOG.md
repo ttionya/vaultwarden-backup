@@ -1,5 +1,20 @@
 # Changelog
 
+## v1.12.1
+
+### Feature
+
+- Support arm/v6 platform (close [#56](https://github.com/ttionya/vaultwarden-backup/issues/56))
+
+### Chore
+
+- Add GitHub Actions dependabot
+- Update GitHub Actions
+
+<br>
+
+
+
 ## v1.12.0
 
 ### Feature
