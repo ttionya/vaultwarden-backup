@@ -1,10 +1,20 @@
 # Changelog
 
+## v1.12.2
+
+### Feature
+
+- Support `arm/v6` platform by using multistage build (close [#56](https://github.com/ttionya/vaultwarden-backup/issues/56))
+
+<br>
+
+
+
 ## v1.12.1
 
 ### Feature
 
-- Support arm/v6 platform (close [#56](https://github.com/ttionya/vaultwarden-backup/issues/56))
+- Support `arm/v6` platform (close [#56](https://github.com/ttionya/vaultwarden-backup/issues/56))
 
 ### Chore
 
