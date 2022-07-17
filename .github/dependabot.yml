@@ -8,6 +8,10 @@ updates:
       interval: daily
     commit-message:
       prefix: 'feat:'
+    ignore:
+      - dependency-name: 'alpine'
+        versions:
+          - '3.15'
 
   - package-ecosystem: 'github-actions'
     directory: /
