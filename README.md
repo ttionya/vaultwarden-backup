@@ -183,6 +183,12 @@ See [Options](#options) for options information.
 
 #### Options
 
+#####  --force-restore
+
+For restore whithout asking for confirmation.
+
+USE WITH CAUTION!!
+
 <details>
 <summary><strong>※ You have the compressed file named <code>backup</code></strong></summary>
 

@@ -10,6 +10,7 @@ RESTORE_FILE_SENDS=""
 RESTORE_FILE_ZIP=""
 RESTORE_FILE_DIR="${RESTORE_DIR}"
 ZIP_PASSWORD=""
+FORCE_RESTORE=false
 
 function clear_extract_dir() {
     rm -rf "${RESTORE_EXTRACT_DIR}"
@@ -262,6 +263,11 @@ function restore() {
                 RESTORE_FILE_SENDS="$(basename "$1")"
                 shift
                 ;;
+            --force-restore)
+                shift
+                FORCE_RESTORE=true
+                shift
+                ;;
             *)
                 color red "Illegal input"
                 exit 1
@@ -273,9 +279,13 @@ function restore() {
     check_empty_input
     check_data_dir_exist
 
-    color yellow "Restore will overwrite the existing files, continue? (y/N)"
-    read -p "(Default: n): " READ_RESTORE_CONTINUE
-    if [[ $(echo "${READ_RESTORE_CONTINUE:-n}" | tr [a-z] [A-Z]) == "Y" ]]; then
+    if $FORCE_RESTORE; then
         restore_file
+    else
+        color yellow "Restore will overwrite the existing files, continue? (y/N)"
+        read -p "(Default: n): " READ_RESTORE_CONTINUE
+        if [[ $(echo "${READ_RESTORE_CONTINUE:-n}" | tr [a-z] [A-Z]) == "Y" ]]; then
+            restore_file
+        fi
     fi
 }
