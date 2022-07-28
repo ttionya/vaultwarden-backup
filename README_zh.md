@@ -183,6 +183,10 @@ docker run --rm -it \
 
 #### 选项
 
+##### -f / --force-restore
+
+强制还原，没有交互式确认。请谨慎使用！！
+
 <details>
 <summary><strong>※ 你有一个名为 <code>backup</code> 的压缩文件</strong></summary>
 

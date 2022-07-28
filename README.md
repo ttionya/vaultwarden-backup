@@ -183,9 +183,9 @@ See [Options](#options) for options information.
 
 #### Options
 
-#####  --force-restore
+##### -f / --force-restore
 
-For restore whithout asking for confirmation.
+For restore without asking for confirmation.
 
 USE WITH CAUTION!!
 
