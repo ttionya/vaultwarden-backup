@@ -16,7 +16,7 @@ FROM rclone/rclone:1.59.0 AS image-linux-armv7
 
 
 # main
-FROM image-${TARGETOS}-${TARGETARCH}${TARGETVARIANT}
+#FROM image-${TARGETOS}-${TARGETARCH}${TARGETVARIANT}
 
 LABEL "repository"="https://github.com/ttionya/vaultwarden-backup" \
   "homepage"="https://github.com/ttionya/vaultwarden-backup" \
