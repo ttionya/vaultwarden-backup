@@ -1,9 +1,9 @@
 # for linux/amd64 platform
-#FROM rclone/rclone:1.59.0 AS image-linux-amd64
+FROM rclone/rclone:1.59.0 AS image-linux-amd64
 
 
 # for linux/arm64 platform
-#FROM rclone/rclone:1.59.0 AS image-linux-arm64
+FROM rclone/rclone:1.59.0 AS image-linux-arm64
 
 
 # for linux/arm/v7 platform
@@ -11,12 +11,12 @@ FROM rclone/rclone:1.59.0 AS image-linux-armv7
 
 
 # for linux/arm/v6 platform
-#FROM alpine:3.15 AS image-linux-armv6
-#RUN apk add --no-cache rclone
+FROM alpine:3.15 AS image-linux-armv6
+RUN apk add --no-cache rclone
 
 
 # main
-#FROM image-${TARGETOS}-${TARGETARCH}${TARGETVARIANT}
+FROM image-${TARGETOS}-${TARGETARCH}${TARGETVARIANT}
 
 LABEL "repository"="https://github.com/ttionya/vaultwarden-backup" \
   "homepage"="https://github.com/ttionya/vaultwarden-backup" \
