@@ -263,7 +263,7 @@ function restore() {
                 RESTORE_FILE_SENDS="$(basename "$1")"
                 shift
                 ;;
-              --force-restore)
+            --force-restore)
                 shift
                 FORCE_RESTORE=true
                 shift
@@ -280,12 +280,12 @@ function restore() {
     check_data_dir_exist
 
     if $FORCE_RESTORE; then
-      restore_file
+        restore_file
     else
         color yellow "Restore will overwrite the existing files, continue? (y/N)"
         read -p "(Default: n): " READ_RESTORE_CONTINUE
         if [[ $(echo "${READ_RESTORE_CONTINUE:-n}" | tr [a-z] [A-Z]) == "Y" ]]; then
             restore_file
         fi
-     fi
+    fi
 }
