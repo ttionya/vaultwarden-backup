@@ -1,5 +1,15 @@
 # Changelog
 
+## v1.13.0
+
+### Feature
+
+- Support force restore without asking for confirmation
+
+<br>
+
+
+
 ## v1.12.2
 
 ### Feature
