@@ -124,8 +124,6 @@ function backup_package() {
 }
 
 function upload() {
-    color blue "upload backup file to storage system"
-
     # upload file not exist
     if [[ ! -e "${UPLOAD_FILE}" ]]; then
         color red "upload file not found"
@@ -135,10 +133,22 @@ function upload() {
         exit 1
     fi
 
-    rclone ${RCLONE_GLOBAL_FLAG} copy "${UPLOAD_FILE}" "${RCLONE_REMOTE}"
-    if [[ $? != 0 ]]; then
-        color red "upload failed"
+    # upload
+    local HAS_ERROR="FALSE"
 
+    for RCLONE_REMOTE_X in "${RCLONE_REMOTE_LIST[@]}"
+    do
+        color blue "upload backup file to storage system $(color yellow "[${RCLONE_REMOTE_X}]")"
+
+        rclone ${RCLONE_GLOBAL_FLAG} copy "${UPLOAD_FILE}" "${RCLONE_REMOTE_X}"
+        if [[ $? != 0 ]]; then
+            color red "upload failed"
+
+            HAS_ERROR="TRUE"
+        fi
+    done
+
+    if [[ "${HAS_ERROR}" == "TRUE" ]]; then
         send_mail_content "FALSE" "File upload failed at $(date +"%Y-%m-%d %H:%M:%S %Z")."
 
         exit 1
@@ -147,18 +157,21 @@ function upload() {
 
 function clear_history() {
     if [[ "${BACKUP_KEEP_DAYS}" -gt 0 ]]; then
-        color blue "delete ${BACKUP_KEEP_DAYS} days ago backup files"
-
-        mapfile -t RCLONE_DELETE_LIST < <(rclone ${RCLONE_GLOBAL_FLAG} lsf "${RCLONE_REMOTE}" --min-age "${BACKUP_KEEP_DAYS}d")
-
-        for RCLONE_DELETE_FILE in "${RCLONE_DELETE_LIST[@]}"
+        for RCLONE_REMOTE_X in "${RCLONE_REMOTE_LIST[@]}"
         do
-            color yellow "deleting \"${RCLONE_DELETE_FILE}\""
+            color blue "delete ${BACKUP_KEEP_DAYS} days ago backup files $(color yellow "[${RCLONE_REMOTE_X}]")"
 
-            rclone ${RCLONE_GLOBAL_FLAG} delete "${RCLONE_REMOTE}/${RCLONE_DELETE_FILE}"
-            if [[ $? != 0 ]]; then
-                color red "delete \"${RCLONE_DELETE_FILE}\" failed"
-            fi
+            mapfile -t RCLONE_DELETE_LIST < <(rclone ${RCLONE_GLOBAL_FLAG} lsf "${RCLONE_REMOTE_X}" --min-age "${BACKUP_KEEP_DAYS}d")
+
+            for RCLONE_DELETE_FILE in "${RCLONE_DELETE_LIST[@]}"
+            do
+                color yellow "deleting \"${RCLONE_DELETE_FILE}\""
+
+                rclone ${RCLONE_GLOBAL_FLAG} delete "${RCLONE_REMOTE_X}/${RCLONE_DELETE_FILE}"
+                if [[ $? != 0 ]]; then
+                    color red "delete \"${RCLONE_DELETE_FILE}\" failed"
+                fi
+            done
         done
     fi
 }
