@@ -476,6 +476,15 @@ docker run --rm -it -e MAIL_SMTP_VARIABLES='<your smtp variables>' -e MAIL_TO='<
 
 
 
+## 高级
+
+- [以非 root 用户运行](docs/run-as-non-root-user.md)
+- [备份到多个远程目标](docs/multiple-remote-destinations.md)
+
+<br>
+
+
+
 ## 更新日志
 
 请查看 [CHANGELOG](CHANGELOG.md) 文件。

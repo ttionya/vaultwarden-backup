@@ -479,6 +479,15 @@ We recommend re-downloading the `docker-compose.yml` file, replacing your enviro
 
 
 
+## Advance
+
+- [Run as non-root user](docs/run-as-non-root-user.md)
+- [Multiple remote destinations](docs/multiple-remote-destinations.md)
+
+<br>
+
+
+
 ## Changelog
 
 Check out [CHANGELOG](CHANGELOG.md) file.
