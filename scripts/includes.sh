@@ -31,6 +31,7 @@ function color() {
 #     None
 ########################################
 function check_rclone_connection() {
+    # check configuration exist
     rclone ${RCLONE_GLOBAL_FLAG} config show "${RCLONE_REMOTE_NAME}" > /dev/null 2>&1
     if [[ $? != 0 ]]; then
         color red "rclone configuration information not found"
@@ -38,9 +39,20 @@ function check_rclone_connection() {
         exit 1
     fi
 
-    rclone ${RCLONE_GLOBAL_FLAG} mkdir "${RCLONE_REMOTE}"
-    if [[ $? != 0 ]]; then
-        color red "storage system connection failure"
+    # check connection
+    local HAS_ERROR="FALSE"
+
+    for RCLONE_REMOTE_X in "${RCLONE_REMOTE_LIST[@]}"
+    do
+        rclone ${RCLONE_GLOBAL_FLAG} mkdir "${RCLONE_REMOTE_X}"
+        if [[ $? != 0 ]]; then
+            color red "storage system connection failure $(color yellow "[${RCLONE_REMOTE_X}]")"
+
+            HAS_ERROR="TRUE"
+        fi
+    done
+
+    if [[ "${HAS_ERROR}" == "TRUE" ]]; then
         exit 1
     fi
 }
@@ -180,6 +192,40 @@ function get_env() {
 }
 
 ########################################
+# Get RCLONE_REMOTE_LIST variables.
+# Arguments:
+#     None
+# Outputs:
+#     variable value
+########################################
+function get_rclone_remote_list() {
+    # RCLONE_REMOTE_LIST
+    RCLONE_REMOTE_LIST=()
+
+    local i=0
+    local RCLONE_REMOTE_NAME_X_REFER
+    local RCLONE_REMOTE_DIR_X_REFER
+    local RCLONE_REMOTE_X
+
+    # for multiple
+    while true; do
+        RCLONE_REMOTE_NAME_X_REFER="RCLONE_REMOTE_NAME_${i}"
+        RCLONE_REMOTE_DIR_X_REFER="RCLONE_REMOTE_DIR_${i}"
+        get_env "${RCLONE_REMOTE_NAME_X_REFER}"
+        get_env "${RCLONE_REMOTE_DIR_X_REFER}"
+
+        if [[ -z "${!RCLONE_REMOTE_NAME_X_REFER}" || -z "${!RCLONE_REMOTE_DIR_X_REFER}" ]]; then
+            break
+        fi
+
+        RCLONE_REMOTE_X=$(echo "${!RCLONE_REMOTE_NAME_X_REFER}:${!RCLONE_REMOTE_DIR_X_REFER}" | sed 's@\(/*\)$@@')
+        RCLONE_REMOTE_LIST=(${RCLONE_REMOTE_LIST[@]} "${RCLONE_REMOTE_X}")
+
+        ((i++))
+    done
+}
+
+########################################
 # Initialization environment variables.
 # Arguments:
 #     None
@@ -200,13 +246,15 @@ function init_env() {
     # RCLONE_REMOTE_NAME
     get_env RCLONE_REMOTE_NAME
     RCLONE_REMOTE_NAME="${RCLONE_REMOTE_NAME:-"BitwardenBackup"}"
+    RCLONE_REMOTE_NAME_0="${RCLONE_REMOTE_NAME}"
 
     # RCLONE_REMOTE_DIR
     get_env RCLONE_REMOTE_DIR
     RCLONE_REMOTE_DIR="${RCLONE_REMOTE_DIR:-"/BitwardenBackup/"}"
+    RCLONE_REMOTE_DIR_0="${RCLONE_REMOTE_DIR}"
 
-    # RCLONE_REMOTE
-    RCLONE_REMOTE=$(echo "${RCLONE_REMOTE_NAME}:${RCLONE_REMOTE_DIR}" | sed 's@\(/*\)$@@')
+    # get RCLONE_REMOTE_LIST
+    get_rclone_remote_list
 
     # RCLONE_GLOBAL_FLAG
     get_env RCLONE_GLOBAL_FLAG
@@ -262,9 +310,12 @@ function init_env() {
     color yellow "DATA_SENDS: ${DATA_SENDS}"
     color yellow "========================================"
     color yellow "CRON: ${CRON}"
-    color yellow "RCLONE_REMOTE_NAME: ${RCLONE_REMOTE_NAME}"
-    color yellow "RCLONE_REMOTE_DIR: ${RCLONE_REMOTE_DIR}"
-    color yellow "RCLONE_REMOTE: ${RCLONE_REMOTE}"
+
+    for RCLONE_REMOTE_X in "${RCLONE_REMOTE_LIST[@]}"
+    do
+        color yellow "RCLONE_REMOTE: ${RCLONE_REMOTE_X}"
+    done
+
     color yellow "RCLONE_GLOBAL_FLAG: ${RCLONE_GLOBAL_FLAG}"
     color yellow "ZIP_ENABLE: ${ZIP_ENABLE}"
     color yellow "ZIP_PASSWORD: ${#ZIP_PASSWORD} Chars"
