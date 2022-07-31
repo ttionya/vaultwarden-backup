@@ -1,5 +1,15 @@
 # Changelog
 
+## v1.14.0
+
+### Feature
+
+- Support backup to multiple remote storage
+
+<br>
+
+
+
 ## v1.13.0
 
 ### Feature
