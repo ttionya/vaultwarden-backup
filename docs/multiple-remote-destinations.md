@@ -10,6 +10,10 @@ You can do this by setting the following environment variables.
 
 ## Usage
 
+> **Don't forget to add the new Rclone remote before running with the new environment variables.**
+> 
+> Document [here](https://github.com/ttionya/vaultwarden-backup#configure-rclone-%EF%B8%8F-must-read-%EF%B8%8F).
+
 Set additional remote destinations via environment variables `RCLONE_REMOTE_NAME_N` and `RCLONE_REMOTE_DIR_N`.
 
 Note:
