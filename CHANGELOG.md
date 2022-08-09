@@ -1,5 +1,19 @@
 # Changelog
 
+## v1.14.1
+
+### Feature
+
+- Update Dockerfile base image to `rclone/rclone:1.59.1`
+
+### Chore
+
+- Skip sync when dependabot push branch
+
+<br>
+
+
+
 ## v1.14.0
 
 ### Feature
@@ -35,6 +49,7 @@
 ### Feature
 
 - Support `arm/v6` platform (close [#56](https://github.com/ttionya/vaultwarden-backup/issues/56))
+- Update Dockerfile base image to `rclone/rclone:1.59.0`
 
 ### Chore
 
