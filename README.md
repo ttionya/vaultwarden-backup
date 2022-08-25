@@ -389,9 +389,7 @@ Default: `/bitwarden/data`
 
 Edit this environment variable only if you explicitly want to change the time prefix of the backup file (e.g. 20220101). **Incorrect configuration may result in the backup file being overwritten by mistake.**
 
-Example of possible scenario: When performing monthly or weekly backups, you want only month or week information to appear on the backup file name.
-
-See [`BACKUP_FILE_DATE_SUFFIX`](#backup_file_date_suffix) for details.
+Same rule as [`BACKUP_FILE_DATE_SUFFIX`](#backup_file_date_suffix).
 
 Default: `%Y%m%d`
 
