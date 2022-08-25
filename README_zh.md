@@ -382,6 +382,16 @@ Rclone 全局参数，详见 [flags](https://rclone.org/flags/)。
 
 > **你无需修改这些环境变量，除非你知道你在做什么。**
 
+#### BACKUP_FILE_DATE
+
+只有在你确实想修改备份文件的时间前缀（如 20220101）时编辑该环境变量。**错误的配置可能导致备份文件被错误的覆盖。**
+
+可能的场景示例：每月或每周执行备份时，你希望在备份文件名上只出现月份或星期信息。
+
+更多信息见 [`BACKUP_FILE_DATE_SUFFIX`](#backup_file_date_suffix)。
+
+Default: `%Y%m%d`
+
 #### DATA_DB
 
 指定 sqlite 数据库文件的路径。
