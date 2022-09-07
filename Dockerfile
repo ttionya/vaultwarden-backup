@@ -21,6 +21,8 @@ RUN apk add --no-cache ca-certificates fuse \
   && rm -rf /rclone-linux-arm.zip /rclone-linux-arm \
   && rclone --help
 
+ENV XDG_CONFIG_HOME="/config"
+
 
 # main
 FROM image-${TARGETOS}-${TARGETARCH}${TARGETVARIANT}
