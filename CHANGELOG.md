@@ -1,5 +1,15 @@
 # Changelog
 
+## v1.14.3
+
+### Fixed
+
+- Fix arm/v6 can't use the latest rclone (fixed [#81](https://github.com/ttionya/vaultwarden-backup/issues/81))
+
+<br>
+
+
+
 ## v1.14.2
 
 ### Feature
