@@ -192,7 +192,7 @@ USE WITH CAUTION!!
 <details>
 <summary><strong>※ You have the compressed file named <code>backup</code></strong></summary>
 
-##### --zip-file
+##### --zip-file \<file>
 
 You need to use this option to specify the `backup` compressed package.
 
@@ -211,23 +211,23 @@ If not, the password will be asked for interactively.
 <details>
 <summary><strong>※ You have multiple independent backup files</strong></summary>
 
-##### --db-file
+##### --db-file \<file>
 
 You need to use this option to specify the `db.sqlite3` file.
 
-##### --config-file
+##### --config-file \<file>
 
 You need to use this option to specify the `config.json` file.
 
-##### --rsakey-file
+##### --rsakey-file \<file>
 
 You need to use this option to specify the `rsakey.tar` file.
 
-##### --attachments-file
+##### --attachments-file \<file>
 
 You need to use this option to specify the `attachments.tar` file.
 
-##### --sends-file
+##### --sends-file \<file>
 
 You need to use this option to specify the `sends.tar` file.
 

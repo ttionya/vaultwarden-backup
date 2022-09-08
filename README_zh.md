@@ -190,7 +190,7 @@ docker run --rm -it \
 <details>
 <summary><strong>※ 你有一个名为 <code>backup</code> 的压缩文件</strong></summary>
 
-##### --zip-file
+##### --zip-file \<file>
 
 你需要使用这个选项来指定 `backup` 压缩文件。
 
@@ -209,23 +209,23 @@ docker run --rm -it \
 <details>
 <summary><strong>※ 你有多个独立的备份文件</strong></summary>
 
-##### --db-file
+##### --db-file \<file>
 
 你需要用这个选项来指定 `db.sqlite3` 文件。
 
-##### --config-file
+##### --config-file \<file>
 
 你需要用这个选项来指定 `config.json` 文件。
 
-##### --rsakey-file
+##### --rsakey-file \<file>
 
 你需要用这个选项来指定 `rsakey.tar` 文件。
 
-##### --attachments-file
+##### --attachments-file \<file>
 
 你需要用这个选项来指定 `attachments.tar` 文件。
 
-##### --sends-file
+##### --sends-file \<file>
 
 你需要用这个选项来指定 `sends.tar` 文件。
 
