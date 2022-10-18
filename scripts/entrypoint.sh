@@ -53,4 +53,4 @@ configure_timezone
 configure_cron
 
 # foreground run crond
-supercronic -passthrough-logs -quiet "${CRON_CONFIG_FILE}"
+exec supercronic -passthrough-logs -quiet "${CRON_CONFIG_FILE}"
