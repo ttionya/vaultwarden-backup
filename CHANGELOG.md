@@ -1,5 +1,15 @@
 # Changelog
 
+## v1.15.0 (20221018)
+
+### Feature
+
+- Execute `supercronic` as PID 1 process
+
+<br>
+
+
+
 ## v1.14.4 (20220916)
 
 ### Feature
