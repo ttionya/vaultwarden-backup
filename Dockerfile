@@ -1,13 +1,13 @@
 # for linux/amd64 platform
-FROM rclone/rclone:1.59.2 AS image-linux-amd64
+FROM rclone/rclone:1.60.0 AS image-linux-amd64
 
 
 # for linux/arm64 platform
-FROM rclone/rclone:1.59.2 AS image-linux-arm64
+FROM rclone/rclone:1.60.0 AS image-linux-arm64
 
 
 # for linux/arm/v7 platform
-FROM rclone/rclone:1.59.2 AS image-linux-armv7
+FROM rclone/rclone:1.60.0 AS image-linux-armv7
 
 
 # for linux/arm/v6 platform
