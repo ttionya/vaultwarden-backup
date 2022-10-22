@@ -1,13 +1,13 @@
 # for linux/amd64 platform
-FROM rclone/rclone:1.59.2 AS image-linux-amd64
+FROM rclone/rclone:1.60.0 AS image-linux-amd64
 
 
 # for linux/arm64 platform
-FROM rclone/rclone:1.59.2 AS image-linux-arm64
+FROM rclone/rclone:1.60.0 AS image-linux-arm64
 
 
 # for linux/arm/v7 platform
-FROM rclone/rclone:1.59.2 AS image-linux-armv7
+FROM rclone/rclone:1.60.0 AS image-linux-armv7
 
 
 # for linux/arm/v6 platform
@@ -15,7 +15,7 @@ FROM alpine:3.15 AS image-linux-armv6
 
 RUN apk add --no-cache ca-certificates fuse \
   && echo "user_allow_other" >> /etc/fuse.conf \
-  && wget https://downloads.rclone.org/v1.59.2/rclone-v1.59.2-linux-arm.zip -O /rclone-linux-arm.zip \
+  && wget https://downloads.rclone.org/v1.60.0/rclone-v1.60.0-linux-arm.zip -O /rclone-linux-arm.zip \
   && unzip /rclone-linux-arm.zip -j -d /rclone-linux-arm \
   && cp /rclone-linux-arm/rclone /usr/local/bin/ \
   && rm -rf /rclone-linux-arm.zip /rclone-linux-arm \
