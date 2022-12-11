@@ -143,6 +143,18 @@ function send_ping() {
 }
 
 ########################################
+# Configure PostgreSQL password file.
+# Arguments:
+#     None
+########################################
+function configure_postgresql() {
+    if [[ "${DB_TYPE}" == "POSTGRESQL" ]]; then
+        echo "${PG_HOST}:${PG_PORT}:${PG_DBNAME}:${PG_USERNAME}:${PG_PASSWORD}" > ~/.pgpass
+        chmod 0600 ~/.pgpass
+    fi
+}
+
+########################################
 # Export variables from .env file.
 # Arguments:
 #     None
