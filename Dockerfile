@@ -40,7 +40,7 @@ COPY scripts/*.sh /app/
 
 RUN chmod +x /app/*.sh \
   && mkdir -m 777 /bitwarden \
-  && apk add --no-cache bash heirloom-mailx p7zip sqlite supercronic tzdata \
+  && apk add --no-cache bash heirloom-mailx p7zip postgresql14-client sqlite supercronic tzdata \
   && ln -sf "${LOCALTIME_FILE}" /etc/localtime \
   && addgroup -g "${USER_ID}" "${USER_NAME}" \
   && adduser -u "${USER_ID}" -Ds /bin/sh -G "${USER_NAME}" "${USER_NAME}"
