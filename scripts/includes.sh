@@ -237,6 +237,7 @@ function init_env() {
     export_env_file
 
     init_env_dir
+    init_env_db
     init_env_mail
 
     # CRON
@@ -305,11 +306,19 @@ function init_env() {
 
     color yellow "========================================"
     color yellow "DATA_DIR: ${DATA_DIR}"
-    color yellow "DATA_DB: ${DATA_DB}"
     color yellow "DATA_CONFIG: ${DATA_CONFIG}"
     color yellow "DATA_RSAKEY: ${DATA_RSAKEY}"
     color yellow "DATA_ATTACHMENTS: ${DATA_ATTACHMENTS}"
     color yellow "DATA_SENDS: ${DATA_SENDS}"
+    color yellow "========================================"
+    color yellow "DB_TYPE: ${DB_TYPE}"
+
+    if [[ "${DB_TYPE}" == "POSTGRESQL" ]]; then
+        color yellow "DB_URL: ${PG_HOST}:${PG_PORT}:${PG_DBNAME}:${PG_USERNAME}:***(${#PG_PASSWORD} Chars)"
+    else
+        color yellow "DATA_DB: ${DATA_DB}"
+    fi
+
     color yellow "========================================"
     color yellow "CRON: ${CRON}"
 
@@ -367,6 +376,35 @@ function init_env_dir() {
     DATA_SENDS="$(dirname "${DATA_SENDS:-"${DATA_DIR}/sends"}/useless")"
     DATA_SENDS_DIRNAME="$(dirname "${DATA_SENDS}")"
     DATA_SENDS_BASENAME="$(basename "${DATA_SENDS}")"
+}
+
+function init_env_db() {
+    # DB_TYPE
+    get_env DB_TYPE
+
+    if [[ "${DB_TYPE^^}" == "POSTGRESQL" ]]; then # postgresql
+        DB_TYPE="POSTGRESQL"
+
+        # PG_HOST
+        get_env PG_HOST
+
+        # PG_PORT
+        get_env PG_PORT
+        PG_PORT="${PG_PORT:-"5432"}"
+
+        # PG_DBNAME
+        get_env PG_DBNAME
+        PG_DBNAME="${PG_DBNAME:-"vaultwarden"}"
+
+        # PG_USERNAME
+        get_env PG_USERNAME
+        PG_USERNAME="${PG_USERNAME:-"vaultwarden"}"
+
+        # PG_PASSWORD
+        get_env PG_PASSWORD
+    else # sqlite
+        DB_TYPE="SQLITE"
+    fi
 }
 
 function init_env_mail() {

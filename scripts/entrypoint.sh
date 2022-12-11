@@ -36,6 +36,13 @@ if [[ "$1" == "restore" ]]; then
     exit 0
 fi
 
+function configure_postgresql() {
+    if [[ "${DB_TYPE}" == "POSTGRESQL" ]]; then
+        echo "${PG_HOST}:${PG_PORT}:${PG_DBNAME}:${PG_USERNAME}:${PG_PASSWORD}" > ~/.pgpass
+        chmod 0600 ~/.pgpass
+    fi
+}
+
 function configure_timezone() {
     ln -sf "/usr/share/zoneinfo/${TIMEZONE}" "${LOCALTIME_FILE}"
 }
@@ -49,6 +56,7 @@ function configure_cron() {
 
 init_env
 check_rclone_connection
+configure_postgresql
 configure_timezone
 configure_cron
 

@@ -8,8 +8,10 @@ function clear_dir() {
 
 function backup_init() {
     NOW="$(date +"${BACKUP_FILE_DATE_FORMAT}")"
-    # backup vaultwarden database file
-    BACKUP_FILE_DB="${BACKUP_DIR}/db.${NOW}.sqlite3"
+    # backup vaultwarden database file (sqlite)
+    BACKUP_FILE_DB_SQLITE="${BACKUP_DIR}/db.${NOW}.sqlite3"
+    # backup vaultwarden database file (postgresql)
+    BACKUP_FILE_DB_POSTGRESQL="${BACKUP_DIR}/db.${NOW}.dump"
     # backup vaultwarden config file
     BACKUP_FILE_CONFIG="${BACKUP_DIR}/config.${NOW}.json"
     # backup vaultwarden rsakey files
@@ -22,13 +24,26 @@ function backup_init() {
     BACKUP_FILE_ZIP="${BACKUP_DIR}/backup.${NOW}.${ZIP_TYPE}"
 }
 
-function backup_db() {
+function backup_db_sqlite() {
     color blue "backup vaultwarden sqlite database"
 
     if [[ -f "${DATA_DB}" ]]; then
-        sqlite3 "${DATA_DB}" ".backup '${BACKUP_FILE_DB}'"
+        sqlite3 "${DATA_DB}" ".backup '${BACKUP_FILE_DB_SQLITE}'"
     else
         color yellow "not found vaultwarden sqlite database, skipping"
+    fi
+}
+
+function backup_db_postgresql() {
+    color blue "backup vaultwarden postgresql database"
+
+    pg_dump -Fc -h "${PG_HOST}" -p "${PG_PORT}" -d "${PG_DBNAME}" -U "${PG_USERNAME}" -f "${BACKUP_FILE_DB_POSTGRESQL}"
+    if [[ $? != 0 ]]; then
+        color red "backup vaultwarden postgresql database failed"
+
+        send_mail_content "FALSE" "Backup failed at $(date +"%Y-%m-%d %H:%M:%S %Z"). Reason: Backup postgresql database failed."
+
+        exit 1
     fi
 }
 
@@ -90,7 +105,11 @@ function backup_sends() {
 function backup() {
     mkdir -p "${BACKUP_DIR}"
 
-    backup_db
+    case "${DB_TYPE}" in
+        SQLITE)     backup_db_sqlite ;;
+        POSTGRESQL) backup_db_postgresql ;;
+    esac
+
     backup_config
     backup_rsakey
     backup_attachments
