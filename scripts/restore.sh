@@ -76,7 +76,7 @@ function restore_db_sqlite() {
 }
 
 function restore_db_postgresql() {
-    color blue "restore vaultwarden sqlite database"
+    color blue "restore vaultwarden postgresql database"
 
     pg_restore -h "${PG_HOST}" -p "${PG_PORT}" -d "${PG_DBNAME}" -U "${PG_USERNAME}" -c "${RESTORE_FILE_DB}"
 
