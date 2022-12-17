@@ -12,6 +12,8 @@ function backup_init() {
     BACKUP_FILE_DB_SQLITE="${BACKUP_DIR}/db.${NOW}.sqlite3"
     # backup vaultwarden database file (postgresql)
     BACKUP_FILE_DB_POSTGRESQL="${BACKUP_DIR}/db.${NOW}.dump"
+    # backup vaultwarden database file (mysql)
+    BACKUP_FILE_DB_MYSQL="${BACKUP_DIR}/db.${NOW}.sql"
     # backup vaultwarden config file
     BACKUP_FILE_CONFIG="${BACKUP_DIR}/config.${NOW}.json"
     # backup vaultwarden rsakey files
@@ -38,6 +40,19 @@ function backup_db_postgresql() {
     color blue "backup vaultwarden postgresql database"
 
     pg_dump -Fc -h "${PG_HOST}" -p "${PG_PORT}" -d "${PG_DBNAME}" -U "${PG_USERNAME}" -f "${BACKUP_FILE_DB_POSTGRESQL}"
+    if [[ $? != 0 ]]; then
+        color red "backup vaultwarden postgresql database failed"
+
+        send_mail_content "FALSE" "Backup failed at $(date +"%Y-%m-%d %H:%M:%S %Z"). Reason: Backup postgresql database failed."
+
+        exit 1
+    fi
+}
+
+function backup_db_mysql() {
+    color blue "backup vaultwarden mysql database"
+
+    mysqldump -h "${MYSQL_HOST}" -P "${MYSQL_PORT}" -u "${MYSQL_USERNAME}" -p"${MYSQL_PASSWORD}" "${MYSQL_DATABASE}" > "${BACKUP_FILE_DB_MYSQL}"
     if [[ $? != 0 ]]; then
         color red "backup vaultwarden postgresql database failed"
 
@@ -108,6 +123,7 @@ function backup() {
     case "${DB_TYPE}" in
         SQLITE)     backup_db_sqlite ;;
         POSTGRESQL) backup_db_postgresql ;;
+        MYSQL)      backup_db_mysql ;;
     esac
 
     backup_config
