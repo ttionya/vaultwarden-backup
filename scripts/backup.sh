@@ -52,7 +52,7 @@ function backup_db_postgresql() {
 function backup_db_mysql() {
     color blue "backup vaultwarden mysql database"
 
-    mysqldump -h "${MYSQL_HOST}" -P "${MYSQL_PORT}" -u "${MYSQL_USERNAME}" -p"${MYSQL_PASSWORD}" "${MYSQL_DATABASE}" > "${BACKUP_FILE_DB_MYSQL}"
+    mariadb-dump -h "${MYSQL_HOST}" -P "${MYSQL_PORT}" -u "${MYSQL_USERNAME}" -p"${MYSQL_PASSWORD}" "${MYSQL_DATABASE}" > "${BACKUP_FILE_DB_MYSQL}"
     if [[ $? != 0 ]]; then
         color red "backup vaultwarden postgresql database failed"
 

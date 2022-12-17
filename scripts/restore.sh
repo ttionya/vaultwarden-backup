@@ -90,7 +90,7 @@ function restore_db_postgresql() {
 function restore_db_mysql() {
     color blue "restore vaultwarden mysql database"
 
-    mysql -h "${MYSQL_HOST}" -P "${MYSQL_PORT}" -u "${MYSQL_USERNAME}" -p"${MYSQL_PASSWORD}" "${MYSQL_DATABASE}" < "${RESTORE_FILE_DB}"
+    mariadb -h "${MYSQL_HOST}" -P "${MYSQL_PORT}" -u "${MYSQL_USERNAME}" -p"${MYSQL_PASSWORD}" "${MYSQL_DATABASE}" < "${RESTORE_FILE_DB}"
 
     if [[ $? == 0 ]]; then
         color green "restore vaultwarden mysql database successful"
