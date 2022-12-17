@@ -33,6 +33,7 @@ This tool supports backing up the following files or directories.
 
 - `db.sqlite3` (for SQLite database)
 - `db.dump` (for PostgreSQL database)
+- `db.sql` (for MySQL / MariaDB database)
 - `config.json`
 - `rsa_key*` (multiple files)
 - `attachments` (directory)
@@ -493,6 +494,7 @@ We recommend re-downloading the `docker-compose.yml` file, replacing your enviro
 - [Run as non-root user](docs/run-as-non-root-user.md)
 - [Multiple remote destinations](docs/multiple-remote-destinations.md)
 - [Using the PostgreSQL backend](docs/using-the-postgresql-backend.md)
+- [Using the MySQL(MariaDB) backend](docs/using-the-mysql-or-mariadb-backend.md)
 
 <br>
 
