@@ -87,6 +87,18 @@ function restore_db_postgresql() {
     fi
 }
 
+function restore_db_mysql() {
+    color blue "restore vaultwarden mysql database"
+
+    mysql -h "${MYSQL_HOST}" -P "${MYSQL_PORT}" -u "${MYSQL_USERNAME}" -p"${MYSQL_PASSWORD}" "${MYSQL_DATABASE}" < "${RESTORE_FILE_DB}"
+
+    if [[ $? == 0 ]]; then
+        color green "restore vaultwarden mysql database successful"
+    else
+        color red "restore vaultwarden mysql database failed"
+    fi
+}
+
 function restore_config() {
     color blue "restore vaultwarden config"
 
@@ -205,6 +217,7 @@ function restore_file() {
             case "${DB_TYPE}" in
                 SQLITE)     restore_db_sqlite ;;
                 POSTGRESQL) restore_db_postgresql ;;
+                MYSQL)      restore_db_mysql ;;
             esac
         fi
         if [[ -n "${RESTORE_FILE_CONFIG}" ]]; then
