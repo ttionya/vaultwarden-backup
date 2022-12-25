@@ -1,5 +1,16 @@
 # Changelog
 
+## v1.15.3 (20221225)
+
+### Feature
+
+- Update Dockerfile base image to `rclone/rclone:1.61.1`
+- Replace `p7zip` with `7zip` package (close [#86](https://github.com/ttionya/vaultwarden-backup/issues/68))
+
+<br>
+
+
+
 ## v1.15.2 (20221119)
 
 ### Feature

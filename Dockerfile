@@ -1,31 +1,4 @@
-# for linux/amd64 platform
-FROM rclone/rclone:1.60.1 AS image-linux-amd64
-
-
-# for linux/arm64 platform
-FROM rclone/rclone:1.60.1 AS image-linux-arm64
-
-
-# for linux/arm/v7 platform
-FROM rclone/rclone:1.60.1 AS image-linux-armv7
-
-
-# for linux/arm/v6 platform
-FROM alpine:3.15 AS image-linux-armv6
-
-RUN apk add --no-cache ca-certificates fuse \
-  && echo "user_allow_other" >> /etc/fuse.conf \
-  && wget https://downloads.rclone.org/v1.60.1/rclone-v1.60.1-linux-arm.zip -O /rclone-linux-arm.zip \
-  && unzip /rclone-linux-arm.zip -j -d /rclone-linux-arm \
-  && cp /rclone-linux-arm/rclone /usr/local/bin/ \
-  && rm -rf /rclone-linux-arm.zip /rclone-linux-arm \
-  && rclone --help
-
-ENV XDG_CONFIG_HOME="/config"
-
-
-# main
-FROM image-${TARGETOS}-${TARGETARCH}${TARGETVARIANT}
+FROM rclone/rclone:1.61.1
 
 LABEL "repository"="https://github.com/ttionya/vaultwarden-backup" \
   "homepage"="https://github.com/ttionya/vaultwarden-backup" \
@@ -40,7 +13,7 @@ COPY scripts/*.sh /app/
 
 RUN chmod +x /app/*.sh \
   && mkdir -m 777 /bitwarden \
-  && apk add --no-cache bash heirloom-mailx mariadb-client p7zip postgresql14-client sqlite supercronic tzdata \
+  && apk add --no-cache 7zip bash heirloom-mailx mariadb-client postgresql14-client sqlite supercronic tzdata \
   && apk info --no-cache -Lq mariadb-client | grep -vE '/bin/mariadb$' | grep -vE '/bin/mariadb-dump$' | xargs -I {} rm -f "/{}" \
   && ln -sf "${LOCALTIME_FILE}" /etc/localtime \
   && addgroup -g "${USER_ID}" "${USER_NAME}" \
