@@ -54,9 +54,9 @@ function backup_db_mysql() {
 
     mariadb-dump -h "${MYSQL_HOST}" -P "${MYSQL_PORT}" -u "${MYSQL_USERNAME}" -p"${MYSQL_PASSWORD}" "${MYSQL_DATABASE}" > "${BACKUP_FILE_DB_MYSQL}"
     if [[ $? != 0 ]]; then
-        color red "backup vaultwarden postgresql database failed"
+        color red "backup vaultwarden mysql database failed"
 
-        send_mail_content "FALSE" "Backup failed at $(date +"%Y-%m-%d %H:%M:%S %Z"). Reason: Backup postgresql database failed."
+        send_mail_content "FALSE" "Backup failed at $(date +"%Y-%m-%d %H:%M:%S %Z"). Reason: Backup mysql database failed."
 
         exit 1
     fi
