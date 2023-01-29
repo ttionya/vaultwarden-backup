@@ -39,7 +39,7 @@ function restore_zip() {
     fi
 
     # get restore db file
-    FIND_FILE_DB="$( basename "$(ls ${RESTORE_EXTRACT_DIR}/db.*.sqlite3 2>/dev/null)" )"
+    FIND_FILE_DB="$( basename "$(ls ${RESTORE_EXTRACT_DIR}/db.*.* 2>/dev/null)" )"
     RESTORE_FILE_DB="${FIND_FILE_DB:-}"
 
     # get restore config file
@@ -63,7 +63,7 @@ function restore_zip() {
     restore_file
 }
 
-function restore_db() {
+function restore_db_sqlite() {
     color blue "restore vaultwarden sqlite database"
 
     cp -f "${RESTORE_FILE_DB}" "${DATA_DB}"
@@ -72,6 +72,30 @@ function restore_db() {
         color green "restore vaultwarden sqlite database successful"
     else
         color red "restore vaultwarden sqlite database failed"
+    fi
+}
+
+function restore_db_postgresql() {
+    color blue "restore vaultwarden postgresql database"
+
+    pg_restore -h "${PG_HOST}" -p "${PG_PORT}" -d "${PG_DBNAME}" -U "${PG_USERNAME}" -c "${RESTORE_FILE_DB}"
+
+    if [[ $? == 0 ]]; then
+        color green "restore vaultwarden postgresql database successful"
+    else
+        color red "restore vaultwarden postgresql database failed"
+    fi
+}
+
+function restore_db_mysql() {
+    color blue "restore vaultwarden mysql database"
+
+    mariadb -h "${MYSQL_HOST}" -P "${MYSQL_PORT}" -u "${MYSQL_USERNAME}" -p"${MYSQL_PASSWORD}" "${MYSQL_DATABASE}" < "${RESTORE_FILE_DB}"
+
+    if [[ $? == 0 ]]; then
+        color green "restore vaultwarden mysql database successful"
+    else
+        color red "restore vaultwarden mysql database failed"
     fi
 }
 
@@ -190,7 +214,11 @@ function restore_file() {
         fi
 
         if [[ -n "${RESTORE_FILE_DB}" ]]; then
-            restore_db
+            case "${DB_TYPE}" in
+                SQLITE)     restore_db_sqlite ;;
+                POSTGRESQL) restore_db_postgresql ;;
+                MYSQL)      restore_db_mysql ;;
+            esac
         fi
         if [[ -n "${RESTORE_FILE_CONFIG}" ]]; then
             restore_config
@@ -276,6 +304,8 @@ function restore() {
     done
 
     init_env_dir
+    init_env_db
+    configure_postgresql
     check_empty_input
     check_data_dir_exist
 

@@ -31,7 +31,9 @@ The old image can still be used, just **DEPRECATED**. It is recommended to migra
 
 This tool supports backing up the following files or directories.
 
-- `db.sqlite3`
+- `db.sqlite3` (for SQLite database)
+- `db.dump` (for PostgreSQL database)
+- `db.sql` (for MySQL / MariaDB database)
 - `config.json`
 - `rsa_key*` (multiple files)
 - `attachments` (directory)
@@ -213,7 +215,7 @@ If not, the password will be asked for interactively.
 
 ##### --db-file \<file>
 
-You need to use this option to specify the `db.sqlite3` file.
+You need to use this option to specify the `db.*` file.
 
 ##### --config-file \<file>
 
@@ -491,6 +493,8 @@ We recommend re-downloading the `docker-compose.yml` file, replacing your enviro
 
 - [Run as non-root user](docs/run-as-non-root-user.md)
 - [Multiple remote destinations](docs/multiple-remote-destinations.md)
+- [Using the PostgreSQL backend](docs/using-the-postgresql-backend.md)
+- [Using the MySQL(MariaDB) backend](docs/using-the-mysql-or-mariadb-backend.md)
 
 <br>
 
