@@ -1,5 +1,15 @@
 # Changelog
 
+## v1.16.0 (20230129)
+
+### Feature
+
+- Support PostgreSQL/MySQL/MariaDB backend (close [#88](https://github.com/ttionya/vaultwarden-backup/issues/88))
+
+<br>
+
+
+
 ## v1.15.3 (20221225)
 
 ### Feature
