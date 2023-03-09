@@ -6,23 +6,22 @@ on:
       - 'v*.*.*'
       - '!v*.*.*-*'
 
+permissions:
+  contents: write
+
 jobs:
   release:
     name: Create Release
+
     runs-on: ubuntu-latest
+
     steps:
       -
         name: Checkout
         uses: actions/checkout@v3
       -
         name: Release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: softprops/action-gh-release@v1
         with:
-          tag_name: ${{ github.ref }}
-          release_name: ${{ github.ref }}
-          draft: false
-          prerelease: false
           body: |
             [CHANGELOG](https://github.com/ttionya/vaultwarden-backup/blob/master/CHANGELOG.md)

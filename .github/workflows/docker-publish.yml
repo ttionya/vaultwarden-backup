@@ -4,20 +4,24 @@ on:
   push:
     tags:
       - 'v*.*.*'
-      - '!v*.*.*-*'
+  schedule:
+    - cron: '0 0 10,20,30 * *'
 
 jobs:
-  publish:
+  publish-stable:
     name: Docker Publish
+
     runs-on: ubuntu-latest
+
+    if: ${{ github.event_name != 'schedule' && !contains(github.ref, '-') }}
+
     steps:
       -
         name: Checkout
         uses: actions/checkout@v3
       -
         name: Prepare
-        id: pre
-        run: echo ::set-output name=tag::${GITHUB_REF#refs/tags/v}
+        run: echo "TAG=${GITHUB_REF_NAME#v}" >> $GITHUB_ENV
       -
         name: Set up QEMU
         uses: docker/setup-qemu-action@v2
@@ -40,6 +44,94 @@ jobs:
           push: true
           tags: |
             ttionya/vaultwarden-backup:latest
-            ttionya/vaultwarden-backup:${{ steps.pre.outputs.tag }}
+            ttionya/vaultwarden-backup:${{ env.TAG }}
             ttionya/bitwardenrs-backup:latest
-            ttionya/bitwardenrs-backup:${{ steps.pre.outputs.tag }}
+            ttionya/bitwardenrs-backup:${{ env.TAG }}
+
+  publish-beta:
+    name: Docker Publish Beta
+
+    runs-on: ubuntu-latest
+
+    if: ${{ github.event_name != 'schedule' && contains(github.ref, '-') }}
+
+    steps:
+      -
+        name: Checkout
+        uses: actions/checkout@v3
+      -
+        name: Prepare
+        run: echo "TAG=${GITHUB_REF_NAME#v}" >> $GITHUB_ENV
+      -
+        name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+      -
+        name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+      -
+        name: Login to DockerHub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      -
+        name: Build and push
+        uses: docker/build-push-action@v4
+        with:
+          context: '.'
+          file: './Dockerfile'
+          platforms: 'linux/amd64,linux/arm64,linux/arm/v6,linux/arm/v7'
+          push: true
+          tags: |
+            ttionya/vaultwarden-backup:${{ env.TAG }}
+
+  publish-schedule:
+    name: Docker Publish Schedule
+
+    runs-on: ubuntu-latest
+
+    if: ${{ github.event_name == 'schedule' }}
+
+    steps:
+      -
+        name: Get Tag
+        id: tag
+        uses: pozetroninc/github-action-get-latest-release@v0.7.0
+        with:
+          repository: ${{ github.repository }}
+          excludes: prerelease, draft
+      -
+        name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: refs/tags/${{ steps.tag.outputs.release }}
+      -
+        name: Prepare
+        run: |
+          TAG=${{ steps.tag.outputs.release }}
+          echo "TAG=${TAG#v}" >> $GITHUB_ENV
+      -
+        name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+      -
+        name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+      -
+        name: Login to DockerHub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      -
+        name: Build and push
+        uses: docker/build-push-action@v4
+        with:
+          context: '.'
+          file: './Dockerfile'
+          platforms: 'linux/amd64,linux/arm64,linux/arm/v6,linux/arm/v7'
+          push: true
+          tags: |
+            ttionya/vaultwarden-backup:latest
+            ttionya/vaultwarden-backup:${{ env.TAG }}
+            ttionya/bitwardenrs-backup:latest
+            ttionya/bitwardenrs-backup:${{ env.TAG }}

@@ -3,11 +3,17 @@ name: 'Sync'
 on:
   push:
   delete:
+  schedule:
+    - cron: '0 9 * * *'
 
 jobs:
   gitee:
+    name: Sync to Gitee
+
     runs-on: ubuntu-latest
+
     if: ${{ github.actor != 'dependabot[bot]' }}
+
     steps:
       -
         name: Checkout

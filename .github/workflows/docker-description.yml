@@ -11,7 +11,9 @@ on:
 jobs:
   sync:
     name: Docker README.md Sync
+
     runs-on: ubuntu-latest
+
     steps:
       -
         name: Checkout
