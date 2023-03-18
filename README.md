@@ -245,7 +245,7 @@ You need to use this option to specify the `sends.tar` file.
 
 #### RCLONE_REMOTE_NAME
 
-Rclone remote name, which needs to be consistent with the remote name in the rclone config.
+The name of the Rclone remote, which needs to be consistent with the remote name in the rclone config.
 
 You can view the current remote name with the following command.
 
@@ -263,7 +263,7 @@ Default: `BitwardenBackup`
 
 #### RCLONE_REMOTE_DIR
 
-Folder for storing backup files in the storage system.
+The folder where backup files are stored in the storage system.
 
 Default: `/BitwardenBackup/`
 
@@ -277,7 +277,7 @@ Default: `''`
 
 #### CRON
 
-Schedule run backup script, based on [`supercronic`](https://github.com/aptible/supercronic). You can test the rules [here](https://crontab.guru/#5_*_*_*_*).
+Schedule to run the backup script, based on [`supercronic`](https://github.com/aptible/supercronic). You can test the rules [here](https://crontab.guru/#5_*_*_*_*).
 
 Default: `5 * * * *` (run the script at 5 minute every hour)
 
@@ -289,7 +289,7 @@ Default: `TRUE`
 
 #### ZIP_PASSWORD
 
-Password for compressed file. Note that the password will always be used when packing the backup files.
+The password for the compressed file. Note that the password will always be used when packing the backup files.
 
 Default: `WHEREISMYPASSWORD?`
 
@@ -299,7 +299,7 @@ Because the `zip` format is less secure, we offer archives in `7z` format for th
 
 It should be noted that the password for vaultwarden is encrypted before it is sent to the server. The server does not have plaintext passwords, so the `zip` format is good enough for basic encryption needs.
 
-Default: `zip` (only support `zip` and `7z` format)
+Default: `zip` (only support `zip` and `7z` formats)
 
 #### BACKUP_KEEP_DAYS
 
@@ -309,8 +309,8 @@ Default: `0`
 
 #### BACKUP_FILE_DATE_SUFFIX
 
-Each backup file is suffixed by default with `%Y%m%d`. If you back up your vault multiple times a day that suffix is not unique anymore.
-This environment variable allows you to append that date (`%Y%m%d${BACKUP_FILE_DATE_SUFFIX}`) suffix in order to create a unique backup name.
+Each backup file is suffixed by default with `%Y%m%d`. If you back up your vault multiple times a day, that suffix is not unique anymore.
+This environment variable allows you to append a unique suffix to that date (`%Y%m%d${BACKUP_FILE_DATE_SUFFIX}`) to create a unique backup name.
 
 Note that only numbers, upper and lower case letters, `-`, `_`, `%` are supported.
 
@@ -320,7 +320,7 @@ Default: `''`
 
 #### TIMEZONE
 
-You should set the available timezone name.
+Set your timezone name.
 
 Here is timezone list at [wikipedia](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones).
 
@@ -342,7 +342,7 @@ Because the configuration for sending emails is too complicated, we allow you to
 
 **We will set the subject according to the usage scenario, so you should not use the `-s` option.**
 
-When testing, we will add the `-v` option to display detailed information.
+During testing, we will add the `-v` option to display detailed information.
 
 ```text
 # My example:
@@ -356,36 +356,36 @@ When testing, we will add the `-v` option to display detailed information.
 -S from=<my-email-address>
 ```
 
-See [here](https://www.systutorials.com/sending-email-from-mailx-command-in-linux-using-gmails-smtp/) for more information.
+For more information, refer to [here](https://www.systutorials.com/sending-email-from-mailx-command-in-linux-using-gmails-smtp/).
 
 #### MAIL_TO
 
-Who will receive the notification email.
+This specifies the recipient of the notification email.
 
 #### MAIL_WHEN_SUCCESS
 
-Send email when backup is successful.
+Sends an email when the backup is successful.
 
 Default: `TRUE`
 
 #### MAIL_WHEN_FAILURE
 
-Send email when backup fails.
+Sends an email when the backup fails.
 
 Default: `TRUE`
 
 #### DATA_DIR
 
-The folder where vaultwarden stores its data.
+This folder stores the data of vaultwarden.
 
-When using `Docker Compose`, you don't need to change it, but when using automatic backup, you need to change it to `/data`.
+When using `Docker Compose`, this does not need to be changed. However, when using automatic backup, you need to change it to `/data`.
 
 Default: `/bitwarden/data`
 
 <details>
 <summary><strong>※ Other environment variables</strong></summary>
 
-> **You don't need to change these environment variables unless you know what you're doing.**
+> **You don't need to change these environment variables unless you know what you are doing.**
 
 #### BACKUP_FILE_DATE
 
@@ -397,25 +397,25 @@ Default: `%Y%m%d`
 
 #### DATA_DB
 
-Set the sqlite database file path.
+Set the path for the sqlite database file.
 
 Default: `${DATA_DIR}/db.sqlite3`
 
 #### DATA_RSAKEY
 
-Set the rsa_key file path.
+Set the path for the rsa_key file.
 
 Default: `${DATA_DIR}/rsa_key`
 
 #### DATA_ATTACHMENTS
 
-Set the attachment folder path.
+Set the path for the attachment folder.
 
 Default: `${DATA_DIR}/attachments`
 
 #### DATA_SENDS
 
-Set the sends folder path.
+Set the path for the sends folder.
 
 Default: `${DATA_DIR}/sends`
 
@@ -425,9 +425,9 @@ Default: `${DATA_DIR}/sends`
 
 
 
-## Use `.env` file
+## Using `.env` file
 
-If you prefer to use env file instead of environment variables, you can map the env file containing the environment variables to the `/.env` file in the container.
+If you prefer using an env file instead of environment variables, you can map the env file containing the environment variables to the `/.env` file in the container.
 
 ```shell
 docker run -d \
@@ -441,7 +441,7 @@ docker run -d \
 
 ## Docker Secrets
 
-As an alternative to passing sensitive information via environment variables, `_FILE` may be appended to the previously listed environment variables, causing the initialization script to load the values for those variables from files present in the container. In particular, this can be used to load passwords from Docker secrets stored in `/run/secrets/<secret_name>` files.
+As an alternative to passing sensitive information via environment variables, `_FILE` may be appended to the previously listed environment variables. This causes the initialization script to load the values for those variables from files present in the container. In particular, this can be used to load passwords from Docker secrets stored in `/run/secrets/<secret_name>` files.
 
 ```shell
 docker run -d \
@@ -455,7 +455,7 @@ docker run -d \
 
 ## About Priority
 
-We will use the environment variables first, then the contents of the file ending in `_FILE` as defined by the environment variables, followed by the contents of the file ending in `_FILE` as defined in the `.env` file, and finally the `.env` file values.
+We will use the environment variables first, followed by the contents of the file ending in `_FILE` as defined by the environment variables. Next, we will use the contents of the file ending in `_FILE` as defined in the `.env` file, and finally the values from the `.env` file itself.
 
 <br>
 
@@ -463,7 +463,7 @@ We will use the environment variables first, then the contents of the file endin
 
 ## Mail Test
 
-You can use the following command to test the mail sending. Remember to replace your smtp variables.
+You can use the following command to test mail sending. Remember to replace your SMTP variables.
 
 ```shell
 docker run --rm -it -e MAIL_SMTP_VARIABLES='<your smtp variables>' ttionya/vaultwarden-backup:latest mail <mail send to>
@@ -502,7 +502,7 @@ We recommend re-downloading the `docker-compose.yml` file, replacing your enviro
 
 ## Changelog
 
-Check out [CHANGELOG](CHANGELOG.md) file.
+Check out the [CHANGELOG](CHANGELOG.md) file.
 
 <br>
 

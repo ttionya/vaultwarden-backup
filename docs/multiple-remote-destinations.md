@@ -1,8 +1,8 @@
 # Multiple remote destinations
 
-Some users want to upload to multiple remote destinations when backing up.
+Some users want to upload their backups to multiple remote destinations.
 
-You can do this by setting the following environment variables.
+You can achieve this by setting the following environment variables.
 
 <br>
 
@@ -12,17 +12,14 @@ You can do this by setting the following environment variables.
 
 > **Don't forget to add the new Rclone remote before running with the new environment variables.**
 > 
-> Document [here](https://github.com/ttionya/vaultwarden-backup#configure-rclone-%EF%B8%8F-must-read-%EF%B8%8F).
+> Find more information on how to configure Rclone [here](https://github.com/ttionya/vaultwarden-backup#configure-rclone-%EF%B8%8F-must-read-%EF%B8%8F).
 
-Set additional remote destinations via environment variables `RCLONE_REMOTE_NAME_N` and `RCLONE_REMOTE_DIR_N`.
+To set additional remote destinations, use the environment variables `RCLONE_REMOTE_NAME_N` and `RCLONE_REMOTE_DIR_N`, where:
 
-Note:
-
-- `N` is the serial number, which is a number
-- `N` starts from 1 and is consecutive, e.g. 1 2 3 4 5 ...
+- `N` is a serial number, starting from 1 and increasing consecutively for each additional destination
 - `RCLONE_REMOTE_NAME_N` and `RCLONE_REMOTE_DIR_N` cannot be empty
 
-The script will break parsing of environment variables for remote destinations where the serial number is not consecutive or the value is empty.
+Note that if the serial number is not consecutive or the value is empty, the script will break parsing the environment variables for remote destinations.
 
 <br>
 
@@ -41,7 +38,7 @@ environment:
 ...
 ```
 
-Both remote destinations are available, they are `BitwardenBackup:/BitwardenBackup/` and `extraRemoteName1:extraRemoteDir1`.
+With the above example, both remote destinations are available: `BitwardenBackup:/BitwardenBackup/` and `extraRemoteName1:extraRemoteDir1`.
 
 <br>
 
@@ -61,7 +58,7 @@ environment:
 ...
 ```
 
-All 5 remote destinations are available.
+With the above example, all 5 remote destinations are available.
 
 <br>
 
@@ -81,7 +78,7 @@ environment:
 ...
 ```
 
-`RCLONE_REMOTE_DIR_2` is not defined, so only the remote destination before it is available. They are `remoteName:remoteDir` and `extraRemoteName1:extraRemoteDir1`.
+With the above example, only the remote destinations before `RCLONE_REMOTE_DIR_2` are available: `remoteName:remoteDir` and `extraRemoteName1:extraRemoteDir1`.
 
 <br>
 

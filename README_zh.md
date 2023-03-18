@@ -317,9 +317,9 @@ Rclone 全局参数，详见 [flags](https://rclone.org/flags/)。
 
 #### TIMEZONE
 
-设置合法的时区名称。
+设置你的时区名称。
 
-[这里](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) 可以查看所有合法的时区名称。
+在 [wikipedia](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) 查看所有时区名称。
 
 默认值：`UTC`
 
@@ -339,7 +339,7 @@ Rclone 全局参数，详见 [flags](https://rclone.org/flags/)。
 
 **我们会根据使用场景设置邮件主题，所以你不应该使用 `-s` 选项。**
 
-在测试时，我们将增加 `-v` 选项来显示详细信息。
+测试期间，我们将增加 `-v` 选项来显示详细信息。
 
 ```text
 # 提供一个能正常使用的例子：
@@ -353,11 +353,11 @@ Rclone 全局参数，详见 [flags](https://rclone.org/flags/)。
 -S from=<my-email-address>
 ```
 
-[这里](https://www.systutorials.com/sending-email-from-mailx-command-in-linux-using-gmails-smtp/) 能查看更多配置说明。
+在 [这里](https://www.systutorials.com/sending-email-from-mailx-command-in-linux-using-gmails-smtp/) 查看更多配置说明。
 
 #### MAIL_TO
 
-设置会收到通知邮件的邮箱。
+指定通知邮件的接收者。
 
 #### MAIL_WHEN_SUCCESS
 

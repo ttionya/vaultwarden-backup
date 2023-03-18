@@ -1,8 +1,8 @@
 # Run as non-root user
 
-By default the container runs the backup script as root user. There are few things you need to set to run the container as non-root user if you wish to do so.
+By default, the container runs the backup script as the root user. If you wish to run the container as a non-root user, there are a few things you need to set.
 
-You can use the built-in non-root user and group, named `backuptool`, uid and gid are `1100`.
+You can use the built-in non-root user and group, named `backuptool`, with the UID and GID of `1100`.
 
 <br>
 
@@ -26,7 +26,7 @@ chown -R 1100:1100 /config/
 exit
 ```
 
-2. If you want a full backup of the `rsa_key*`, you need to allow `backuptool` user to read the `rsa_key*`.
+2. If you want a full backup of the `rsa_key*`, you need to allow the `backuptool` user to read the `rsa_key*`.
 
 **With Docker Compose**
 
@@ -89,4 +89,4 @@ docker run -d \
 
 ## Restore
 
-Do the restore normally, nothing special.
+Perform the restore normally, nothing special.
