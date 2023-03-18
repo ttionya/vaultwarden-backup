@@ -493,6 +493,7 @@ We recommend re-downloading the `docker-compose.yml` file, replacing your enviro
 
 - [Run as non-root user](docs/run-as-non-root-user.md)
 - [Multiple remote destinations](docs/multiple-remote-destinations.md)
+- [Manually trigger a backup](docs/manually-trigger-a-backup.md)
 - [Using the PostgreSQL backend](docs/using-the-postgresql-backend.md)
 - [Using the MySQL(MariaDB) backend](docs/using-the-mysql-or-mariadb-backend.md)
 
