@@ -53,5 +53,14 @@ configure_postgresql
 configure_timezone
 configure_cron
 
+# backup manually
+if [[ "$1" == "backup" ]]; then
+    color yellow "Manually triggering a backup will only execute the backup script once, and the container will exit upon completion."
+
+    bash "/app/backup.sh"
+
+    exit 0
+fi
+
 # foreground run crond
 exec supercronic -passthrough-logs -quiet "${CRON_CONFIG_FILE}"
