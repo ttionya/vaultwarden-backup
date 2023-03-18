@@ -490,6 +490,7 @@ docker run --rm -it -e MAIL_SMTP_VARIABLES='<your smtp variables>' -e MAIL_TO='<
 
 - [以非 root 用户运行](docs/run-as-non-root-user.md)
 - [备份到多个远程目标](docs/multiple-remote-destinations.md)
+- [手动触发备份](docs/manually-trigger-a-backup.md)
 - [使用 PostgreSQL 数据库](docs/using-the-postgresql-backend.md)
 - [使用 MySQL(MariaDB) 数据库](docs/using-the-mysql-or-mariadb-backend.md)
 
