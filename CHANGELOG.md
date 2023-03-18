@@ -1,5 +1,16 @@
 # Changelog
 
+## v1.17.0 (20230318)
+
+### Feature
+
+- Update Dockerfile base image to `rclone/rclone:1.62.2`
+- Support manually trigger a backup (close [#94](https://github.com/ttionya/vaultwarden-backup/issues/94))
+
+<br>
+
+
+
 ## v1.16.0 (20230129)
 
 ### Feature
