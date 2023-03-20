@@ -7,6 +7,7 @@
 备份 [vaultwarden](https://github.com/dani-garcia/vaultwarden) (之前叫 `bitwarden_rs`) 数据并通过 [Rclone](https://rclone.org/) 同步到其他存储系统。
 
 - [Docker Hub](https://hub.docker.com/r/ttionya/vaultwarden-backup)
+- [GitHub Packages](https://github.com/ttionya/vaultwarden-backup/pkgs/container/vaultwarden-backup)
 - [GitHub](https://github.com/ttionya/vaultwarden-backup)
 
 <br>

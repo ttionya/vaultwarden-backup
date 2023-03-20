@@ -7,6 +7,7 @@ README | [中文文档](README_zh.md)
 Docker containers for [vaultwarden](https://github.com/dani-garcia/vaultwarden) (formerly known as **`bitwarden_rs`**) backup to remote.
 
 - [Docker Hub](https://hub.docker.com/r/ttionya/vaultwarden-backup)
+- [GitHub Packages](https://github.com/ttionya/vaultwarden-backup/pkgs/container/vaultwarden-backup)
 - [GitHub](https://github.com/ttionya/vaultwarden-backup)
 
 <br>
