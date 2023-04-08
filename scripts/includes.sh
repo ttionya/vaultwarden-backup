@@ -304,7 +304,7 @@ function init_env() {
     get_env BACKUP_FILE_DATE
     get_env BACKUP_FILE_DATE_SUFFIX
     BACKUP_FILE_DATE="$(echo "${BACKUP_FILE_DATE:-"%Y%m%d"}${BACKUP_FILE_DATE_SUFFIX}" | sed 's/[^0-9a-zA-Z%_-]//g')"
-    BACKUP_FILE_DATE_FORMAT="${BACKUP_FILE_SUFFIX:-"${BACKUP_FILE_DATE}"}"
+    BACKUP_FILE_DATE_FORMAT="$(echo "${BACKUP_FILE_SUFFIX:-"${BACKUP_FILE_DATE}"}" | sed 's/\///g')"
 
     # PING_URL
     get_env PING_URL
