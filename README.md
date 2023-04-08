@@ -308,16 +308,17 @@ Only keep last a few days backup files in the storage system. Set to `0` to keep
 
 Default: `0`
 
-#### BACKUP_FILE_DATE_SUFFIX
+#### BACKUP_FILE_SUFFIX
 
-Each backup file is suffixed by default with `%Y%m%d`. If you back up your vault multiple times a day, that suffix is not unique anymore.
-This environment variable allows you to append a unique suffix to that date (`%Y%m%d${BACKUP_FILE_DATE_SUFFIX}`) to create a unique backup name.
+Each backup file is suffixed by default with `%Y%m%d`. If you back up your vault multiple times a day, that suffix is not unique anymore. This environment variable allows you to append a unique suffix to that date to create a unique backup name.
 
-Note that only numbers, upper and lower case letters, `-`, `_`, `%` are supported.
+You can use any character except for `/` since it cannot be used in Linux file names.
+
+This environment variable combines the functionalities of [`BACKUP_FILE_DATE`](#backup_file_date) and [`BACKUP_FILE_DATE_SUFFIX`](#backup_file_date_suffix), and has a higher priority. You can directly use this environment variable to control the suffix of the backup files.
 
 Please use the [date man page](https://man7.org/linux/man-pages/man1/date.1.html) for the format notation.
 
-Default: `''`
+Default: `%Y%m%d`
 
 #### TIMEZONE
 
@@ -390,11 +391,26 @@ Default: `/bitwarden/data`
 
 #### BACKUP_FILE_DATE
 
+You should use the [`BACKUP_FILE_SUFFIX`](#backup_file_suffix) environment variable instead.
+
 Edit this environment variable only if you explicitly want to change the time prefix of the backup file (e.g. 20220101). **Incorrect configuration may result in the backup file being overwritten by mistake.**
 
 Same rule as [`BACKUP_FILE_DATE_SUFFIX`](#backup_file_date_suffix).
 
 Default: `%Y%m%d`
+
+#### BACKUP_FILE_DATE_SUFFIX
+
+You should use the [`BACKUP_FILE_SUFFIX`](#backup_file_suffix) environment variable instead.
+
+Each backup file is suffixed by default with `%Y%m%d`. If you back up your vault multiple times a day, that suffix is not unique anymore.
+This environment variable allows you to append a unique suffix to that date (`%Y%m%d${BACKUP_FILE_DATE_SUFFIX}`) to create a unique backup name.
+
+Note that only numbers, upper and lower case letters, `-`, `_`, `%` are supported.
+
+Please use the [date man page](https://man7.org/linux/man-pages/man1/date.1.html) for the format notation.
+
+Default: `''`
 
 #### DATA_DB
 

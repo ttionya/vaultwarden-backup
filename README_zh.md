@@ -306,15 +306,17 @@ Rclone 全局参数，详见 [flags](https://rclone.org/flags/)。
 
 默认值：`0`
 
-#### BACKUP_FILE_DATE_SUFFIX
+#### BACKUP_FILE_SUFFIX
 
-每个备份文件都默认添加 `%Y%m%d` 后缀。如果你在一天内多次进行备份，每次备份都会被覆盖之前同名的文件。这个环境变量允许你追加日期信息 (`%Y%m%d${BACKUP_FILE_DATE_SUFFIX}`) 以便每次备份生成不同的文件。
+每个备份文件都默认添加 `%Y%m%d` 后缀。如果你在一天内多次进行备份，每次备份都会被覆盖之前同名的文件。这个环境变量允许你自定义日期信息以便每次备份生成不同的文件。
 
-注意：只支持数字、大小写字母、`-`、`_` 和 `%`。
+你可以使用除了 `/` 外的任何字符，无法使用的原因是 Linux 不能使用 `/` 作为文件名。
+
+这个环境变量合并了 [`BACKUP_FILE_DATE`](#backup_file_date) 和 [`BACKUP_FILE_DATE_SUFFIX`](#backup_file_date_suffix) 的功能，并且优先级更高。现在你可以直接通过它控制备份文件后缀。
 
 在 [这里](https://man7.org/linux/man-pages/man1/date.1.html) 查看时间格式化说明。
 
-默认值：`''`
+默认值：`%Y%m%d`
 
 #### TIMEZONE
 
@@ -387,11 +389,25 @@ Rclone 全局参数，详见 [flags](https://rclone.org/flags/)。
 
 #### BACKUP_FILE_DATE
 
+你应该使用 [`BACKUP_FILE_SUFFIX`](#backup_file_suffix) 环境变量替代。 
+
 只有在你确定想修改备份文件的时间前缀（如 20220101）时编辑该环境变量。**错误的配置可能导致备份文件被错误的覆盖。**
 
 规则同 [`BACKUP_FILE_DATE_SUFFIX`](#backup_file_date_suffix)。
 
 Default: `%Y%m%d`
+
+#### BACKUP_FILE_DATE_SUFFIX
+
+你应该使用 [`BACKUP_FILE_SUFFIX`](#backup_file_suffix) 环境变量替代。
+
+每个备份文件都默认添加 `%Y%m%d` 后缀。如果你在一天内多次进行备份，每次备份都会被覆盖之前同名的文件。这个环境变量允许你追加日期信息 (`%Y%m%d${BACKUP_FILE_DATE_SUFFIX}`) 以便每次备份生成不同的文件。
+
+注意：只支持数字、大小写字母、`-`、`_` 和 `%`。
+
+在 [这里](https://man7.org/linux/man-pages/man1/date.1.html) 查看时间格式化说明。
+
+默认值：`''`
 
 #### DATA_DB
 
