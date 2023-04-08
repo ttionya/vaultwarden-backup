@@ -300,10 +300,11 @@ function init_env() {
     BACKUP_KEEP_DAYS="${BACKUP_KEEP_DAYS:-"0"}"
 
     # BACKUP_FILE_DATE_FORMAT
+    get_env BACKUP_FILE_SUFFIX
     get_env BACKUP_FILE_DATE
     get_env BACKUP_FILE_DATE_SUFFIX
-    BACKUP_FILE_DATE="${BACKUP_FILE_DATE:-"%Y%m%d"}"
-    BACKUP_FILE_DATE_FORMAT=$(echo "${BACKUP_FILE_DATE}${BACKUP_FILE_DATE_SUFFIX}" | sed 's/[^0-9a-zA-Z%_-]//g')
+    BACKUP_FILE_DATE="$(echo "${BACKUP_FILE_DATE:-"%Y%m%d"}${BACKUP_FILE_DATE_SUFFIX}" | sed 's/[^0-9a-zA-Z%_-]//g')"
+    BACKUP_FILE_DATE_FORMAT="$(echo "${BACKUP_FILE_SUFFIX:-"${BACKUP_FILE_DATE}"}" | sed 's/\///g')"
 
     # PING_URL
     get_env PING_URL
@@ -345,7 +346,7 @@ function init_env() {
     color yellow "ZIP_ENABLE: ${ZIP_ENABLE}"
     color yellow "ZIP_PASSWORD: ${#ZIP_PASSWORD} Chars"
     color yellow "ZIP_TYPE: ${ZIP_TYPE}"
-    color yellow "BACKUP_FILE_DATE_FORMAT: ${BACKUP_FILE_DATE_FORMAT}"
+    color yellow "BACKUP_FILE_DATE_FORMAT: ${BACKUP_FILE_DATE_FORMAT} (example \"[filename].$(date +"${BACKUP_FILE_DATE_FORMAT}").[ext]\")"
     color yellow "BACKUP_KEEP_DAYS: ${BACKUP_KEEP_DAYS}"
     if [[ -n "${PING_URL}" ]]; then
         color yellow "PING_URL: ${PING_URL}"
