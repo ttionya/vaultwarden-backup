@@ -1,5 +1,15 @@
 # Changelog
 
+## v1.18.0 (20230408)
+
+### Feature
+
+- Add environment variable `BACKUP_FILE_SUFFIX`
+
+<br>
+
+
+
 ## v1.17.0 (20230318)
 
 ### Feature
