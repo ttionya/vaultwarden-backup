@@ -512,12 +512,18 @@ function init_env_mail() {
 
 function init_env_ntfy() {
     # NTFY_ENABLE
-    # NTFY_HOST
-    # NTFY_TOPIC
     get_env NTFY_ENABLE
+
+    # NTFY_HOST
     get_env NTFY_HOST
+    NTFY_HOST="${NTFY_HOST:-"ntfy.sh"}"
+
+    # NTFY_TOPIC
     get_env NTFY_TOPIC
+    NTFY_TOPIC="${NTFY_TOPIC:-"vaultwarden-backup"}"
+
     NTFY_ENABLE=$(echo "${NTFY_ENABLE}" | tr '[a-z]' '[A-Z]')
+
     if [[ "${NTFY_ENABLE}" == "TRUE" && "${NTFY_HOST}" && "${NTFY_TOPIC}" ]]; then
         NTFY_ENABLE="TRUE"
     else
