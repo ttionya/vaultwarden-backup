@@ -334,7 +334,7 @@ Use [healthcheck.io](https://healthchecks.io/) url or similar cron monitoring to
 
 #### NTFY_ENABLE
 
-The tool uses [ntfy.sh](https://ntfy.sh) to send notification.
+The tool uses [ntfy.sh](https://ntfy.sh) to send push notification.
 
 Default: `FALSE`
 
