@@ -332,6 +332,24 @@ Default: `UTC`
 
 Use [healthcheck.io](https://healthchecks.io/) url or similar cron monitoring to perform `GET` requests after a **successful** backup.
 
+#### NTFY_ENABLE
+
+The tool uses [ntfy.sh](https://ntfy.sh) to send notification.
+
+Default: `FALSE`
+
+#### NTFY_HOST
+
+Ntfy host.
+
+Default: `ntfy.sh`
+
+#### NTFY_TOPIC
+
+Ntfy topic.
+
+Default: `vaultwarden-backup`
+
 #### MAIL_SMTP_ENABLE
 
 The tool uses [heirloom-mailx](https://www.systutorials.com/docs/linux/man/1-heirloom-mailx/) to send mail.
