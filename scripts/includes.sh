@@ -143,6 +143,33 @@ function send_ping() {
 }
 
 ########################################
+# Send notification to ntfy.
+# Arguments:
+#     notification content
+########################################
+function send_ntfy() {
+    if [[ "${NTFY_ENABLE}" == "FALSE" ]]; then
+        return
+    fi
+
+    if [[ "${NTFY_HOST}" == "" ]]; then
+        color red "missing ntfy host"
+    fi
+
+    if [[ "${NTFY_TOPIC}" == "" ]]; then
+        color red "missing ntfy topic"
+    fi
+
+    curl -s -d "$1" ${NTFY_HOST}/${NTFY_TOPIC} > /dev/null
+
+    if [[ $? != 0 ]]; then
+        color red "ntfy sending failed"
+    else
+        color blue "ntfy send was successfully"
+    fi
+}
+
+########################################
 # Configure PostgreSQL password file.
 # Arguments:
 #     None
@@ -251,6 +278,7 @@ function init_env() {
     init_env_dir
     init_env_db
     init_env_mail
+    init_env_ntfy
 
     # CRON
     get_env CRON
@@ -350,6 +378,11 @@ function init_env() {
     color yellow "BACKUP_KEEP_DAYS: ${BACKUP_KEEP_DAYS}"
     if [[ -n "${PING_URL}" ]]; then
         color yellow "PING_URL: ${PING_URL}"
+    fi
+    color yellow "NTFY_ENABLE: ${NTFY_ENABLE}"
+    if [[ "${NTFY_ENABLE}" == "TRUE" ]]; then
+        color yellow "NTFY_HOST: ${NTFY_HOST}"
+        color yellow "NTFY_TOPIC: ${NTFY_TOPIC}"
     fi
     color yellow "MAIL_SMTP_ENABLE: ${MAIL_SMTP_ENABLE}"
     if [[ "${MAIL_SMTP_ENABLE}" == "TRUE" ]]; then
@@ -474,5 +507,20 @@ function init_env_mail() {
         MAIL_WHEN_FAILURE="FALSE"
     else
         MAIL_WHEN_FAILURE="TRUE"
+    fi
+}
+
+function init_env_ntfy() {
+    # NTFY_ENABLE
+    # NTFY_HOST
+    # NTFY_TOPIC
+    get_env NTFY_ENABLE
+    get_env NTFY_HOST
+    get_env NTFY_TOPIC
+    NTFY_ENABLE=$(echo "${NTFY_ENABLE}" | tr '[a-z]' '[A-Z]')
+    if [[ "${NTFY_ENABLE}" == "TRUE" && "${NTFY_HOST}" && "${NTFY_TOPIC}" ]]; then
+        NTFY_ENABLE="TRUE"
+    else
+        NTFY_ENABLE="FALSE"
     fi
 }

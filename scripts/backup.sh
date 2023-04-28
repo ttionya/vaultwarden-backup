@@ -224,7 +224,9 @@ upload
 clear_dir
 clear_history
 
-send_mail_content "TRUE" "The file was successfully uploaded at $(date +"%Y-%m-%d %H:%M:%S %Z")."
+UPLOAD_SUCCESS_MESSAGE="The file was successfully uploaded at $(date +"%Y-%m-%d %H:%M:%S %Z")."
+send_mail_content "TRUE" $UPLOAD_SUCCESS_MESSAGE
 send_ping
+send_ntfy "$UPLOAD_SUCCESS_MESSAGE"
 
 color none ""
