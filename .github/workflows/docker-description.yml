@@ -3,7 +3,8 @@ name: 'Docker Publish Description'
 on:
   push:
     branches:
-      - master
+#      - master
+      - develop
     paths:
       - README.md
       - .github/workflows/docker-description.yml
@@ -24,11 +25,11 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
-          repository: 'ttionya/vaultwarden-backup'
+          repository: 'bastouf/vaultwarden-backup'
       -
         name: DockerHub Description
         uses: peter-evans/dockerhub-description@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
-          repository: 'ttionya/bitwardenrs-backup'
+          repository: 'bastouf/bitwardenrs-backup'
