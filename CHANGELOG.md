@@ -1,5 +1,13 @@
 # Changelog
 
+## v1.19.0 (20230428)
+
+### Feature
+
+- Add ntfy push notification
+
+<br>
+
 ## v1.18.0 (20230408)
 
 ### Feature
