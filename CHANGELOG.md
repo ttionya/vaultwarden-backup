@@ -1,5 +1,13 @@
 # Changelog
 
+## v1.19.1 (20230530)
+
+### Feature
+
+- Change [https://ntfy.sh](ntfy) push notification message
+
+<br>
+
 ## v1.19.0 (20230428)
 
 ### Feature

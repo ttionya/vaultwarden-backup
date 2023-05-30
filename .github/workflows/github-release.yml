@@ -2,9 +2,8 @@ name: 'GitHub Release'
 
 on:
   push:
-    tags:
-      - 'v*.*.*'
-      - '!v*.*.*-*'
+    branches:
+      - 'master'
 
 permissions:
   contents: write
@@ -24,4 +23,4 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           body: |
-            [CHANGELOG](https://github.com/ttionya/vaultwarden-backup/blob/master/CHANGELOG.md)
+            [CHANGELOG](https://github.com/bastouf/vaultwarden-backup/blob/master/CHANGELOG.md)
