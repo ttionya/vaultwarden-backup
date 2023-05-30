@@ -227,6 +227,6 @@ clear_history
 UPLOAD_SUCCESS_MESSAGE="The file was successfully uploaded at $(date +"%Y-%m-%d %H:%M:%S %Z")."
 send_mail_content "TRUE" $UPLOAD_SUCCESS_MESSAGE
 send_ping
-send_ntfy "$UPLOAD_SUCCESS_MESSAGE"
+send_ntfy "Backup Vaultwarden succeded! $(date +"%Y-%m-%d %H:%M:%S %Z")"
 
 color none ""
