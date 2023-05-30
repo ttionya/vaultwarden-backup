@@ -3,7 +3,7 @@ name: 'GitHub Release'
 on:
   push:
     branches:
-      - 'develop'
+      - 'master'
 
 permissions:
   contents: write
