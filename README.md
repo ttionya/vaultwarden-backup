@@ -334,7 +334,9 @@ Use [healthcheck.io](https://healthchecks.io/) url or similar cron monitoring to
 
 #### MAIL_SMTP_ENABLE
 
-The tool uses [heirloom-mailx](https://www.systutorials.com/docs/linux/man/1-heirloom-mailx/) to send mail.
+Starting from v1.19.0, we will be using [`s-nail`](https://www.sdaoden.eu/code-nail.html) instead of [`heirloom-mailx`](https://www.systutorials.com/docs/linux/man/1-heirloom-mailx/) to send emails.
+
+Please note that `heirloom-mailx` is a stub for `s-nail`, and most of its functionality is compatible. Therefore, you may not need to modify any environment variables for this change.
 
 Default: `FALSE`
 
@@ -357,8 +359,6 @@ During testing, we will add the `-v` option to display detailed information.
 -S smtp-auth-password=<my-email-password> \
 -S from=<my-email-address>
 ```
-
-For more information, refer to [here](https://www.systutorials.com/sending-email-from-mailx-command-in-linux-using-gmails-smtp/).
 
 #### MAIL_TO
 
