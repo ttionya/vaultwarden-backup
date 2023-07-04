@@ -9,7 +9,7 @@ if [[ "$1" == "rclone" ]]; then
     exit 0
 fi
 
-# mailx test
+# mail test
 if [[ "$1" == "mail" ]]; then
     export_env_file
     init_env_mail

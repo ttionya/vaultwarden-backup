@@ -332,7 +332,9 @@ Rclone 全局参数，详见 [flags](https://rclone.org/flags/)。
 
 #### MAIL_SMTP_ENABLE
 
-本工具使用 [heirloom-mailx](https://www.systutorials.com/docs/linux/man/1-heirloom-mailx/) 发送邮件。
+从 v1.19.0 开始，本工具使用 [`s-nail`](https://www.sdaoden.eu/code-nail.html) 代替 [`heirloom-mailx`](https://www.systutorials.com/docs/linux/man/1-heirloom-mailx/) 发送邮件。
+
+请注意，`heirloom-mailx` 是 `s-nail` 的基础，它们大部分功能是兼容的。因此你可能不需要为这个改变修改任何环境变量。
 
 默认值：`FALSE`
 
@@ -355,8 +357,6 @@ Rclone 全局参数，详见 [flags](https://rclone.org/flags/)。
 -S smtp-auth-password=<my-email-password> \
 -S from=<my-email-address>
 ```
-
-在 [这里](https://www.systutorials.com/sending-email-from-mailx-command-in-linux-using-gmails-smtp/) 查看更多配置说明。
 
 #### MAIL_TO
 
