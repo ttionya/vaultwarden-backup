@@ -1,9 +1,12 @@
 # Changelog
 
-## v1.18.1 (20230702)
+## v1.19.0 (20230704)
+
+**Reminder**: We are utilizing [`s-nail`](https://www.sdaoden.eu/code-nail.html) to send emails. In case you encounter any errors during the email sending process, please modify the `MAIL_SMTP_VARIABLES` environment variables accordingly.
 
 ### Feature
 
+- Using `s-nail` instead of `heirloom-mailx` to send emails
 - Update Dockerfile base image to `rclone/rclone:1.63.0`
 
 <br>
