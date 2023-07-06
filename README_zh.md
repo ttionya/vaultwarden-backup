@@ -322,7 +322,7 @@ Rclone 全局参数，详见 [flags](https://rclone.org/flags/)。
 
 设置你的时区名称。
 
-在 [wikipedia](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) 查看所有时区名称。
+在 [wikipedia](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) 查看所有时区名称。（PS: 北京时区TIMEZONE设置为Asia/Shanghai）
 
 默认值：`UTC`
 
