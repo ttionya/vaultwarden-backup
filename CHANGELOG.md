@@ -1,5 +1,15 @@
 # Changelog
 
+## v1.19.1 (20230722)
+
+### Feature
+
+- Update Dockerfile base image to `rclone/rclone:1.63.1`
+
+<br>
+
+
+
 ## v1.19.0 (20230704)
 
 **Reminder**: We are utilizing [`s-nail`](https://www.sdaoden.eu/code-nail.html) to send emails. In case you encounter any errors during the email sending process, please modify the `MAIL_SMTP_VARIABLES` environment variables accordingly.
