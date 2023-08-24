@@ -358,6 +358,8 @@ Rclone 全局参数，详见 [flags](https://rclone.org/flags/)。
 -S from=<my-email-address>
 ```
 
+控制台有警告？查看 [issue #177](https://github.com/ttionya/vaultwarden-backup/issues/117#issuecomment-1691443179) 了解更多。
+
 #### MAIL_TO
 
 指定通知邮件的接收者。

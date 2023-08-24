@@ -360,6 +360,8 @@ During testing, we will add the `-v` option to display detailed information.
 -S from=<my-email-address>
 ```
 
+Console showing warnings? Check [issue #177](https://github.com/ttionya/vaultwarden-backup/issues/117#issuecomment-1691443179) for more details.
+
 #### MAIL_TO
 
 This specifies the recipient of the notification email.
