@@ -3,6 +3,7 @@
 ENV_FILE="/.env"
 CRON_CONFIG_FILE="${HOME}/crontabs"
 BACKUP_DIR="/bitwarden/backup"
+GPG_DIR="/bitwarden/gpg"
 RESTORE_DIR="/bitwarden/restore"
 RESTORE_EXTRACT_DIR="/bitwarden/extract"
 
@@ -284,7 +285,7 @@ function init_env() {
 
     # ZIP_PASSWORD
     get_env ZIP_PASSWORD
-    ZIP_PASSWORD="${ZIP_PASSWORD:-"WHEREISMYPASSWORD?"}"
+    ZIP_PASSWORD="${ZIP_PASSWORD:-""}"
 
     # ZIP_TYPE
     get_env ZIP_TYPE
@@ -294,6 +295,20 @@ function init_env() {
     else
         ZIP_TYPE="zip"
     fi
+
+    # GPG_ENABLE
+    get_env GPG_ENABLE
+    GPG_ENABLE=$(echo "${GPG_ENABLE}" | tr '[a-z]' '[A-Z]')
+    if [[ "${GPG_ENABLE}" == "FALSE" ]]; then
+        GPG_ENABLE="FALSE"
+    else
+        GPG_ENABLE="TRUE"
+    fi
+
+    # GPG_PUBKEY
+    get_env GPG_PUBKEY
+    GPG_PUBKEY="${GPG_PUBKEY:-"/config/key.pub"}"
+    if [[ "${GPG_ENABLE}" == "TRUE" ]]; then check_file_exist "${GPG_PUBKEY}"; fi
 
     # BACKUP_KEEP_DAYS
     get_env BACKUP_KEEP_DAYS
@@ -346,6 +361,8 @@ function init_env() {
     color yellow "ZIP_ENABLE: ${ZIP_ENABLE}"
     color yellow "ZIP_PASSWORD: ${#ZIP_PASSWORD} Chars"
     color yellow "ZIP_TYPE: ${ZIP_TYPE}"
+    color yellow "GPG_ENABLE: ${GPG_ENABLE}"
+    color yellow "GPG_PUBKEY: ${GPG_PUBKEY}"
     color yellow "BACKUP_FILE_DATE_FORMAT: ${BACKUP_FILE_DATE_FORMAT} (example \"[filename].$(date +"${BACKUP_FILE_DATE_FORMAT}").[ext]\")"
     color yellow "BACKUP_KEEP_DAYS: ${BACKUP_KEEP_DAYS}"
     if [[ -n "${PING_URL}" ]]; then

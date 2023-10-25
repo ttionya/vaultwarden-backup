@@ -4,6 +4,7 @@
 
 function clear_dir() {
     rm -rf "${BACKUP_DIR}"
+    rm -rf "${GPG_DIR}"
 }
 
 function backup_init() {
@@ -141,9 +142,17 @@ function backup_package() {
         UPLOAD_FILE="${BACKUP_FILE_ZIP}"
 
         if [[ "${ZIP_TYPE}" == "zip" ]]; then
-            7z a -tzip -mx=9 -p"${ZIP_PASSWORD}" "${BACKUP_FILE_ZIP}" "${BACKUP_DIR}"/*
+            if [[ -n "${ZIP_PASSWORD}" ]]; then
+                7z a -tzip -mx=9 -p"${ZIP_PASSWORD}" "${BACKUP_FILE_ZIP}" "${BACKUP_DIR}"/*
+            else
+                7z a -tzip -mx=9 "${BACKUP_FILE_ZIP}" "${BACKUP_DIR}"/*
+            fi
         else
-            7z a -t7z -m0=lzma2 -mx=9 -mfb=64 -md=32m -ms=on -mhe=on -p"${ZIP_PASSWORD}" "${BACKUP_FILE_ZIP}" "${BACKUP_DIR}"/*
+            if [[ -n "${ZIP_PASSWORD}" ]]; then
+                7z a -t7z -m0=lzma2 -mx=9 -mfb=64 -md=32m -ms=on -mhe=on -p"${ZIP_PASSWORD}" "${BACKUP_FILE_ZIP}" "${BACKUP_DIR}"/*
+            else
+                7z a -t7z -m0=lzma2 -mx=9 -mfb=64 -md=32m -ms=on -mhe=on "${BACKUP_FILE_ZIP}" "${BACKUP_DIR}"/*
+            fi
         fi
 
         ls -lah "${BACKUP_DIR}"
@@ -155,6 +164,28 @@ function backup_package() {
         color yellow "skip package backup files"
 
         UPLOAD_FILE="${BACKUP_DIR}"
+    fi
+}
+
+function backup_gpg() {
+    if [[ "${GPG_ENABLE}" == "TRUE" ]]; then
+        color blue "encrypt backup file"
+
+        if [[ -f "${UPLOAD_FILE}" ]]; then
+            gpg --quiet --output "${BACKUP_FILE_ZIP}.gpg" --encrypt --recipient-file "${GPG_PUBKEY}" "${UPLOAD_FILE}"
+
+            UPLOAD_FILE="${BACKUP_FILE_ZIP}.gpg"
+        else
+            mkdir -p "${GPG_DIR}"
+
+            find "${UPLOAD_FILE}" -maxdepth 1 -type f -print0 | while IFS= read -r -d '' FILEPATH; do
+                local FILENAME=$(basename "${FILEPATH}")
+
+                gpg --quiet --recipient-file "${GPG_PUBKEY}" --output "${GPG_DIR}/${FILENAME}.gpg" --encrypt "${FILEPATH}"
+
+                UPLOAD_FILE="${GPG_DIR}"
+            done
+        fi
     fi
 }
 
@@ -220,6 +251,7 @@ clear_dir
 backup_init
 backup
 backup_package
+backup_gpg
 upload
 clear_dir
 clear_history
