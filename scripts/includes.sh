@@ -83,6 +83,22 @@ function check_dir_exist() {
 }
 
 ########################################
+# Check GPG key is exist.
+# Arguments:
+#     public key content
+########################################
+function check_gpg_key_exist() {
+    echo "${GPG_PUBKEY}" > /config/key.pub
+
+    local output
+    output=$(gpg /config/key.pub 2>&1)
+    if [[ ! $output == *"pub"* ]]; then
+        color red "cannot access GPG key: No valid public key"
+        exit 1
+    fi
+}
+
+########################################
 # Send mail by s-nail.
 # Arguments:
 #     mail subject
@@ -307,8 +323,7 @@ function init_env() {
 
     # GPG_PUBKEY
     get_env GPG_PUBKEY
-    GPG_PUBKEY="${GPG_PUBKEY:-"/config/key.pub"}"
-    if [[ "${GPG_ENABLE}" == "TRUE" ]]; then check_file_exist "${GPG_PUBKEY}"; fi
+    if [[ "${GPG_ENABLE}" == "TRUE" ]]; then check_gpg_key_exist "${GPG_PUBKEY}"; fi
 
     # BACKUP_KEEP_DAYS
     get_env BACKUP_KEEP_DAYS

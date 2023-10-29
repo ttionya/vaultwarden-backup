@@ -171,8 +171,10 @@ function backup_gpg() {
     if [[ "${GPG_ENABLE}" == "TRUE" ]]; then
         color blue "encrypt backup file"
 
+        echo "${GPG_PUBKEY}" > /config/key.pub
+
         if [[ -f "${UPLOAD_FILE}" ]]; then
-            gpg --quiet --output "${BACKUP_FILE_ZIP}.gpg" --encrypt --recipient-file "${GPG_PUBKEY}" "${UPLOAD_FILE}"
+            gpg --quiet --output "${BACKUP_FILE_ZIP}.gpg" --encrypt --recipient-file /config/key.pub "${UPLOAD_FILE}"
 
             UPLOAD_FILE="${BACKUP_FILE_ZIP}.gpg"
         else
@@ -181,10 +183,10 @@ function backup_gpg() {
             find "${UPLOAD_FILE}" -maxdepth 1 -type f -print0 | while IFS= read -r -d '' FILEPATH; do
                 local FILENAME=$(basename "${FILEPATH}")
 
-                gpg --quiet --recipient-file "${GPG_PUBKEY}" --output "${GPG_DIR}/${FILENAME}.gpg" --encrypt "${FILEPATH}"
-
-                UPLOAD_FILE="${GPG_DIR}"
+                gpg --quiet --output "${GPG_DIR}/${FILENAME}.gpg" --encrypt --recipient-file /config/key.pub "${FILEPATH}"
             done
+
+            UPLOAD_FILE="${GPG_DIR}"
         fi
     fi
 }
