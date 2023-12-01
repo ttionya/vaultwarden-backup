@@ -13,7 +13,7 @@ COPY scripts/*.sh /app/
 
 RUN chmod +x /app/*.sh \
   && mkdir -m 777 /bitwarden \
-  && apk add --no-cache 7zip bash mariadb-client postgresql15-client sqlite supercronic s-nail tzdata \
+  && apk add --no-cache 7zip bash mariadb-client postgresql15-client sqlite supercronic s-nail tzdata gpg \
   && apk info --no-cache -Lq mariadb-client | grep -vE '/bin/mariadb$' | grep -vE '/bin/mariadb-dump$' | xargs -I {} rm -f "/{}" \
   && ln -sf "${LOCALTIME_FILE}" /etc/localtime \
   && addgroup -g "${USER_ID}" "${USER_NAME}" \
