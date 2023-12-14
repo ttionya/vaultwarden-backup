@@ -1,5 +1,15 @@
 # Changelog
 
+## v1.19.5 (20231214)
+
+### Feature
+
+- Support PostgreSQL 16 (close [#137](https://github.com/ttionya/vaultwarden-backup/issues/137))
+
+<br>
+
+
+
 ## v1.19.4 (20231128)
 
 ### Feature
