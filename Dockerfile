@@ -1,4 +1,22 @@
-FROM rclone/rclone:1.65.0
+FROM rclone/rclone:1.65.0 AS provider
+
+# To address the issue of dependencies in Alpine's edge version being required while rclone is not yet updated.
+# https://github.com/rclone/rclone/blob/master/Dockerfile
+FROM alpine:latest AS base
+
+RUN apk --no-cache add ca-certificates fuse3 tzdata && \
+  echo "user_allow_other" >> /etc/fuse.conf
+
+COPY --from=provider /usr/local/bin/rclone /usr/local/bin/
+
+RUN addgroup -g 1009 rclone && adduser -u 1009 -Ds /bin/sh -G rclone rclone
+
+ENTRYPOINT [ "rclone" ]
+
+WORKDIR /data
+ENV XDG_CONFIG_HOME=/config
+
+FROM base
 
 LABEL "repository"="https://github.com/ttionya/vaultwarden-backup" \
   "homepage"="https://github.com/ttionya/vaultwarden-backup" \
