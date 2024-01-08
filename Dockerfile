@@ -1,4 +1,4 @@
-FROM rclone/rclone:1.65.0 AS provider
+FROM rclone/rclone:1.65.1 AS provider
 
 # To address the issue of dependencies in Alpine's edge version being required while rclone is not yet updated.
 # https://github.com/rclone/rclone/blob/master/Dockerfile
