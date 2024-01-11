@@ -192,6 +192,8 @@ For restore without asking for confirmation.
 
 USE WITH CAUTION!!
 
+> **Warning:** The force options must be the last if used non-interactively.
+
 <details>
 <summary><strong>※ You have the compressed file named <code>backup</code></strong></summary>
 
