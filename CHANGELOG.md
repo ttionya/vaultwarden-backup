@@ -1,5 +1,15 @@
 # Changelog
 
+## v1.19.8 (20240112)
+
+### Fixed
+
+- Fix `restore` command parameter parsing error (fixed [#141](https://github.com/ttionya/vaultwarden-backup/issues/141))
+
+<br>
+
+
+
 ## v1.19.7 (20240111)
 
 ### Feature
