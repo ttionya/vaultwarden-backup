@@ -294,7 +294,6 @@ function restore() {
             -f|--force-restore)
                 shift
                 FORCE_RESTORE="TRUE"
-                shift
                 ;;
             *)
                 color red "Illegal input"
