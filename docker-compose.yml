@@ -22,18 +22,11 @@ services:
     #   RCLONE_GLOBAL_FLAG: ''
     #   CRON: '5 * * * *'
     #   ZIP_ENABLE: 'TRUE'
-    #   ZIP_PASSWORD: ''
+    #   ZIP_PASSWORD: 'WHEREISMYPASSWORD?'
     #   ZIP_TYPE: 'zip'
+    #   GPG_BASE64_PUBKEY: ''
     #   BACKUP_FILE_SUFFIX: '%Y%m%d'
     #   BACKUP_KEEP_DAYS: 0
-    #   GPG_ENABLE: 'FALSE'
-    #   GPG_PUBKEY: |
-    #     -----BEGIN PGP PUBLIC KEY BLOCK-----
-    #
-    #     mQINBGU+LVgBEADSxdHNywMJWt7q/K4EcvQhA6A0CNANN18BLTelcTZBJheNqz1I
-    #     tRq9pW6VBsJTpYWXTz0satGB3XLyhd9rUe1Ydz6zSbewh66vUdh6CaJI5Hr8TSur
-    #     ...
-    #     -----END PGP PUBLIC KEY BLOCK-----
     #   PING_URL: ''
     #   MAIL_SMTP_ENABLE: 'FALSE'
     #   MAIL_SMTP_VARIABLES: ''

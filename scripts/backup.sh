@@ -141,18 +141,15 @@ function backup_package() {
 
         UPLOAD_FILE="${BACKUP_FILE_ZIP}"
 
+        local PASSWORD_FLAG="-p${ZIP_PASSWORD}"
+        if [[ "${GPG_ENABLE}" == "TRUE" ]]; then
+            PASSWORD_FLAG=""
+        fi
+
         if [[ "${ZIP_TYPE}" == "zip" ]]; then
-            if [[ -n "${ZIP_PASSWORD}" ]]; then
-                7z a -tzip -mx=9 -p"${ZIP_PASSWORD}" "${BACKUP_FILE_ZIP}" "${BACKUP_DIR}"/*
-            else
-                7z a -tzip -mx=9 "${BACKUP_FILE_ZIP}" "${BACKUP_DIR}"/*
-            fi
+            7z a -tzip -mx=9 "${PASSWORD_FLAG}" "${BACKUP_FILE_ZIP}" "${BACKUP_DIR}"/*
         else
-            if [[ -n "${ZIP_PASSWORD}" ]]; then
-                7z a -t7z -m0=lzma2 -mx=9 -mfb=64 -md=32m -ms=on -mhe=on -p"${ZIP_PASSWORD}" "${BACKUP_FILE_ZIP}" "${BACKUP_DIR}"/*
-            else
-                7z a -t7z -m0=lzma2 -mx=9 -mfb=64 -md=32m -ms=on -mhe=on "${BACKUP_FILE_ZIP}" "${BACKUP_DIR}"/*
-            fi
+            7z a -t7z -m0=lzma2 -mx=9 -mfb=64 -md=32m -ms=on -mhe=on "${PASSWORD_FLAG}" "${BACKUP_FILE_ZIP}" "${BACKUP_DIR}"/*
         fi
 
         ls -lah "${BACKUP_DIR}"
@@ -168,26 +165,22 @@ function backup_package() {
 }
 
 function backup_gpg() {
-    if [[ "${GPG_ENABLE}" == "TRUE" ]]; then
-        color blue "encrypt backup file"
+    if [[ "${GPG_ENABLE}" == "FALSE" ]]; then
+        return
+    fi
 
-        echo "${GPG_PUBKEY}" > /config/key.pub
+    color blue "encrypt backup file"
 
-        if [[ -f "${UPLOAD_FILE}" ]]; then
-            gpg --quiet --output "${BACKUP_FILE_ZIP}.gpg" --encrypt --recipient-file /config/key.pub "${UPLOAD_FILE}"
+    if [[ -f "${UPLOAD_FILE}" ]]; then
+        gpg -v --output "${UPLOAD_FILE}.gpg" --encrypt --recipient-file "${GPG_PUBKEY_FILE}" "${UPLOAD_FILE}"
 
-            UPLOAD_FILE="${BACKUP_FILE_ZIP}.gpg"
-        else
-            mkdir -p "${GPG_DIR}"
+        UPLOAD_FILE="${UPLOAD_FILE}.gpg"
+    else
+        mkdir -p "${GPG_DIR}"
 
-            find "${UPLOAD_FILE}" -maxdepth 1 -type f -print0 | while IFS= read -r -d '' FILEPATH; do
-                local FILENAME=$(basename "${FILEPATH}")
+        ls "${UPLOAD_FILE}" | xargs -I {} gpg -v --output "${GPG_DIR}/{}.gpg" --encrypt --recipient-file "${GPG_PUBKEY_FILE}" "{}"
 
-                gpg --quiet --output "${GPG_DIR}/${FILENAME}.gpg" --encrypt --recipient-file /config/key.pub "${FILEPATH}"
-            done
-
-            UPLOAD_FILE="${GPG_DIR}"
-        fi
+        UPLOAD_FILE="${GPG_DIR}"
     fi
 }
 
