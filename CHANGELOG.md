@@ -1,5 +1,55 @@
 # Changelog
 
+## v1.19.9 (20240223)
+
+### Feature
+
+- Update Dockerfile base image to `rclone/rclone:1.65.2`
+
+<br>
+
+
+
+## v1.19.8 (20240112)
+
+### Fixed
+
+- Fix `restore` command parameter parsing error (fixed [#141](https://github.com/ttionya/vaultwarden-backup/issues/141))
+
+<br>
+
+
+
+## v1.19.7 (20240111)
+
+### Feature
+
+- Update Dockerfile base image to `rclone/rclone:1.65.1`
+
+<br>
+
+
+
+## v1.19.6 (20231214)
+
+### Feature
+
+- Support PostgreSQL 16 (close [#137](https://github.com/ttionya/vaultwarden-backup/issues/137))
+
+<br>
+
+
+
+## v1.19.4 (20231128)
+
+### Feature
+
+- Update Dockerfile base image to `rclone/rclone:1.65.0`
+
+<br>
+
+
+
 ## v1.19.3 (20231021)
 
 ### Feature

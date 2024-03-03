@@ -1,4 +1,4 @@
-FROM rclone/rclone:1.64.2
+FROM rclone/rclone:1.65.2
 
 LABEL "repository"="https://github.com/ttionya/vaultwarden-backup" \
   "homepage"="https://github.com/ttionya/vaultwarden-backup" \
@@ -13,7 +13,7 @@ COPY scripts/*.sh /app/
 
 RUN chmod +x /app/*.sh \
   && mkdir -m 777 /bitwarden \
-  && apk add --no-cache 7zip bash mariadb-client postgresql15-client sqlite supercronic s-nail tzdata gpg \
+  && apk add --no-cache 7zip bash mariadb-client postgresql16-client sqlite supercronic s-nail tzdata gpg \
   && apk info --no-cache -Lq mariadb-client | grep -vE '/bin/mariadb$' | grep -vE '/bin/mariadb-dump$' | xargs -I {} rm -f "/{}" \
   && ln -sf "${LOCALTIME_FILE}" /etc/localtime \
   && addgroup -g "${USER_ID}" "${USER_NAME}" \
