@@ -21,7 +21,7 @@ jobs:
         uses: actions/checkout@v4
       -
         name: Release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
           body: |
             [CHANGELOG](https://github.com/ttionya/vaultwarden-backup/blob/master/CHANGELOG.md)
