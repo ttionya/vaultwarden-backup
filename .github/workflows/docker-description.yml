@@ -25,6 +25,7 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
           repository: 'ttionya/vaultwarden-backup'
+          enable-url-completion: true
       -
         name: DockerHub Description
         uses: peter-evans/dockerhub-description@v4
@@ -32,3 +33,4 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
           repository: 'ttionya/bitwardenrs-backup'
+          enable-url-completion: true
