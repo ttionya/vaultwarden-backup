@@ -1,0 +1,48 @@
+name: 'Docker Test'
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - .github/workflows/docker-test.yml
+      - Dockerfile
+      - scripts/**
+      - tests/**
+
+jobs:
+  test:
+    name: Docker Test
+
+    runs-on: ubuntu-latest
+
+    steps:
+      -
+        name: Checkout
+        uses: actions/checkout@v4
+      -
+        name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      -
+        name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      -
+        name: Build Docker Image for Test
+        uses: docker/build-push-action@v5
+        with:
+          context: '.'
+          file: './Dockerfile'
+          platforms: 'linux/amd64,linux/arm64,linux/arm/v6,linux/arm/v7'
+          tags: ttionya/vaultwarden-backup:base
+      -
+        name: Build Test Docker Image
+        uses: docker/build-push-action@v5
+        with:
+          context: '.'
+          file: './tests/Dockerfile'
+          platforms: 'linux/amd64,linux/arm64,linux/arm/v6,linux/arm/v7'
+          tags: ttionya/vaultwarden-backup:test
+      -
+        name: Test
+        run: |
+          echo ${{ github.workspace }}
+          ls -al ${{ github.workspace }}
