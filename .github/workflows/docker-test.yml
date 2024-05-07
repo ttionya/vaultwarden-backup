@@ -26,21 +26,27 @@ jobs:
         name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
       -
-        name: Build Docker Image for Test
+        name: Login to DockerHub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      -
+        name: Build and push
         uses: docker/build-push-action@v5
         with:
           context: '.'
           file: './Dockerfile'
-          platforms: 'linux/amd64,linux/arm64,linux/arm/v6,linux/arm/v7'
-          tags: ttionya/vaultwarden-backup:base
+          push: true
+          tags: ttionya/vaultwarden-backup:dev
       -
-        name: Build Test Docker Image
+        name: Build test Docker image
         uses: docker/build-push-action@v5
         with:
           context: '.'
           file: './tests/Dockerfile'
-          platforms: 'linux/amd64,linux/arm64,linux/arm/v6,linux/arm/v7'
           tags: ttionya/vaultwarden-backup:test
+          load: true
       -
         name: Test
         run: |
