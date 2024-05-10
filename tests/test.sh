@@ -1,3 +1,3 @@
 #!/bin/bash
 
-. units/backup-zip-file/test.sh
+. tests/units/backup-zip-file/test.sh
