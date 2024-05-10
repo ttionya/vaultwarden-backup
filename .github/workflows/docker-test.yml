@@ -49,6 +49,4 @@ jobs:
           load: true
       -
         name: Test
-        run: |
-          echo ${{ github.workspace }}
-          ls -al ${{ github.workspace }}
+        run: bash tests/test.sh
