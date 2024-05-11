@@ -167,7 +167,7 @@ function configure_gpg_pubkey() {
     fi
 
     gpg "${GPG_PUBKEY_FILE}" > /dev/null 2>&1
-    if [[ $? != 0]]; then
+    if [[ $? != 0 ]]; then
         color red "validate GPG public key failed"
         exit 1
     fi
