@@ -147,16 +147,16 @@ function backup_package() {
         fi
 
         if [[ "${ZIP_TYPE}" == "zip" ]]; then
-            7z a -tzip -mx=9 "${PASSWORD_FLAG}" "${BACKUP_FILE_ZIP}" "${BACKUP_DIR}"/*
+            7z a -tzip -mx=9 ${PASSWORD_FLAG} "${BACKUP_FILE_ZIP}" "${BACKUP_DIR}"/*
         else
-            7z a -t7z -m0=lzma2 -mx=9 -mfb=64 -md=32m -ms=on -mhe=on "${PASSWORD_FLAG}" "${BACKUP_FILE_ZIP}" "${BACKUP_DIR}"/*
+            7z a -t7z -m0=lzma2 -mx=9 -mfb=64 -md=32m -ms=on -mhe=on ${PASSWORD_FLAG} "${BACKUP_FILE_ZIP}" "${BACKUP_DIR}"/*
         fi
 
         ls -lah "${BACKUP_DIR}"
 
         color blue "display backup ${ZIP_TYPE} file list"
 
-        7z l -p"${ZIP_PASSWORD}" "${BACKUP_FILE_ZIP}"
+        7z l ${PASSWORD_FLAG} "${BACKUP_FILE_ZIP}"
     else
         color yellow "skip package backup files"
 
