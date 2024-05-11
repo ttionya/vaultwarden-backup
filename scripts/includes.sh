@@ -308,8 +308,7 @@ function init_env() {
 
     # ZIP_ENABLE
     get_env ZIP_ENABLE
-    ZIP_ENABLE=$(echo "${ZIP_ENABLE}" | tr '[a-z]' '[A-Z]')
-    if [[ "${ZIP_ENABLE}" == "FALSE" ]]; then
+    if [[ "${ZIP_ENABLE^^}" == "FALSE" ]]; then
         ZIP_ENABLE="FALSE"
     else
         ZIP_ENABLE="TRUE"
@@ -321,8 +320,7 @@ function init_env() {
 
     # ZIP_TYPE
     get_env ZIP_TYPE
-    ZIP_TYPE=$(echo "${ZIP_TYPE}" | tr '[A-Z]' '[a-z]')
-    if [[ "${ZIP_TYPE}" == "7z" ]]; then
+    if [[ "${ZIP_TYPE,,}" == "7z" ]]; then
         ZIP_TYPE="7z"
     else
         ZIP_TYPE="zip"
@@ -486,8 +484,7 @@ function init_env_mail() {
     # MAIL_TO
     get_env MAIL_SMTP_ENABLE
     get_env MAIL_TO
-    MAIL_SMTP_ENABLE=$(echo "${MAIL_SMTP_ENABLE}" | tr '[a-z]' '[A-Z]')
-    if [[ "${MAIL_SMTP_ENABLE}" == "TRUE" && "${MAIL_TO}" ]]; then
+    if [[ "${MAIL_SMTP_ENABLE^^}" == "TRUE" && "${MAIL_TO}" ]]; then
         MAIL_SMTP_ENABLE="TRUE"
     else
         MAIL_SMTP_ENABLE="FALSE"
@@ -499,8 +496,7 @@ function init_env_mail() {
 
     # MAIL_WHEN_SUCCESS
     get_env MAIL_WHEN_SUCCESS
-    MAIL_WHEN_SUCCESS=$(echo "${MAIL_WHEN_SUCCESS}" | tr '[a-z]' '[A-Z]')
-    if [[ "${MAIL_WHEN_SUCCESS}" == "FALSE" ]]; then
+    if [[ "${MAIL_WHEN_SUCCESS^^}" == "FALSE" ]]; then
         MAIL_WHEN_SUCCESS="FALSE"
     else
         MAIL_WHEN_SUCCESS="TRUE"
@@ -508,8 +504,7 @@ function init_env_mail() {
 
     # MAIL_WHEN_FAILURE
     get_env MAIL_WHEN_FAILURE
-    MAIL_WHEN_FAILURE=$(echo "${MAIL_WHEN_FAILURE}" | tr '[a-z]' '[A-Z]')
-    if [[ "${MAIL_WHEN_FAILURE}" == "FALSE" ]]; then
+    if [[ "${MAIL_WHEN_FAILURE^^}" == "FALSE" ]]; then
         MAIL_WHEN_FAILURE="FALSE"
     else
         MAIL_WHEN_FAILURE="TRUE"
