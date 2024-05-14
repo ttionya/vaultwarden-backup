@@ -49,4 +49,7 @@ jobs:
           load: true
       -
         name: Test
-        run: bash tests/test.sh
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y p7zip-full
+          bash tests/test.sh
