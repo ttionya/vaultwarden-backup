@@ -2,6 +2,8 @@
 
 ENV_FILE="/.env"
 CRON_CONFIG_FILE="${HOME}/crontabs"
+GPG_PUBKEY_FILE="${HOME}/gpg.pub"
+GPG_DIR="/bitwarden/gpg"
 BACKUP_DIR="/bitwarden/backup"
 RESTORE_DIR="/bitwarden/restore"
 RESTORE_EXTRACT_DIR="/bitwarden/extract"
@@ -140,6 +142,37 @@ function send_ping() {
     else
         color blue "ping send was successfully"
     fi
+}
+
+########################################
+# Configure GPG public key.
+# Arguments:
+#     None
+########################################
+function configure_gpg_pubkey() {
+    GPG_ENABLE="FALSE"
+
+    if [[ -z "${GPG_BASE64_PUBKEY}" ]]; then
+        return
+    fi
+
+    if [[ ! -f "${GPG_PUBKEY_FILE}" ]]; then
+        local PUBKEY=$(echo "${GPG_BASE64_PUBKEY}" | base64 -d 2>&1)
+        if [[ $? != 0 ]]; then
+            color red "decoding GPG public key failed"
+            exit 1
+        fi
+
+        echo "${PUBKEY}" > "${GPG_PUBKEY_FILE}"
+    fi
+
+    gpg "${GPG_PUBKEY_FILE}" > /dev/null 2>&1
+    if [[ $? != 0 ]]; then
+        color red "validate GPG public key failed"
+        exit 1
+    fi
+
+    GPG_ENABLE="TRUE"
 }
 
 ########################################
@@ -293,6 +326,11 @@ function init_env() {
         ZIP_TYPE="zip"
     fi
 
+    # GPG_BASE64_PUBKEY
+    get_env GPG_BASE64_PUBKEY
+    GPG_BASE64_PUBKEY="${GPG_BASE64_PUBKEY:-""}"
+    configure_gpg_pubkey
+
     # BACKUP_KEEP_DAYS
     get_env BACKUP_KEEP_DAYS
     BACKUP_KEEP_DAYS="${BACKUP_KEEP_DAYS:-"0"}"
@@ -344,6 +382,7 @@ function init_env() {
     color yellow "ZIP_ENABLE: ${ZIP_ENABLE}"
     color yellow "ZIP_PASSWORD: ${#ZIP_PASSWORD} Chars"
     color yellow "ZIP_TYPE: ${ZIP_TYPE}"
+    color yellow "GPG_ENABLE: ${GPG_ENABLE}"
     color yellow "BACKUP_FILE_DATE_FORMAT: ${BACKUP_FILE_DATE_FORMAT} (example \"[filename].$(date +"${BACKUP_FILE_DATE_FORMAT}").[ext]\")"
     color yellow "BACKUP_KEEP_DAYS: ${BACKUP_KEEP_DAYS}"
     if [[ -n "${PING_URL}" ]]; then
