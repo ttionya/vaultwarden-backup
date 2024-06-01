@@ -108,7 +108,7 @@ jobs:
       -
         name: Get Tag
         id: tag
-        uses: pozetroninc/github-action-get-latest-release@v0.7.0
+        uses: pozetroninc/github-action-get-latest-release@v0.8.0
         with:
           repository: ${{ github.repository }}
           excludes: prerelease, draft
