@@ -43,6 +43,8 @@ function backup_db_postgresql() {
     if [[ $? != 0 ]]; then
         color red "backup vaultwarden postgresql database failed"
 
+        send_ping "${PING_URL_WHEN_ERROR}" "error"
+        send_ping "${PING_URL}" "completion"
         send_mail_content "FALSE" "Backup failed at $(date +"%Y-%m-%d %H:%M:%S %Z"). Reason: Backup postgresql database failed."
 
         exit 1
@@ -56,6 +58,8 @@ function backup_db_mysql() {
     if [[ $? != 0 ]]; then
         color red "backup vaultwarden mysql database failed"
 
+        send_ping "${PING_URL_WHEN_ERROR}" "error"
+        send_ping "${PING_URL}" "completion"
         send_mail_content "FALSE" "Backup failed at $(date +"%Y-%m-%d %H:%M:%S %Z"). Reason: Backup mysql database failed."
 
         exit 1
@@ -163,6 +167,8 @@ function upload() {
     if [[ ! -e "${UPLOAD_FILE}" ]]; then
         color red "upload file not found"
 
+        send_ping "${PING_URL_WHEN_ERROR}" "error"
+        send_ping "${PING_URL}" "completion"
         send_mail_content "FALSE" "File upload failed at $(date +"%Y-%m-%d %H:%M:%S %Z"). Reason: Upload file not found."
 
         exit 1
@@ -184,6 +190,8 @@ function upload() {
     done
 
     if [[ "${HAS_ERROR}" == "TRUE" ]]; then
+        send_ping "${PING_URL_WHEN_ERROR}" "error"
+        send_ping "${PING_URL}" "completion"
         send_mail_content "FALSE" "File upload failed at $(date +"%Y-%m-%d %H:%M:%S %Z")."
 
         exit 1
@@ -214,6 +222,9 @@ function clear_history() {
 color blue "running the backup program at $(date +"%Y-%m-%d %H:%M:%S %Z")"
 
 init_env
+
+send_ping "${PING_URL_WHEN_STARTS}" "start"
+
 check_rclone_connection
 
 clear_dir
@@ -225,6 +236,7 @@ clear_dir
 clear_history
 
 send_mail_content "TRUE" "The file was successfully uploaded at $(date +"%Y-%m-%d %H:%M:%S %Z")."
-send_ping
+send_ping "${PING_URL}" "completion"
+send_ping "${PING_URL_WHEN_SUCCESS}" "success"
 
 color none ""

@@ -42,7 +42,7 @@ This tool supports backing up the following files or directories.
 
 And the following ways of notifying backup results are supported.
 
-- Ping (only send on success)
+- Ping (send on completion, start, success, or failure)
 - Mail (SMTP based, send on success and on failure)
 
 <br>
@@ -330,7 +330,19 @@ Default: `UTC`
 
 #### PING_URL
 
+Use [healthcheck.io](https://healthchecks.io/) url or similar cron monitoring to perform `GET` requests after a backup **no matter if it succeeds or fails**.
+
+#### PING_URL_WHEN_STARTS
+
+Use [healthcheck.io](https://healthchecks.io/) url or similar cron monitoring to perform `GET` requests at the **beginning** of a backup.
+
+#### PING_URL_WHEN_SUCCESS
+
 Use [healthcheck.io](https://healthchecks.io/) url or similar cron monitoring to perform `GET` requests after a **successful** backup.
+
+#### PING_URL_WHEN_ERROR
+
+Use [healthcheck.io](https://healthchecks.io/) url or similar cron monitoring to perform `GET` requests after a backup **fails**.
 
 #### MAIL_SMTP_ENABLE
 

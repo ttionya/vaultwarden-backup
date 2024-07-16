@@ -42,7 +42,7 @@
 
 并且支持以下通知备份结果的方式。
 
-- Ping (仅成功时发送)
+- Ping (完成，开始，成功或失败时发送)
 - Mail (基于 SMTP，成功时和失败时都会发送)
 
 <br>
@@ -328,7 +328,19 @@ Rclone 全局参数，详见 [flags](https://rclone.org/flags/)。
 
 #### PING_URL
 
+使用 [healthcheck.io](https://healthchecks.io/) 地址或者其他类似的 cron 监控，以便在备份**完成（不论成功或失败）**后执行 `GET` 请求。
+
+#### PING_URL_WHEN_STARTS
+
+使用 [healthcheck.io](https://healthchecks.io/) 地址或者其他类似的 cron 监控，以便在备份**开始**前执行 `GET` 请求。
+
+#### PING_URL_WHEN_SUCCESS
+
 使用 [healthcheck.io](https://healthchecks.io/) 地址或者其他类似的 cron 监控，以便在备份**成功**后执行 `GET` 请求。
+
+#### PING_URL_WHEN_ERROR
+
+使用 [healthcheck.io](https://healthchecks.io/) 地址或者其他类似的 cron 监控，以便在备份**失败**后执行 `GET` 请求。
 
 #### MAIL_SMTP_ENABLE
 
