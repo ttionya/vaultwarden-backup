@@ -4,7 +4,8 @@
 DOCKER_IMAGE="ttionya/vaultwarden-backup:test"
 ERROR_NUM=0
 
-OUTPUT_DIR="outputs"
+OUTPUT_DIR="output"
+EXTRACT_DIR="extract"
 REMOTE_DIR="/${OUTPUT_DIR}"
 
 ########################################
