@@ -15,6 +15,12 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    services:
+      registry:
+        image: registry:2
+        ports:
+          - 5000:5000
+
     steps:
       -
         name: Checkout
@@ -25,21 +31,24 @@ jobs:
       -
         name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
+        with:
+          # network=host driver-opt needed to push to local registry
+          driver-opts: network=host
       -
-        name: Build and push
+        name: Build base image
         uses: docker/build-push-action@v6
         with:
           context: '.'
           file: './Dockerfile'
-          load: true
-          tags: ttionya/vaultwarden-backup:dev
+          tags: localhost:5000/base:dev
+          push: true
       -
-        name: Build test Docker image
+        name: Build test image
         uses: docker/build-push-action@v6
         with:
           context: '.'
           file: './tests/Dockerfile'
-          build-contexts: ttionya/vaultwarden-backup:dev=docker-image://ttionya/vaultwarden-backup:dev
+          build-contexts: base=docker-image://localhost:5000/base:dev
           tags: ttionya/vaultwarden-backup:test
           load: true
       -

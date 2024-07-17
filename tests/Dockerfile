@@ -1,4 +1,4 @@
-FROM ttionya/vaultwarden-backup:dev
+FROM base
 
 COPY tests/fixtures/source /
 
