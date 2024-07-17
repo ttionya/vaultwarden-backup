@@ -33,6 +33,7 @@ jobs:
         uses: docker/setup-buildx-action@v3
         with:
           # network=host driver-opt needed to push to local registry
+          # https://docs.docker.com/build/ci/github-actions/named-contexts/#using-with-a-container-builder
           driver-opts: network=host
       -
         name: Build base image
@@ -40,8 +41,9 @@ jobs:
         with:
           context: '.'
           file: './Dockerfile'
-          tags: localhost:5000/base:dev
+          platforms: 'linux/amd64,linux/arm64,linux/arm/v6,linux/arm/v7'
           push: true
+          tags: localhost:5000/base:dev
       -
         name: Build test image
         uses: docker/build-push-action@v6
@@ -49,8 +51,8 @@ jobs:
           context: '.'
           file: './tests/Dockerfile'
           build-contexts: base=docker-image://localhost:5000/base:dev
-          tags: ttionya/vaultwarden-backup:test
           load: true
+          tags: ttionya/vaultwarden-backup:test
       -
         name: Test
         run: |
