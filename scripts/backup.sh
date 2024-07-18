@@ -4,6 +4,7 @@
 
 function clear_dir() {
     rm -rf "${BACKUP_DIR}"
+    rm -rf "${GPG_DIR}"
 }
 
 function backup_init() {
@@ -140,21 +141,46 @@ function backup_package() {
 
         UPLOAD_FILE="${BACKUP_FILE_ZIP}"
 
+        local PASSWORD_FLAG="-p${ZIP_PASSWORD}"
+        if [[ "${GPG_ENABLE}" == "TRUE" ]]; then
+            PASSWORD_FLAG=""
+        fi
+
         if [[ "${ZIP_TYPE}" == "zip" ]]; then
-            7z a -tzip -mx=9 -p"${ZIP_PASSWORD}" "${BACKUP_FILE_ZIP}" "${BACKUP_DIR}"/*
+            7z a -tzip -mx=9 ${PASSWORD_FLAG} "${BACKUP_FILE_ZIP}" "${BACKUP_DIR}"/*
         else
-            7z a -t7z -m0=lzma2 -mx=9 -mfb=64 -md=32m -ms=on -mhe=on -p"${ZIP_PASSWORD}" "${BACKUP_FILE_ZIP}" "${BACKUP_DIR}"/*
+            7z a -t7z -m0=lzma2 -mx=9 -mfb=64 -md=32m -ms=on -mhe=on ${PASSWORD_FLAG} "${BACKUP_FILE_ZIP}" "${BACKUP_DIR}"/*
         fi
 
         ls -lah "${BACKUP_DIR}"
 
         color blue "display backup ${ZIP_TYPE} file list"
 
-        7z l -p"${ZIP_PASSWORD}" "${BACKUP_FILE_ZIP}"
+        7z l ${PASSWORD_FLAG} "${BACKUP_FILE_ZIP}"
     else
         color yellow "skip package backup files"
 
         UPLOAD_FILE="${BACKUP_DIR}"
+    fi
+}
+
+function backup_gpg() {
+    if [[ "${GPG_ENABLE}" == "FALSE" ]]; then
+        return
+    fi
+
+    color blue "encrypt backup file"
+
+    if [[ -f "${UPLOAD_FILE}" ]]; then
+        gpg -v --output "${UPLOAD_FILE}.gpg" --encrypt --recipient-file "${GPG_PUBKEY_FILE}" "${UPLOAD_FILE}"
+
+        UPLOAD_FILE="${UPLOAD_FILE}.gpg"
+    else
+        mkdir -p "${GPG_DIR}"
+
+        ls "${UPLOAD_FILE}" | xargs -I {} gpg -v --output "${GPG_DIR}/{}.gpg" --encrypt --recipient-file "${GPG_PUBKEY_FILE}" "{}"
+
+        UPLOAD_FILE="${GPG_DIR}"
     fi
 }
 
@@ -220,6 +246,7 @@ clear_dir
 backup_init
 backup
 backup_package
+backup_gpg
 upload
 clear_dir
 clear_history
