@@ -6,7 +6,9 @@ TEST_OUTPUT_DIR="$(pwd)/${OUTPUT_DIR}/${TEST_NAME}"
 PASSWORD="71ad8764-2f69-4c0c-8452-61e08b9f489d"
 BACKUP_FILE="${TEST_OUTPUT_DIR}/backup.test.zip"
 
-color blue "Testing the ${TEST_NAME} unit..."
+FAILED_NUM=0
+
+color yellow "Starting test case \"${TEST_NAME}\""
 
 function prepare() {
     mkdir -p "${TEST_OUTPUT_DIR}"
@@ -23,7 +25,7 @@ function start() {
 }
 
 function test() {
-    color blue "Starting the test..."
+    color blue "Testing..."
 
     ls -l "${BACKUP_FILE}"
 
@@ -31,9 +33,14 @@ function test() {
 
     7z e -aoa -p"${PASSWORD}" -o"${EXTRACT_DIR}" "${BACKUP_FILE}"
 
-    # TODO test the extracted files
+    check_files_same_in_folders "${DATA_DIR}" "${EXTRACT_DIR}"
+    if [[ $? != 0 ]]; then
+        ((FAILED_NUM++))
+    fi
 }
 
 prepare
 start
 test
+
+test_result "${TEST_NAME}" "${FAILED_NUM}"
