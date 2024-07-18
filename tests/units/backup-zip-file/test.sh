@@ -31,7 +31,14 @@ function test() {
 
     7z l -p"${PASSWORD}" "${BACKUP_FILE}"
 
-    7z e -aoa -p"${PASSWORD}" -o"${EXTRACT_DIR}" "${BACKUP_FILE}"
+    docker run --rm \
+      --mount "type=bind,source=${EXTRACT_DIR},target=/bitwarden/data/" \
+      --mount "type=bind,source=$(dirname "${BACKUP_FILE}"),target=/bitwarden/restore/" \
+      "${DOCKER_IMAGE}" \
+      restore \
+      -f \
+      -p "${PASSWORD}" \
+      --zip-file "$(basename "${BACKUP_FILE}")"
 
     check_files_same_in_folders "${DATA_DIR}" "${EXTRACT_DIR}"
     if [[ $? != 0 ]]; then

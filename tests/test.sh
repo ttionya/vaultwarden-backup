@@ -4,7 +4,7 @@
 DOCKER_IMAGE="ttionya/vaultwarden-backup:test"
 ERROR_NUM=0
 
-DATA_DIR="/bitwarden/data"
+DATA_DIR="$(pwd)/fixtures/source/bitwarden/data"
 OUTPUT_DIR="output"
 EXTRACT_DIR="extract"
 REMOTE_DIR="/${OUTPUT_DIR}"
@@ -39,7 +39,7 @@ function color() {
 ########################################
 function check_files_same_in_folders() {
     function generate_hash_list() {
-        find "$1" -type f -exec sha1sum {} \; | sort | sed "s|$1||g" > "$2"
+        find "$1" -type f -not -name "db.*" -exec sha1sum {} \; | sort | sed "s|$1||g" > "$2"
     }
 
     color blue "Calculating file hash in folder \"$1\" and \"$2\""
