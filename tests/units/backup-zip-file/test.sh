@@ -2,6 +2,7 @@
 
 TEST_NAME="backup-zip-file"
 TEST_OUTPUT_DIR="$(pwd)/${OUTPUT_DIR}/${TEST_NAME}"
+TEST_EXTRACT_DIR="$(pwd)/${EXTRACT_DIR}/${TEST_NAME}"
 
 PASSWORD="71ad8764-2f69-4c0c-8452-61e08b9f489d"
 BACKUP_FILE="${TEST_OUTPUT_DIR}/backup.test.zip"
@@ -11,7 +12,7 @@ FAILED_NUM=0
 color yellow "Starting test case \"${TEST_NAME}\""
 
 function prepare() {
-    mkdir -p "${TEST_OUTPUT_DIR}"
+    mkdir -p "${TEST_OUTPUT_DIR}" "${TEST_EXTRACT_DIR}"
 }
 
 function start() {
@@ -32,7 +33,7 @@ function test() {
     7z l -p"${PASSWORD}" "${BACKUP_FILE}"
 
     docker run --rm \
-      --mount "type=bind,source=${EXTRACT_DIR},target=/bitwarden/data/" \
+      --mount "type=bind,source=${TEST_EXTRACT_DIR},target=/bitwarden/data/" \
       --mount "type=bind,source=$(dirname "${BACKUP_FILE}"),target=/bitwarden/restore/" \
       "${DOCKER_IMAGE}" \
       restore \
@@ -40,7 +41,7 @@ function test() {
       -p "${PASSWORD}" \
       --zip-file "$(basename "${BACKUP_FILE}")"
 
-    check_files_same_in_folders "${DATA_DIR}" "${EXTRACT_DIR}"
+    check_files_same_in_folders "${DATA_DIR}" "${TEST_EXTRACT_DIR}"
     if [[ $? != 0 ]]; then
         ((FAILED_NUM++))
     fi

@@ -4,7 +4,7 @@
 DOCKER_IMAGE="ttionya/vaultwarden-backup:test"
 ERROR_NUM=0
 
-DATA_DIR="$(pwd)/fixtures/source/bitwarden/data"
+DATA_DIR="$(pwd)/tests/fixtures/source/bitwarden/data"
 OUTPUT_DIR="output"
 EXTRACT_DIR="extract"
 REMOTE_DIR="/${OUTPUT_DIR}"
