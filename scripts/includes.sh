@@ -127,18 +127,19 @@ function send_mail_content() {
 ########################################
 # Send health check ping.
 # Arguments:
-#     None
+#     url
+#     ping name
 ########################################
 function send_ping() {
-    if [[ -z "${PING_URL}" ]]; then
+    if [[ -z "${1}" ]]; then
         return
     fi
 
-    wget "${PING_URL}" -T 15 -t 10 -O /dev/null -q
+    wget "${1}" -T 15 -t 10 -O /dev/null -q
     if [[ $? != 0 ]]; then
-        color red "ping sending failed"
+        color red "${2} ping sending failed"
     else
-        color blue "ping send was successfully"
+        color blue "${2} ping send was successfully"
     fi
 }
 
@@ -250,6 +251,7 @@ function init_env() {
 
     init_env_dir
     init_env_db
+    init_env_ping
     init_env_mail
 
     # CRON
@@ -304,10 +306,6 @@ function init_env() {
     BACKUP_FILE_DATE="$(echo "${BACKUP_FILE_DATE:-"%Y%m%d"}${BACKUP_FILE_DATE_SUFFIX}" | sed 's/[^0-9a-zA-Z%_-]//g')"
     BACKUP_FILE_DATE_FORMAT="$(echo "${BACKUP_FILE_SUFFIX:-"${BACKUP_FILE_DATE}"}" | sed 's/\///g')"
 
-    # PING_URL
-    get_env PING_URL
-    PING_URL="${PING_URL:-""}"
-
     # TIMEZONE
     get_env TIMEZONE
     local TIMEZONE_MATCHED_COUNT=$(ls "/usr/share/zoneinfo/${TIMEZONE}" 2> /dev/null | wc -l)
@@ -348,6 +346,15 @@ function init_env() {
     color yellow "BACKUP_KEEP_DAYS: ${BACKUP_KEEP_DAYS}"
     if [[ -n "${PING_URL}" ]]; then
         color yellow "PING_URL: ${PING_URL}"
+    fi
+    if [[ -n "${PING_URL_WHEN_STARTS}" ]]; then
+        color yellow "PING_URL_WHEN_STARTS: ${PING_URL_WHEN_STARTS}"
+    fi
+    if [[ -n "${PING_URL_WHEN_SUCCESS}" ]]; then
+        color yellow "PING_URL_WHEN_SUCCESS: ${PING_URL_WHEN_SUCCESS}"
+    fi
+    if [[ -n "${PING_URL_WHEN_ERROR}" ]]; then
+        color yellow "PING_URL_WHEN_ERROR: ${PING_URL_WHEN_ERROR}"
     fi
     color yellow "MAIL_SMTP_ENABLE: ${MAIL_SMTP_ENABLE}"
     if [[ "${MAIL_SMTP_ENABLE}" == "TRUE" ]]; then
@@ -438,6 +445,24 @@ function init_env_db() {
     else # sqlite
         DB_TYPE="SQLITE"
     fi
+}
+
+function init_env_ping() {
+    # PING_URL
+    get_env PING_URL
+    PING_URL="${PING_URL:-""}"
+
+    # PING_URL_WHEN_STARTS
+    get_env PING_URL_WHEN_STARTS
+    PING_URL_WHEN_STARTS="${PING_URL_WHEN_STARTS:-""}"
+
+    # PING_URL_WHEN_SUCCESS
+    get_env PING_URL_WHEN_SUCCESS
+    PING_URL_WHEN_SUCCESS="${PING_URL_WHEN_SUCCESS:-""}"
+
+    # PING_URL_WHEN_ERROR
+    get_env PING_URL_WHEN_ERROR
+    PING_URL_WHEN_ERROR="${PING_URL_WHEN_ERROR:-""}"
 }
 
 function init_env_mail() {
