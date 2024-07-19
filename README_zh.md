@@ -56,7 +56,7 @@
 ### 配置 Rclone (⚠️ 必读 ⚠️)
 
 > **对于备份，你需要先配置 Rclone，否则备份工具不会工作。**
-> 
+>
 > **对于还原，它不是必要的。**
 
 我们通过 [Rclone](https://rclone.org/) 同步备份文件到远程存储系统。
@@ -338,7 +338,7 @@ Rclone 全局参数，详见 [flags](https://rclone.org/flags/)。
 
 使用 [healthcheck.io](https://healthchecks.io/) 地址或者其他类似的 cron 监控，以便在备份**成功**后执行 `GET` 请求。
 
-#### PING_URL_WHEN_ERROR
+#### PING_URL_WHEN_FAILURE
 
 使用 [healthcheck.io](https://healthchecks.io/) 地址或者其他类似的 cron 监控，以便在备份**失败**后执行 `GET` 请求。
 
@@ -403,7 +403,7 @@ Rclone 全局参数，详见 [flags](https://rclone.org/flags/)。
 
 #### BACKUP_FILE_DATE
 
-你应该使用 [`BACKUP_FILE_SUFFIX`](#backup_file_suffix) 环境变量替代。 
+你应该使用 [`BACKUP_FILE_SUFFIX`](#backup_file_suffix) 环境变量替代。
 
 只有在你确定想修改备份文件的时间前缀（如 20220101）时编辑该环境变量。**错误的配置可能导致备份文件被错误的覆盖。**
 

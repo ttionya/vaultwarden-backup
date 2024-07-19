@@ -56,7 +56,7 @@ And the following ways of notifying backup results are supported.
 ### Configure Rclone (⚠️ MUST READ ⚠️)
 
 > **For backup, you need to configure Rclone first, otherwise the backup tool will not work.**
-> 
+>
 > **For restore, it is not necessary.**
 
 We upload the backup files to the storage system by [Rclone](https://rclone.org/).
@@ -340,7 +340,7 @@ Use [healthcheck.io](https://healthchecks.io/) url or similar cron monitoring to
 
 Use [healthcheck.io](https://healthchecks.io/) url or similar cron monitoring to perform `GET` requests after a **successful** backup.
 
-#### PING_URL_WHEN_ERROR
+#### PING_URL_WHEN_FAILURE
 
 Use [healthcheck.io](https://healthchecks.io/) url or similar cron monitoring to perform `GET` requests after a backup **fails**.
 

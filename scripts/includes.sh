@@ -353,8 +353,8 @@ function init_env() {
     if [[ -n "${PING_URL_WHEN_SUCCESS}" ]]; then
         color yellow "PING_URL_WHEN_SUCCESS: ${PING_URL_WHEN_SUCCESS}"
     fi
-    if [[ -n "${PING_URL_WHEN_ERROR}" ]]; then
-        color yellow "PING_URL_WHEN_ERROR: ${PING_URL_WHEN_ERROR}"
+    if [[ -n "${PING_URL_WHEN_FAILURE}" ]]; then
+        color yellow "PING_URL_WHEN_FAILURE: ${PING_URL_WHEN_FAILURE}"
     fi
     color yellow "MAIL_SMTP_ENABLE: ${MAIL_SMTP_ENABLE}"
     if [[ "${MAIL_SMTP_ENABLE}" == "TRUE" ]]; then
@@ -460,9 +460,9 @@ function init_env_ping() {
     get_env PING_URL_WHEN_SUCCESS
     PING_URL_WHEN_SUCCESS="${PING_URL_WHEN_SUCCESS:-""}"
 
-    # PING_URL_WHEN_ERROR
-    get_env PING_URL_WHEN_ERROR
-    PING_URL_WHEN_ERROR="${PING_URL_WHEN_ERROR:-""}"
+    # PING_URL_WHEN_FAILURE
+    get_env PING_URL_WHEN_FAILURE
+    PING_URL_WHEN_FAILURE="${PING_URL_WHEN_FAILURE:-""}"
 }
 
 function init_env_mail() {

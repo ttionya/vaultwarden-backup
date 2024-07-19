@@ -43,7 +43,7 @@ function backup_db_postgresql() {
     if [[ $? != 0 ]]; then
         color red "backup vaultwarden postgresql database failed"
 
-        send_ping "${PING_URL_WHEN_ERROR}" "error"
+        send_ping "${PING_URL_WHEN_FAILURE}" "failure"
         send_ping "${PING_URL}" "completion"
         send_mail_content "FALSE" "Backup failed at $(date +"%Y-%m-%d %H:%M:%S %Z"). Reason: Backup postgresql database failed."
 
@@ -58,7 +58,7 @@ function backup_db_mysql() {
     if [[ $? != 0 ]]; then
         color red "backup vaultwarden mysql database failed"
 
-        send_ping "${PING_URL_WHEN_ERROR}" "error"
+        send_ping "${PING_URL_WHEN_FAILURE}" "failure"
         send_ping "${PING_URL}" "completion"
         send_mail_content "FALSE" "Backup failed at $(date +"%Y-%m-%d %H:%M:%S %Z"). Reason: Backup mysql database failed."
 
@@ -167,7 +167,7 @@ function upload() {
     if [[ ! -e "${UPLOAD_FILE}" ]]; then
         color red "upload file not found"
 
-        send_ping "${PING_URL_WHEN_ERROR}" "error"
+        send_ping "${PING_URL_WHEN_FAILURE}" "failure"
         send_ping "${PING_URL}" "completion"
         send_mail_content "FALSE" "File upload failed at $(date +"%Y-%m-%d %H:%M:%S %Z"). Reason: Upload file not found."
 
@@ -190,7 +190,7 @@ function upload() {
     done
 
     if [[ "${HAS_ERROR}" == "TRUE" ]]; then
-        send_ping "${PING_URL_WHEN_ERROR}" "error"
+        send_ping "${PING_URL_WHEN_FAILURE}" "failure"
         send_ping "${PING_URL}" "completion"
         send_mail_content "FALSE" "File upload failed at $(date +"%Y-%m-%d %H:%M:%S %Z")."
 
