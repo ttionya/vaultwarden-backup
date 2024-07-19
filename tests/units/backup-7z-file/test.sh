@@ -35,7 +35,7 @@ function test() {
 
     docker run --rm \
       --mount "type=bind,source=${TEST_EXTRACT_DIR},target=/bitwarden/data/" \
-      --mount "type=bind,source=$(dirname "${BACKUP_FILE}"),target=/bitwarden/restore/" \
+      --mount "type=bind,source=${TEST_OUTPUT_DIR},target=/bitwarden/restore/" \
       "${DOCKER_IMAGE}" \
       restore \
       -f \
