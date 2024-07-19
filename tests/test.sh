@@ -87,6 +87,7 @@ function test_result() {
 }
 
 . tests/units/backup-zip-file/test.sh
+. tests/units/backup-7z-file/test.sh
 
 if [[ "${ERROR_NUM}" == "0" ]]; then
     color green "All tests passed"
