@@ -143,6 +143,81 @@ function send_ping() {
     fi
 }
 
+
+
+########################################
+# Send ntfy message
+# Arguments:
+#     ntfy subject
+#     ntfy content
+#     ntfy priority
+# Outputs:
+#     ntfy send result
+########################################
+function send_ntfy() {
+
+
+
+    # Initialize the curl command
+    curl_cmd="curl -s -w '%{http_code}' -o /dev/stdout"
+
+    # Add the authentication header based on available credentials
+    if [[ -n "$NTFY_PASSWORD" ]]; then
+        auth_base64=$(echo -n "$NTFY_USERNAME:$NTFY_PASSWORD" | base64)
+        curl_cmd+=" -H 'Authorization: Basic $auth_base64'"
+    elif [[ -n "$NTFY_TOKEN" ]]; then
+        curl_cmd+=" -H \"Authorization: Bearer $NTFY_TOKEN\""
+    fi
+
+    # Add other headers and options
+    curl_cmd+=" -H 'Title: $1' -H 'X-Priority: $3' -d '$2' '$NTFY_SERVER/$NTFY_TOPIC'"
+
+
+    # Execute the constructed curl command
+    response=$(eval $curl_cmd)
+
+    # Extract the HTTP response code (last 3 characters of the response)
+    response_code="${response: -3}"
+
+    # Extract the response body (all except the last 3 characters)
+    response_body="${response:0:-3}"
+
+    # Check the HTTP response code
+    if [[ "$response_code" -eq 200 ]]; then
+        color blue "ntfy has been sent successfully"
+    else
+        color red "ntfy sending has failed with response code $response_code"
+        echo "Response body:"
+        echo "$response_body"
+    fi
+    
+}
+
+
+########################################
+# Send ntfy message content
+# Arguments:
+#     backup succesfull
+#     notification content
+########################################
+function send_ntfy_content() {
+    if [[ "${NTFY_ENABLE}" == "FALSE" ]]; then
+        return
+    fi
+
+
+    # successful
+    if [[ "$1" == "TRUE" && "${NTFY_WHEN_SUCCESS}" == "TRUE" ]]; then
+        send_ntfy "vaultwarden Backup Success" "$2" "$NTFY_PRIORITY_SUCCESS"
+    fi
+
+    # failed
+    if [[ "$1" == "FALSE" && "${NTFY_WHEN_FAILURE}" == "TRUE" ]]; then
+        send_ntfy "vaultwarden Backup Failed" "$2" "$NTFY_PRIORITY_FAILURE"
+    fi
+
+}
+
 ########################################
 # Configure PostgreSQL password file.
 # Arguments:
@@ -253,6 +328,7 @@ function init_env() {
     init_env_db
     init_env_ping
     init_env_mail
+    init_env_ntfy
 
     # CRON
     get_env CRON
@@ -494,5 +570,63 @@ function init_env_mail() {
         MAIL_WHEN_FAILURE="FALSE"
     else
         MAIL_WHEN_FAILURE="TRUE"
+    fi
+}
+
+
+function init_env_ntfy() {
+    # NTFY_ENABLE
+    # NTFY_SERVER
+    get_env NTFY_ENABLE
+    get_env NTFY_SERVER
+    if [[ "${NTFY_ENABLE^^}" == "TRUE" && "${NTFY_SERVER}" ]]; then
+        NTFY_ENABLE="TRUE"
+    else
+        NTFY_ENABLE="FALSE"
+    fi
+
+    # NTFY_TOPIC
+    get_env NTFY_TOPIC
+    NTFY_TOPIC="${NTFY_TOPIC:-""}"
+
+    # NTFY_USERNAME
+    get_env NTFY_USERNAME
+    NTFY_USERNAME="${NTFY_USERNAME:-""}"
+
+    # NTFY_PASSWORD
+    get_env NTFY_PASSWORD
+    NTFY_PASSWORD="${NTFY_PASSWORD:-""}"
+
+    # NTFY_TOKEN
+    get_env NTFY_TOKEN
+    NTFY_TOKEN="${NTFY_TOKEN:-""}"
+    
+     # NTFY_TOKEN
+    get_env NTFY_TOKEN
+    NTFY_TOKEN="${NTFY_TOKEN:-""}"
+
+     # NTFY_PRIORITY_SUCCESS
+    get_env NTFY_PRIORITY_SUCCESS
+    NTFY_PRIORITY_SUCCESS="${NTFY_PRIORITY_SUCCESS:-"3"}"
+
+
+    # NTFY_PRIORITY_FAILURE
+    get_env NTFY_PRIORITY_FAILURE
+    NTFY_PRIORITY_FAILURE="${NTFY_PRIORITY_FAILURE:-"5"}"  
+
+    # NTFY_WHEN_SUCCESS
+    get_env NTFY_WHEN_SUCCESS
+    if [[ "${NTFY_WHEN_SUCCESS^^}" == "FALSE" ]]; then
+        NTFY_WHEN_SUCCESS="FALSE"
+    else
+        NTFY_WHEN_SUCCESS="TRUE"
+    fi
+
+    # NTFY_WHEN_FAILURE
+    get_env NTFY_WHEN_FAILURE
+    if [[ "${NTFY_WHEN_FAILURE^^}" == "FALSE" ]]; then
+        NTFY_WHEN_FAILURE="FALSE"
+    else
+        NTFY_WHEN_FAILURE="TRUE"
     fi
 }

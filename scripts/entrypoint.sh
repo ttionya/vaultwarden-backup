@@ -26,6 +26,16 @@ if [[ "$1" == "mail" ]]; then
     exit 0
 fi
 
+# ntfy test
+if [[ "$1" == "ntfy" ]]; then
+    export_env_file
+    init_env_ntfy
+
+    send_ntfy "vaultwarden Backup Test" "Your ntfy looks configured correctly." "3"
+
+    exit 0
+fi
+
 # restore
 if [[ "$1" == "restore" ]]; then
     . /app/restore.sh

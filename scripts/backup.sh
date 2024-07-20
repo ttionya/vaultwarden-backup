@@ -46,6 +46,7 @@ function backup_db_postgresql() {
         send_ping "${PING_URL_WHEN_FAILURE}" "failure"
         send_ping "${PING_URL}" "completion"
         send_mail_content "FALSE" "Backup failed at $(date +"%Y-%m-%d %H:%M:%S %Z"). Reason: Backup postgresql database failed."
+        send_ntfy_content "FALSE" "Backup failed at $(date +"%Y-%m-%d %H:%M:%S %Z"). Reason: Backup postgresql database failed."
 
         exit 1
     fi
@@ -61,6 +62,7 @@ function backup_db_mysql() {
         send_ping "${PING_URL_WHEN_FAILURE}" "failure"
         send_ping "${PING_URL}" "completion"
         send_mail_content "FALSE" "Backup failed at $(date +"%Y-%m-%d %H:%M:%S %Z"). Reason: Backup mysql database failed."
+        send_ntfy_content "FALSE" "Backup failed at $(date +"%Y-%m-%d %H:%M:%S %Z"). Reason: Backup mysql database failed."
 
         exit 1
     fi
@@ -170,6 +172,8 @@ function upload() {
         send_ping "${PING_URL_WHEN_FAILURE}" "failure"
         send_ping "${PING_URL}" "completion"
         send_mail_content "FALSE" "File upload failed at $(date +"%Y-%m-%d %H:%M:%S %Z"). Reason: Upload file not found."
+        send_ntfy_content "FALSE" "File upload failed at $(date +"%Y-%m-%d %H:%M:%S %Z"). Reason: Upload file not found."
+
 
         exit 1
     fi
@@ -193,6 +197,7 @@ function upload() {
         send_ping "${PING_URL_WHEN_FAILURE}" "failure"
         send_ping "${PING_URL}" "completion"
         send_mail_content "FALSE" "File upload failed at $(date +"%Y-%m-%d %H:%M:%S %Z")."
+        send_ntfy_content "FALSE" "File upload failed at $(date +"%Y-%m-%d %H:%M:%S %Z"). Reason: Upload file not found."
 
         exit 1
     fi
@@ -236,6 +241,7 @@ clear_dir
 clear_history
 
 send_mail_content "TRUE" "The file was successfully uploaded at $(date +"%Y-%m-%d %H:%M:%S %Z")."
+send_ntfy_content "TRUE" "The file was successfully uploaded at $(date +"%Y-%m-%d %H:%M:%S %Z")."
 send_ping "${PING_URL}" "completion"
 send_ping "${PING_URL_WHEN_SUCCESS}" "success"
 
