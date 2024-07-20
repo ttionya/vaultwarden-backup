@@ -1,5 +1,17 @@
 # Changelog
 
+## v1.20.0 (20240721)
+
+### Feature
+
+- Add support for fine-grained ping messages
+- Update Dockerfile base image to `rclone/rclone:1.67.0`
+- Support testing
+
+<br>
+
+
+
 ## v1.19.10 (20240313)
 
 ### Feature
