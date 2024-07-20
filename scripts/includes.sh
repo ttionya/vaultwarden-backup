@@ -96,9 +96,9 @@ function send_mail() {
 
     echo "$2" | mail ${MAIL_VERBOSE} -s "$1" ${MAIL_SMTP_VARIABLES} "${MAIL_TO}"
     if [[ $? != 0 ]]; then
-        color red "mail sending failed"
+        color red "mail sending has failed"
     else
-        color blue "mail send was successfully"
+        color blue "mail has been sent successfully"
     fi
 }
 
@@ -131,15 +131,15 @@ function send_mail_content() {
 #     ping name
 ########################################
 function send_ping() {
-    if [[ -z "${1}" ]]; then
+    if [[ -z "$1" ]]; then
         return
     fi
 
-    wget "${1}" -T 15 -t 10 -O /dev/null -q
+    wget "$1" -T 15 -t 10 -O /dev/null -q
     if [[ $? != 0 ]]; then
-        color red "${2} ping sending failed"
+        color red "$2 ping sending has failed"
     else
-        color blue "${2} ping send was successfully"
+        color blue "$2 ping has been sent successfully"
     fi
 }
 
