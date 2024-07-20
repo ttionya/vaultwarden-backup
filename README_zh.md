@@ -330,7 +330,7 @@ Rclone 全局参数，详见 [flags](https://rclone.org/flags/)。
 
 使用 [healthcheck.io](https://healthchecks.io/) 地址或者其他类似的 cron 监控，以便在备份**完成（不论成功或失败）**后执行 `GET` 请求。
 
-#### PING_URL_WHEN_STARTS
+#### PING_URL_WHEN_START
 
 使用 [healthcheck.io](https://healthchecks.io/) 地址或者其他类似的 cron 监控，以便在备份**开始**前执行 `GET` 请求。
 

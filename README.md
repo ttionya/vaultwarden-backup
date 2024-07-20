@@ -332,7 +332,7 @@ Default: `UTC`
 
 Use [healthcheck.io](https://healthchecks.io/) url or similar cron monitoring to perform `GET` requests after a backup **no matter if it succeeds or fails**.
 
-#### PING_URL_WHEN_STARTS
+#### PING_URL_WHEN_START
 
 Use [healthcheck.io](https://healthchecks.io/) url or similar cron monitoring to perform `GET` requests at the **beginning** of a backup.
 

@@ -347,8 +347,8 @@ function init_env() {
     if [[ -n "${PING_URL}" ]]; then
         color yellow "PING_URL: ${PING_URL}"
     fi
-    if [[ -n "${PING_URL_WHEN_STARTS}" ]]; then
-        color yellow "PING_URL_WHEN_STARTS: ${PING_URL_WHEN_STARTS}"
+    if [[ -n "${PING_URL_WHEN_START}" ]]; then
+        color yellow "PING_URL_WHEN_START: ${PING_URL_WHEN_START}"
     fi
     if [[ -n "${PING_URL_WHEN_SUCCESS}" ]]; then
         color yellow "PING_URL_WHEN_SUCCESS: ${PING_URL_WHEN_SUCCESS}"
@@ -452,9 +452,9 @@ function init_env_ping() {
     get_env PING_URL
     PING_URL="${PING_URL:-""}"
 
-    # PING_URL_WHEN_STARTS
-    get_env PING_URL_WHEN_STARTS
-    PING_URL_WHEN_STARTS="${PING_URL_WHEN_STARTS:-""}"
+    # PING_URL_WHEN_START
+    get_env PING_URL_WHEN_START
+    PING_URL_WHEN_START="${PING_URL_WHEN_START:-""}"
 
     # PING_URL_WHEN_SUCCESS
     get_env PING_URL_WHEN_SUCCESS

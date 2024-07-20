@@ -223,7 +223,7 @@ color blue "running the backup program at $(date +"%Y-%m-%d %H:%M:%S %Z")"
 
 init_env
 
-send_ping "${PING_URL_WHEN_STARTS}" "start"
+send_ping "${PING_URL_WHEN_START}" "start"
 
 check_rclone_connection
 
