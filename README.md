@@ -415,20 +415,20 @@ Default: `vaultwarden-backup`
 
 Username when using username + password based authentication. Leave empty if you don't want to use authentication or want to use authentication based on a token.
 
-Default: ``
+Default: `''`
 
 
 #### NTFY_PASSWORD
 
 Password when using username + password basedauthentication. Leave empty if you don't want to use authentication or want to use authentication based on a token.
 
-Default: ``
+Default: `''`
 
 #### NTFY_TOKEN
 
 Token when using token based authentication. Leave empty if you don't want to use authentication or want to use authentication based on an username + password.
 
-Default: ``
+Default: `''`
 
 #### NTFY_PRIORITY_SUCCESS
 
