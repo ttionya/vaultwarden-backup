@@ -44,6 +44,7 @@ And the following ways of notifying backup results are supported.
 
 - Ping (send on completion, start, success, or failure)
 - Mail (SMTP based, send on success and on failure)
+- Ntfy.sh (Configurable server address, Username/password, token and no authentication supported)
 
 <br>
 
@@ -387,6 +388,69 @@ Default: `TRUE`
 #### MAIL_WHEN_FAILURE
 
 Sends an email when the backup fails.
+
+Default: `TRUE`
+
+#### NTFY_ENABLE
+
+Enable ntfy.sh integration, send notification to a ntfy.sh service once a backup succeeds or fails
+
+Default: `False`
+
+#### NTFY_SERVER
+
+Server address of the ntfy.sh service, including protocol. 
+
+Default: `htps://ntfy.sh`
+
+#### NTFY_TOPIC
+
+Topic where notifications are send to.
+
+**Warning: If using a public ntfy.sh service, topics may not be password-protected, so choose a name that's not easy to guess (or use password-protection)**
+
+Default: `vaultwarden-backup`
+
+#### NTFY_USERNAME
+
+Username when using username + password based authentication. Leave empty if you don't want to use authentication or want to use authentication based on a token.
+
+Default: ``
+
+
+#### NTFY_PASSWORD
+
+Password when using username + password basedauthentication. Leave empty if you don't want to use authentication or want to use authentication based on a token.
+
+Default: ``
+
+#### NTFY_TOKEN
+
+Token when using token based authentication. Leave empty if you don't want to use authentication or want to use authentication based on an username + password.
+
+Default: ``
+
+#### NTFY_PRIORITY_SUCCESS
+
+The priority of the ntfy notification when a backup succeeds.
+
+Default: `3`
+
+#### NTFY_PRIORITY_FAILURE
+
+The priority of the ntfy notification when a backup fails.
+
+Default: `5`
+
+#### NTFY_WHEN_SUCCESS
+
+Send a ntfy notification when a backup succeeds. (NTFY_ENABLE must also be 'TRUE')
+
+Default: `TRUE`
+
+#### NTFY_WHEN_FAILURE="TRUE"
+
+Send a ntfy notification when a backup fails. (NTFY_ENABLE must also be 'TRUE')
 
 Default: `TRUE`
 

@@ -156,14 +156,17 @@ function send_ping() {
 ########################################
 function send_ntfy() {
 
-
+    if [[ -z $NTFY_SERVER ]]; then
+        color red "No ntfy server configured"
+        exit 0
+    fi
 
     # Initialize the curl command
     curl_cmd="curl -s -w '%{http_code}' -o /dev/stdout"
 
     # Add the authentication header based on available credentials
     if [[ -n "$NTFY_PASSWORD" ]]; then
-        auth_base64=$(echo -n "$NTFY_USERNAME:$NTFY_PASSWORD" | base64)
+        auth_base64=$(echo -n "$NTFY_USERNAME:$NTFY_PASSWORD" | base64 -w 0)
         curl_cmd+=" -H 'Authorization: Basic $auth_base64'"
     elif [[ -n "$NTFY_TOKEN" ]]; then
         curl_cmd+=" -H \"Authorization: Bearer $NTFY_TOKEN\""
@@ -440,6 +443,19 @@ function init_env() {
     fi
     color yellow "TIMEZONE: ${TIMEZONE}"
     color yellow "========================================"
+
+    color yellow "NTFY_ENABLE: ${NTFY_ENABLE}"
+    color yellow "NTFY_SERVER: ${NTFY_SERVER}"
+    color yellow "NTFY_TOPIC: ${NTFY_TOPIC}"
+    color yellow "NTFY_USERNAME: ${NTFY_USERNAME}"
+    color yellow "NTFY_PASSWORD: ${#NTFY_PASSWORD} Chars"
+    color yellow "NTFY_TOKEN: ${#NTFY_TOKEN} Chars"
+    color yellow "NTFY_PRIORITY_SUCCESS: ${NTFY_PRIORITY_SUCCESS}"
+    color yellow "NTFY_PRIORITY_FAILURE: ${NTFY_PRIORITY_FAILURE}"
+    color yellow "NTFY_WHEN_SUCCESS: ${NTFY_WHEN_SUCCESS}"
+    color yellow "NTFY_WHEN_FAILURE: ${NTFY_WHEN_FAILURE}"
+
+    color yellow "========================================"
 }
 
 function init_env_dir() {
@@ -578,16 +594,19 @@ function init_env_ntfy() {
     # NTFY_ENABLE
     # NTFY_SERVER
     get_env NTFY_ENABLE
-    get_env NTFY_SERVER
-    if [[ "${NTFY_ENABLE^^}" == "TRUE" && "${NTFY_SERVER}" ]]; then
+    if [[ "${NTFY_ENABLE^^}" == "TRUE" ]]; then
         NTFY_ENABLE="TRUE"
     else
         NTFY_ENABLE="FALSE"
     fi
 
+    # NTFY_SERVER
+    get_env NTFY_SERVER
+    NTFY_SERVER="${NTFY_SERVER:-""}"
+
     # NTFY_TOPIC
     get_env NTFY_TOPIC
-    NTFY_TOPIC="${NTFY_TOPIC:-""}"
+    NTFY_TOPIC="${NTFY_TOPIC:-"vaultwarden-backup"}"
 
     # NTFY_USERNAME
     get_env NTFY_USERNAME
