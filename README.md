@@ -399,9 +399,9 @@ Default: `False`
 
 #### NTFY_SERVER
 
-Server address of the ntfy.sh service, including protocol. 
+Server address of the ntfy.sh service, including protocol. Example: `https://ntfy.sh`
 
-Default: `htps://ntfy.sh`
+Default: `''`
 
 #### NTFY_TOPIC
 
