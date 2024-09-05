@@ -125,17 +125,37 @@ function send_mail_content() {
 }
 
 ########################################
-# Send health check ping.
+# Send health check or notification ping.
 # Arguments:
-#     url
-#     ping name
+#     ping status (completion / start / success / failure)
+#     ping subject
+#     ping content
+# Outputs:
+#     send ping result
 ########################################
 function send_ping() {
-    if [[ -z "$1" ]]; then
+    local CURL_URL=""
+    local CURL_OPTIONS=""
+
+    case "$1" in
+        completion) CURL_URL="${PING_URL}" CURL_OPTIONS="${PING_URL_CURL_OPTIONS}" ;;
+        start)      CURL_URL="${PING_URL_WHEN_START}" CURL_OPTIONS="${PING_URL_WHEN_START_CURL_OPTIONS}" ;;
+        success)    CURL_URL="${PING_URL_WHEN_SUCCESS}" CURL_OPTIONS="${PING_URL_WHEN_SUCCESS_CURL_OPTIONS}" ;;
+        failure)    CURL_URL="${PING_URL_WHEN_FAILURE}" CURL_OPTIONS="${PING_URL_WHEN_FAILURE_CURL_OPTIONS}" ;;
+    esac
+
+    if [[ -z "${CURL_URL}" ]]; then
         return
     fi
 
-    wget "$1" -T 15 -t 10 -O /dev/null -q
+    CURL_URL=$(echo "${CURL_URL}" | sed "s/%{subject}/$(echo "$2" | tr ' ' '+')/g")
+    CURL_URL=$(echo "${CURL_URL}" | sed "s/%{content}/$(echo "$3" | tr ' ' '+')/g")
+    CURL_OPTIONS=$(echo "${CURL_OPTIONS}" | sed "s/%{subject}/$2/g")
+    CURL_OPTIONS=$(echo "${CURL_OPTIONS}" | sed "s/%{content}/$3/g")
+
+    local CURL_COMMAND="curl -m 15 --retry 10 --retry-delay 3 -o /dev/null -s${CURL_OPTIONS:+" ${CURL_OPTIONS}"} ${CURL_URL}"
+
+    eval "${CURL_COMMAND}"
     if [[ $? != 0 ]]; then
         color red "$2 ping sending has failed"
     else
