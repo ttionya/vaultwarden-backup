@@ -33,7 +33,7 @@ if [[ "$1" == "ping" ]]; then
 
     PING_DEBUG="TRUE"
 
-    send_mail "vaultwarden Backup Test" "Your PING configuration looks correct."
+    send_ping "$2" "vaultwarden Backup Test" "Your PING configuration looks correct."
 
     exit 0
 fi

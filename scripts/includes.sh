@@ -158,24 +158,24 @@ function send_notification() {
 
     case "$1" in
         start)
-            // ping
+            # ping
             send_ping "start" "${SUBJECT_START}" "$2"
             ;;
         success)
-            // mail
+            # mail
             if [[ "${MAIL_SMTP_ENABLE}" == "TRUE" && "${MAIL_WHEN_SUCCESS}" == "TRUE" ]]; then
                 send_mail "${SUBJECT_SUCCESS}" "$2"
             fi
-            // ping
+            # ping
             send_ping "success" "${SUBJECT_SUCCESS}" "$2"
             send_ping "completion" "${SUBJECT_SUCCESS}" "$2"
             ;;
         failure)
-            // mail
+            # mail
             if [[ "${MAIL_SMTP_ENABLE}" == "TRUE" && "${MAIL_WHEN_FAILURE}" == "TRUE" ]]; then
                 send_mail "${SUBJECT_FAILURE}" "$2"
             fi
-            // ping
+            # ping
             send_ping "failure" "${SUBJECT_FAILURE}" "$2"
             send_ping "completion" "${SUBJECT_FAILURE}" "$2"
             ;;
