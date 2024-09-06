@@ -14,20 +14,6 @@ Docker containers for [vaultwarden](https://github.com/dani-garcia/vaultwarden) 
 
 
 
-## Rename
-
-**Unofficial Bitwarden compatible server written in Rust, formerly known as `bitwarden_rs`, renamed to `vaultwarden`.**
-
-For this reason, the backup tool was migrated to [ttionya/vaultwarden-backup](https://github.com/ttionya/vaultwarden-backup).
-
-The old image can still be used, just **DEPRECATED**. It is recommended to migrate to new image [ttionya/vaultwarden-backup](https://hub.docker.com/r/ttionya/vaultwarden-backup).
-
-**See how to migrate [here](#migration).**
-
-<br>
-
-
-
 ## Feature
 
 This tool supports backing up the following files or directories.
@@ -328,68 +314,6 @@ Here is timezone list at [wikipedia](https://en.wikipedia.org/wiki/List_of_tz_da
 
 Default: `UTC`
 
-#### PING_URL
-
-Use [healthcheck.io](https://healthchecks.io/) url or similar cron monitoring to perform `GET` requests after a backup **no matter if it succeeds or fails**.
-
-#### PING_URL_WHEN_START
-
-Use [healthcheck.io](https://healthchecks.io/) url or similar cron monitoring to perform `GET` requests at the **beginning** of a backup.
-
-#### PING_URL_WHEN_SUCCESS
-
-Use [healthcheck.io](https://healthchecks.io/) url or similar cron monitoring to perform `GET` requests after a **successful** backup.
-
-#### PING_URL_WHEN_FAILURE
-
-Use [healthcheck.io](https://healthchecks.io/) url or similar cron monitoring to perform `GET` requests after a backup **fails**.
-
-#### MAIL_SMTP_ENABLE
-
-Starting from v1.19.0, we will be using [`s-nail`](https://www.sdaoden.eu/code-nail.html) instead of [`heirloom-mailx`](https://www.systutorials.com/docs/linux/man/1-heirloom-mailx/) to send emails.
-
-Please note that `heirloom-mailx` is a stub for `s-nail`, and most of its functionality is compatible. Therefore, you may not need to modify any environment variables for this change.
-
-Default: `FALSE`
-
-#### MAIL_SMTP_VARIABLES
-
-Because the configuration for sending emails is too complicated, we allow you to configure it yourself.
-
-**We will set the subject according to the usage scenario, so you should not use the `-s` option.**
-
-During testing, we will add the `-v` option to display detailed information.
-
-```text
-# My example:
-
-# For Zoho
--S smtp-use-starttls \
--S smtp=smtp://smtp.zoho.com:587 \
--S smtp-auth=login \
--S smtp-auth-user=<my-email-address> \
--S smtp-auth-password=<my-email-password> \
--S from=<my-email-address>
-```
-
-Console showing warnings? Check [issue #177](https://github.com/ttionya/vaultwarden-backup/issues/117#issuecomment-1691443179) for more details.
-
-#### MAIL_TO
-
-This specifies the recipient of the notification email.
-
-#### MAIL_WHEN_SUCCESS
-
-Sends an email when the backup is successful.
-
-Default: `TRUE`
-
-#### MAIL_WHEN_FAILURE
-
-Sends an email when the backup fails.
-
-Default: `TRUE`
-
 #### DATA_DIR
 
 This folder stores the data of vaultwarden.
@@ -397,6 +321,8 @@ This folder stores the data of vaultwarden.
 When using `Docker Compose`, this does not need to be changed. However, when using automatic backup, you need to change it to `/data`.
 
 Default: `/bitwarden/data`
+
+※ Please refer to the [`Notification`](#notification) section for notification-related environment variables.
 
 <details>
 <summary><strong>※ Other environment variables</strong></summary>
@@ -456,45 +382,45 @@ Default: `${DATA_DIR}/sends`
 
 
 
-## Using `.env` file
+## Notification
 
-If you prefer using an env file instead of environment variables, you can map the env file containing the environment variables to the `/.env` file in the container.
+### Mail
 
-```shell
-docker run -d \
-  --mount type=bind,source=/path/to/env,target=/.env \
-  ttionya/vaultwarden-backup:latest
+Starting from v1.19.0, we will be using [`s-nail`](https://www.sdaoden.eu/code-nail.html) instead of [`heirloom-mailx`](https://www.systutorials.com/docs/linux/man/1-heirloom-mailx/) to send emails.
+
+Please note that `heirloom-mailx` is a stub for `s-nail`, and most of its functionality is compatible. Therefore, you may not need to modify any environment variables for this change.
+
+| Environment Variable | Default Value | Description                                           |
+| --- | --- |-------------------------------------------------------|
+| MAIL_SMTP_ENABLE | `FALSE` | Enable sending mail.                                  |
+| MAIL_SMTP_VARIABLES | | Mail sending options.                                 |
+| MAIL_TO | | The recipient of the notification email.              |
+| MAIL_WHEN_SUCCESS | `TRUE` | Send an email when the backup completes successfully. |
+| MAIL_WHEN_FAILURE | `TRUE` | Send an email if the backup fails.                    |
+
+For `MAIL_SMTP_VARIABLES`, you need to configure the mail sending options yourself. **We will set the email subject based on the usage scenario, so you should not use the `-s` flag.**
+
+```text
+# My example:
+
+# For Zoho
+-S smtp-use-starttls \
+-S smtp=smtp://smtp.zoho.com:587 \
+-S smtp-auth=login \
+-S smtp-auth-user=<my-email-address> \
+-S smtp-auth-password=<my-email-password> \
+-S from=<my-email-address>
 ```
 
-<br>
-
-
-
-## Docker Secrets
-
-As an alternative to passing sensitive information via environment variables, `_FILE` may be appended to the previously listed environment variables. This causes the initialization script to load the values for those variables from files present in the container. In particular, this can be used to load passwords from Docker secrets stored in `/run/secrets/<secret_name>` files.
-
-```shell
-docker run -d \
-  -e ZIP_PASSWORD_FILE=/run/secrets/zip-password \
-  ttionya/vaultwarden-backup:latest
-```
+Console showing warnings? Check [issue #177](https://github.com/ttionya/vaultwarden-backup/issues/117#issuecomment-1691443179) for more details.
 
 <br>
 
 
 
-## About Priority
+### Mail Test
 
-We will use the environment variables first, followed by the contents of the file ending in `_FILE` as defined by the environment variables. Next, we will use the contents of the file ending in `_FILE` as defined in the `.env` file, and finally the values from the `.env` file itself.
-
-<br>
-
-
-
-## Mail Test
-
-You can use the following command to test mail sending. Remember to replace your SMTP variables.
+You can use the following command to test mail sending. We will add the `-v` flag to display detailed information, so you do not need to set it again in `MAIL_SMTP_VARIABLES`.
 
 ```shell
 docker run --rm -it -e MAIL_SMTP_VARIABLES='<your smtp variables>' ttionya/vaultwarden-backup:latest mail <mail send to>
@@ -508,13 +434,122 @@ docker run --rm -it -e MAIL_SMTP_VARIABLES='<your smtp variables>' -e MAIL_TO='<
 
 
 
+### Ping
+
+We provide functionality to send notifications when the backup is completed, started, successful, or failed.
+
+**Using a [healthcheck.io](https://healthchecks.io/) address or other similar cron monitoring addresses is a good choice, and it is also recommended.** For more complex notification scenarios, you can use environment variables with the `_CURL_OPTIONS` suffix to set curl options. For example, you can add request headers, change the request method, etc.
+
+For different notification scenarios, **the backup tool provides `%{subject}` and `%{content}` placeholders to replace the actual title and content**. You can use them in the following environment variables. Note that the title and content may contain spaces. For the four environment variables containing `_CURL_OPTIONS`, the placeholders will be directly replaced, retaining spaces. For other `PING_URL` environment variables, spaces will be replaced with `+` to comply with URL rules.
+
+| Environment Variable                               | Trigger Status        | Test Identifier         | Description                                                          |
+|------------------------------------|-------------|--------------|----------------------------------------------------------------------|
+| PING_URL                           | completion (success or failure) | `completion` | The URL to which the request is sent after the backup is completed.  |
+| PING_URL_CURL_OPTIONS              |             |  | Curl options used with `PING_URL`                                    |
+| PING_URL_WHEN_START                | start          | `start` | The URL to which the request is sent when the backup starts.         |
+| PING_URL_WHEN_START_CURL_OPTIONS   |             |  | Curl options used with `PING_URL_WHEN_START`                         |
+| PING_URL_WHEN_SUCCESS              | success          | `success` | The URL to which the request is sent after the backup is successful. |
+| PING_URL_WHEN_SUCCESS_CURL_OPTIONS |             |  | Curl options used with `PING_URL_WHEN_SUCCESS`                       |
+| PING_URL_WHEN_FAILURE              | failure          | `failure` | The URL to which the request is sent after the backup fails.         |
+| PING_URL_WHEN_FAILURE_CURL_OPTIONS |             |  | Curl options used with `PING_URL_WHEN_FAILURE`                       |
+
+<br>
+
+
+
+### Ping Test
+
+You can use the following command to test the Ping function.
+
+The "test identifier" is the identifier in the table in the [previous section](#ping). You can use `completion`, `start`, `success`, or `failure`, which determines which set of environment variables to use.
+
+```shell
+docker run --rm -it \
+  -e PING_URL='<your ping url>' -e PING_URL_CURL_OPTIONS='<your curl options for PING_URL>' \
+  -e PING_URL_WHEN_START='<your ping url>' -e PING_URL_WHEN_START_CURL_OPTIONS='<your curl options for PING_URL_WHEN_START>' \
+  -e PING_URL_WHEN_SUCCESS='<your ping url>' -e PING_URL_WHEN_SUCCESS_CURL_OPTIONS='<your curl options for PING_URL_WHEN_SUCCESS>' \
+  -e PING_URL_WHEN_FAILURE='<your ping url>' -e PING_URL_WHEN_FAILURE_CURL_OPTIONS='<your curl options for PING_URL_WHEN_FAILURE>' \
+  ttionya/vaultwarden-backup:latest ping <test identifier>
+```
+
+<br>
+
+
+
+## Environment Variables Considerations
+
+### Using `.env` file
+
+If you prefer using an env file instead of environment variables, you can map the env file containing the environment variables to the `/.env` file in the container.
+
+```shell
+docker run -d \
+  --mount type=bind,source=/path/to/env,target=/.env \
+  ttionya/vaultwarden-backup:latest
+```
+
+**Please do not use the `--env-file` flag directly**; make sure to map the environment variables by mounting the file. The `--env-file` flag incorrectly handles quotes, which can lead to unexpected situations. For more information, please see [docker/cli#3630](https://github.com/docker/cli/issues/3630).
+
+<br>
+
+
+
+### Docker Secrets
+
+As an alternative to passing sensitive information via environment variables, you can append `_FILE` to the previously listed environment variables. This causes the initialization script to load the values for those variables from files present in the container. In particular, this can be used to load passwords from Docker secrets stored in `/run/secrets/<secret_name>` files.
+
+```shell
+docker run -d \
+  -e ZIP_PASSWORD_FILE=/run/secrets/zip-password \
+  ttionya/vaultwarden-backup:latest
+```
+
+<br>
+
+
+
+### About Priority
+
+We look for environment variables in the following order:
+
+1. Directly read the value of the environment variable
+2. Read the content of the file pointed to by the environment variable ending in `_FILE`
+3. Read the content of the file pointed to by the environment variable ending in `_FILE` in the `.env` file
+4. Read the value of the environment variable in the `.env` file
+
+Example:
+
+```txt
+# For 1
+MY_ENV="example1"
+
+# For 2
+MY_ENV_FILE="/path/to/example2"
+
+# For 3 (.env file)
+MY_ENV_FILE: "/path/to/example3" 
+
+# For 4 (.env file)
+MY_ENV: "example4"
+```
+
+<br>
+
+
+
 ## Migration
 
-If you use automatic backups, you just need to replace the image with `ttionya/vaultwarden-backup`. Note the name of your volume.
+**Unofficial Bitwarden compatible server written in Rust, formerly known as `bitwarden_rs`, has been renamed to `vaultwarden`. Consequently, this backup tool has also been renamed from `bitwardenrs-backup` to `vaultwarden-backup`.**
 
-If you are using `docker-compose`, you need to update `bitwardenrs/server` to `vaultwarden/server` and `ttionya/bitwardenrs-backup` to `ttionya/vaultwarden-backup`.
+The old image can still be used, just **DEPRECATED**. Please migrate to the new image as soon as possible.
 
-We recommend re-downloading the `docker-compose.yml` file, replacing your environment variables, and noting the `volumes` section, which you may need to change.
+Please follow the instructions below to migrate:
+
+If you use automatic backups, you only need to replace the image with `ttionya/vaultwarden-backup`. Note the name of your volume.
+
+If you use `docker-compose`, you need to update `bitwardenrs/server` to `vaultwarden/server` and `ttionya/bitwardenrs-backup` to `ttionya/vaultwarden-backup`.
+
+We recommend re-downloading the [`docker-compose.yml`](./docker-compose.yml) file, updating your environment variables, and paying attention to the `volumes` section, which you may need to modify.
 
 <br>
 
@@ -544,7 +579,7 @@ Check out the [CHANGELOG](CHANGELOG.md) file.
 
 I am grateful for the OSS license provided by [JetBrains](https://www.jetbrains.com/).
 
-<a href="https://jb.gg/OpenSourceSupport" target="_blank"><img src="https://resources.jetbrains.com/storage/products/company/brand/logos/jb_beam.png" alt="JetBrains Logo (Main) logo" width="300"></a>
+<a href="https://jb.gg/OpenSourceSupport" target="_blank"><img src="https://resources.jetbrains.com/storage/products/company/brand/logos/jb_beam.png" alt="JetBrains Logo (Main) logo" width="200"></a>
 
 <br>
 
