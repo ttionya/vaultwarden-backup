@@ -322,7 +322,7 @@ When using `Docker Compose`, this does not need to be changed. However, when usi
 
 Default: `/bitwarden/data`
 
-※ Please refer to the [`Notification`](#notification) section for notification-related environment variables.
+<strong>※ Please refer to the [`Notification`](#notification) section for notification-related environment variables.</strong>
 
 <details>
 <summary><strong>※ Other environment variables</strong></summary>
@@ -459,16 +459,20 @@ For different notification scenarios, **the backup tool provides `%{subject}` an
 
 ### Ping Test
 
-You can use the following command to test the Ping function.
+You can use the following command to test the Ping sending.
 
 The "test identifier" is the identifier in the table in the [previous section](#ping). You can use `completion`, `start`, `success`, or `failure`, which determines which set of environment variables to use.
 
 ```shell
 docker run --rm -it \
-  -e PING_URL='<your ping url>' -e PING_URL_CURL_OPTIONS='<your curl options for PING_URL>' \
-  -e PING_URL_WHEN_START='<your ping url>' -e PING_URL_WHEN_START_CURL_OPTIONS='<your curl options for PING_URL_WHEN_START>' \
-  -e PING_URL_WHEN_SUCCESS='<your ping url>' -e PING_URL_WHEN_SUCCESS_CURL_OPTIONS='<your curl options for PING_URL_WHEN_SUCCESS>' \
-  -e PING_URL_WHEN_FAILURE='<your ping url>' -e PING_URL_WHEN_FAILURE_CURL_OPTIONS='<your curl options for PING_URL_WHEN_FAILURE>' \
+  -e PING_URL='<your ping url>' \
+  -e PING_URL_CURL_OPTIONS='<your curl options for PING_URL>' \
+  -e PING_URL_WHEN_START='<your ping url>' \
+  -e PING_URL_WHEN_START_CURL_OPTIONS='<your curl options for PING_URL_WHEN_START>' \
+  -e PING_URL_WHEN_SUCCESS='<your ping url>' \
+  -e PING_URL_WHEN_SUCCESS_CURL_OPTIONS='<your curl options for PING_URL_WHEN_SUCCESS>' \
+  -e PING_URL_WHEN_FAILURE='<your ping url>' \
+  -e PING_URL_WHEN_FAILURE_CURL_OPTIONS='<your curl options for PING_URL_WHEN_FAILURE>' \
   ttionya/vaultwarden-backup:latest ping <test identifier>
 ```
 
@@ -543,7 +547,7 @@ MY_ENV: "example4"
 
 The old image can still be used, just **DEPRECATED**. Please migrate to the new image as soon as possible.
 
-Please follow the instructions below to migrate:
+**Migration Instructions**
 
 If you use automatic backups, you only need to replace the image with `ttionya/vaultwarden-backup`. Note the name of your volume.
 

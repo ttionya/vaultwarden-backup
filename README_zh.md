@@ -320,7 +320,7 @@ Rclone 全局参数，详见 [flags](https://rclone.org/flags/)。
 
 默认值：`/bitwarden/data`
 
-※ 通知相关环境变量请查看[通知](#通知)部分。
+<strong>※ 通知相关环境变量请查看[通知](#通知)部分。</strong>
 
 <details>
 <summary><strong>※ 其他环境变量</strong></summary>
@@ -454,19 +454,23 @@ docker run --rm -it -e MAIL_SMTP_VARIABLES='<your smtp variables>' -e MAIL_TO='<
 
 
 
-### Ping 测试
+### Ping 发送测试
 
-你可以使用下面的命令测试 Ping 功能。
+你可以使用下面的命令测试 Ping 发送功能。
 
-“测试标识”是[上一节](#ping)表格中的标识，你可以使用 `completion`、`start`、`success` 或 `failure`，它决定了使用哪一组环境变量。
+“test identifier”是[上一节](#ping)表格中的测试标识，你可以使用 `completion`、`start`、`success` 或 `failure`，它决定了使用哪一组环境变量。
 
 ```shell
 docker run --rm -it \
-  -e PING_URL='<your ping url>' -e PING_URL_CURL_OPTIONS='<your curl options for PING_URL>' \
-  -e PING_URL_WHEN_START='<your ping url>' -e PING_URL_WHEN_START_CURL_OPTIONS='<your curl options for PING_URL_WHEN_START>' \
-  -e PING_URL_WHEN_SUCCESS='<your ping url>' -e PING_URL_WHEN_SUCCESS_CURL_OPTIONS='<your curl options for PING_URL_WHEN_SUCCESS>' \
-  -e PING_URL_WHEN_FAILURE='<your ping url>' -e PING_URL_WHEN_FAILURE_CURL_OPTIONS='<your curl options for PING_URL_WHEN_FAILURE>' \
-  ttionya/vaultwarden-backup:latest ping <测试标识>
+  -e PING_URL='<your ping url>' \
+  -e PING_URL_CURL_OPTIONS='<your curl options for PING_URL>' \
+  -e PING_URL_WHEN_START='<your ping url>' \
+  -e PING_URL_WHEN_START_CURL_OPTIONS='<your curl options for PING_URL_WHEN_START>' \
+  -e PING_URL_WHEN_SUCCESS='<your ping url>' \
+  -e PING_URL_WHEN_SUCCESS_CURL_OPTIONS='<your curl options for PING_URL_WHEN_SUCCESS>' \
+  -e PING_URL_WHEN_FAILURE='<your ping url>' \
+  -e PING_URL_WHEN_FAILURE_CURL_OPTIONS='<your curl options for PING_URL_WHEN_FAILURE>' \
+  ttionya/vaultwarden-backup:latest ping <test identifier>
 ```
 
 <br>
@@ -540,7 +544,7 @@ MY_ENV: "example4"
 
 旧的镜像仍然可以使用，只是被标记为 **DEPRECATED** 了，请尽快迁移到新的镜像。
 
-请根据以下说明进行迁移：
+**迁移说明**
 
 如果你使用自动备份，你只需要把镜像名改为 `ttionya/vaultwarden-backup`。注意你的卷的名称。
 
