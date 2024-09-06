@@ -103,28 +103,6 @@ function send_mail() {
 }
 
 ########################################
-# Send mail.
-# Arguments:
-#     backup successful
-#     mail content
-########################################
-function send_mail_content() {
-    if [[ "${MAIL_SMTP_ENABLE}" == "FALSE" ]]; then
-        return
-    fi
-
-    # successful
-    if [[ "$1" == "TRUE" && "${MAIL_WHEN_SUCCESS}" == "TRUE" ]]; then
-        send_mail "vaultwarden Backup Success" "$2"
-    fi
-
-    # failed
-    if [[ "$1" == "FALSE" && "${MAIL_WHEN_FAILURE}" == "TRUE" ]]; then
-        send_mail "vaultwarden Backup Failed" "$2"
-    fi
-}
-
-########################################
 # Send health check or notification ping.
 # Arguments:
 #     ping status (completion / start / success / failure)
@@ -153,14 +131,55 @@ function send_ping() {
     CURL_OPTIONS=$(echo "${CURL_OPTIONS}" | sed "s/%{subject}/$2/g")
     CURL_OPTIONS=$(echo "${CURL_OPTIONS}" | sed "s/%{content}/$3/g")
 
-    local CURL_COMMAND="curl -m 15 --retry 10 --retry-delay 3 -o /dev/null -s${CURL_OPTIONS:+" ${CURL_OPTIONS}"} ${CURL_URL}"
+    local CURL_COMMAND="curl -m 15 --retry 10 --retry-delay 1 -o /dev/null -s${CURL_OPTIONS:+" ${CURL_OPTIONS}"} \"${CURL_URL}\""
+
+    if [[ "${PING_DEBUG}" == "TRUE" ]]; then
+        color yellow "curl command: ${CURL_COMMAND}"
+    fi
 
     eval "${CURL_COMMAND}"
     if [[ $? != 0 ]]; then
-        color red "$2 ping sending has failed"
+        color red "$1 ping sending has failed"
     else
-        color blue "$2 ping has been sent successfully"
+        color blue "$1 ping has been sent successfully"
     fi
+}
+
+########################################
+# Send notification.
+# Arguments:
+#     status (start / success / failure)
+#     notification content
+########################################
+function send_notification() {
+    local SUBJECT_START="vaultwarden Backup Start"
+    local SUBJECT_SUCCESS="vaultwarden Backup Success"
+    local SUBJECT_FAILURE="vaultwarden Backup Failed"
+
+    case "$1" in
+        start)
+            // ping
+            send_ping "start" "${SUBJECT_START}" "$2"
+            ;;
+        success)
+            // mail
+            if [[ "${MAIL_SMTP_ENABLE}" == "TRUE" && "${MAIL_WHEN_SUCCESS}" == "TRUE" ]]; then
+                send_mail "${SUBJECT_SUCCESS}" "$2"
+            fi
+            // ping
+            send_ping "success" "${SUBJECT_SUCCESS}" "$2"
+            send_ping "completion" "${SUBJECT_SUCCESS}" "$2"
+            ;;
+        failure)
+            // mail
+            if [[ "${MAIL_SMTP_ENABLE}" == "TRUE" && "${MAIL_WHEN_FAILURE}" == "TRUE" ]]; then
+                send_mail "${SUBJECT_FAILURE}" "$2"
+            fi
+            // ping
+            send_ping "failure" "${SUBJECT_FAILURE}" "$2"
+            send_ping "completion" "${SUBJECT_FAILURE}" "$2"
+            ;;
+    esac
 }
 
 ########################################

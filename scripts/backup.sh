@@ -43,9 +43,7 @@ function backup_db_postgresql() {
     if [[ $? != 0 ]]; then
         color red "backup vaultwarden postgresql database failed"
 
-        send_ping "${PING_URL_WHEN_FAILURE}" "failure"
-        send_ping "${PING_URL}" "completion"
-        send_mail_content "FALSE" "Backup failed at $(date +"%Y-%m-%d %H:%M:%S %Z"). Reason: Backup postgresql database failed."
+        send_notification "failure" "Backup failed at $(date +"%Y-%m-%d %H:%M:%S %Z"). Reason: Backup postgresql database failed."
 
         exit 1
     fi
@@ -58,9 +56,7 @@ function backup_db_mysql() {
     if [[ $? != 0 ]]; then
         color red "backup vaultwarden mysql database failed"
 
-        send_ping "${PING_URL_WHEN_FAILURE}" "failure"
-        send_ping "${PING_URL}" "completion"
-        send_mail_content "FALSE" "Backup failed at $(date +"%Y-%m-%d %H:%M:%S %Z"). Reason: Backup mysql database failed."
+        send_notification "failure" "Backup failed at $(date +"%Y-%m-%d %H:%M:%S %Z"). Reason: Backup mysql database failed."
 
         exit 1
     fi
@@ -167,9 +163,7 @@ function upload() {
     if [[ ! -e "${UPLOAD_FILE}" ]]; then
         color red "upload file not found"
 
-        send_ping "${PING_URL_WHEN_FAILURE}" "failure"
-        send_ping "${PING_URL}" "completion"
-        send_mail_content "FALSE" "File upload failed at $(date +"%Y-%m-%d %H:%M:%S %Z"). Reason: Upload file not found."
+        send_notification "failure" "File upload failed at $(date +"%Y-%m-%d %H:%M:%S %Z"). Reason: Upload file not found."
 
         exit 1
     fi
@@ -190,9 +184,7 @@ function upload() {
     done
 
     if [[ "${HAS_ERROR}" == "TRUE" ]]; then
-        send_ping "${PING_URL_WHEN_FAILURE}" "failure"
-        send_ping "${PING_URL}" "completion"
-        send_mail_content "FALSE" "File upload failed at $(date +"%Y-%m-%d %H:%M:%S %Z")."
+        send_notification "failure" "File upload failed at $(date +"%Y-%m-%d %H:%M:%S %Z")."
 
         exit 1
     fi
@@ -223,7 +215,7 @@ color blue "running the backup program at $(date +"%Y-%m-%d %H:%M:%S %Z")"
 
 init_env
 
-send_ping "${PING_URL_WHEN_START}" "start"
+send_notification "start" "Start backup at $(date +"%Y-%m-%d %H:%M:%S %Z")"
 
 check_rclone_connection
 
@@ -235,8 +227,6 @@ upload
 clear_dir
 clear_history
 
-send_mail_content "TRUE" "The file was successfully uploaded at $(date +"%Y-%m-%d %H:%M:%S %Z")."
-send_ping "${PING_URL}" "completion"
-send_ping "${PING_URL_WHEN_SUCCESS}" "success"
+send_notification "success" "The file was successfully uploaded at $(date +"%Y-%m-%d %H:%M:%S %Z")."
 
 color none ""
