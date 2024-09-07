@@ -103,44 +103,84 @@ function send_mail() {
 }
 
 ########################################
-# Send mail.
+# Send health check or notification ping.
 # Arguments:
-#     backup successful
-#     mail content
+#     ping status (completion / start / success / failure)
+#     ping subject
+#     ping content
+# Outputs:
+#     send ping result
 ########################################
-function send_mail_content() {
-    if [[ "${MAIL_SMTP_ENABLE}" == "FALSE" ]]; then
+function send_ping() {
+    local CURL_URL=""
+    local CURL_OPTIONS=""
+
+    case "$1" in
+        completion) CURL_URL="${PING_URL}" CURL_OPTIONS="${PING_URL_CURL_OPTIONS}" ;;
+        start)      CURL_URL="${PING_URL_WHEN_START}" CURL_OPTIONS="${PING_URL_WHEN_START_CURL_OPTIONS}" ;;
+        success)    CURL_URL="${PING_URL_WHEN_SUCCESS}" CURL_OPTIONS="${PING_URL_WHEN_SUCCESS_CURL_OPTIONS}" ;;
+        failure)    CURL_URL="${PING_URL_WHEN_FAILURE}" CURL_OPTIONS="${PING_URL_WHEN_FAILURE_CURL_OPTIONS}" ;;
+        *)          color red "illegal identifier, only supports completion, start, success, failure" ;;
+    esac
+
+    if [[ -z "${CURL_URL}" ]]; then
         return
     fi
 
-    # successful
-    if [[ "$1" == "TRUE" && "${MAIL_WHEN_SUCCESS}" == "TRUE" ]]; then
-        send_mail "vaultwarden Backup Success" "$2"
+    CURL_URL=$(echo "${CURL_URL}" | sed "s/%{subject}/$(echo "$2" | tr ' ' '+')/g")
+    CURL_URL=$(echo "${CURL_URL}" | sed "s/%{content}/$(echo "$3" | tr ' ' '+')/g")
+    CURL_OPTIONS=$(echo "${CURL_OPTIONS}" | sed "s/%{subject}/$2/g")
+    CURL_OPTIONS=$(echo "${CURL_OPTIONS}" | sed "s/%{content}/$3/g")
+
+    local CURL_COMMAND="curl -m 15 --retry 10 --retry-delay 1 -o /dev/null -s${CURL_OPTIONS:+" ${CURL_OPTIONS}"} \"${CURL_URL}\""
+
+    if [[ "${PING_DEBUG}" == "TRUE" ]]; then
+        color yellow "curl command: ${CURL_COMMAND}"
     fi
 
-    # failed
-    if [[ "$1" == "FALSE" && "${MAIL_WHEN_FAILURE}" == "TRUE" ]]; then
-        send_mail "vaultwarden Backup Failed" "$2"
+    eval "${CURL_COMMAND}"
+    if [[ $? != 0 ]]; then
+        color red "$1 ping sending has failed"
+    else
+        color blue "$1 ping has been sent successfully"
     fi
 }
 
 ########################################
-# Send health check ping.
+# Send notification.
 # Arguments:
-#     url
-#     ping name
+#     status (start / success / failure)
+#     notification content
 ########################################
-function send_ping() {
-    if [[ -z "$1" ]]; then
-        return
-    fi
+function send_notification() {
+    local SUBJECT_START="vaultwarden Backup Start"
+    local SUBJECT_SUCCESS="vaultwarden Backup Success"
+    local SUBJECT_FAILURE="vaultwarden Backup Failed"
 
-    wget "$1" -T 15 -t 10 -O /dev/null -q
-    if [[ $? != 0 ]]; then
-        color red "$2 ping sending has failed"
-    else
-        color blue "$2 ping has been sent successfully"
-    fi
+    case "$1" in
+        start)
+            # ping
+            send_ping "start" "${SUBJECT_START}" "$2"
+            ;;
+        success)
+            # mail
+            if [[ "${MAIL_SMTP_ENABLE}" == "TRUE" && "${MAIL_WHEN_SUCCESS}" == "TRUE" ]]; then
+                send_mail "${SUBJECT_SUCCESS}" "$2"
+            fi
+            # ping
+            send_ping "success" "${SUBJECT_SUCCESS}" "$2"
+            send_ping "completion" "${SUBJECT_SUCCESS}" "$2"
+            ;;
+        failure)
+            # mail
+            if [[ "${MAIL_SMTP_ENABLE}" == "TRUE" && "${MAIL_WHEN_FAILURE}" == "TRUE" ]]; then
+                send_mail "${SUBJECT_FAILURE}" "$2"
+            fi
+            # ping
+            send_ping "failure" "${SUBJECT_FAILURE}" "$2"
+            send_ping "completion" "${SUBJECT_FAILURE}" "$2"
+            ;;
+    esac
 }
 
 ########################################
@@ -345,16 +385,16 @@ function init_env() {
     color yellow "BACKUP_FILE_DATE_FORMAT: ${BACKUP_FILE_DATE_FORMAT} (example \"[filename].$(date +"${BACKUP_FILE_DATE_FORMAT}").[ext]\")"
     color yellow "BACKUP_KEEP_DAYS: ${BACKUP_KEEP_DAYS}"
     if [[ -n "${PING_URL}" ]]; then
-        color yellow "PING_URL: ${PING_URL}"
+        color yellow "PING_URL: curl${PING_URL_CURL_OPTIONS:+" ${PING_URL_CURL_OPTIONS}"} \"${PING_URL}\""
     fi
     if [[ -n "${PING_URL_WHEN_START}" ]]; then
-        color yellow "PING_URL_WHEN_START: ${PING_URL_WHEN_START}"
+        color yellow "PING_URL_WHEN_START: curl${PING_URL_WHEN_START_CURL_OPTIONS:+" ${PING_URL_WHEN_START_CURL_OPTIONS}"} \"${PING_URL_WHEN_START}\""
     fi
     if [[ -n "${PING_URL_WHEN_SUCCESS}" ]]; then
-        color yellow "PING_URL_WHEN_SUCCESS: ${PING_URL_WHEN_SUCCESS}"
+        color yellow "PING_URL_WHEN_SUCCESS: curl${PING_URL_WHEN_SUCCESS_CURL_OPTIONS:+" ${PING_URL_WHEN_SUCCESS_CURL_OPTIONS}"} \"${PING_URL_WHEN_SUCCESS}\""
     fi
     if [[ -n "${PING_URL_WHEN_FAILURE}" ]]; then
-        color yellow "PING_URL_WHEN_FAILURE: ${PING_URL_WHEN_FAILURE}"
+        color yellow "PING_URL_WHEN_FAILURE: curl${PING_URL_WHEN_FAILURE_CURL_OPTIONS:+" ${PING_URL_WHEN_FAILURE_CURL_OPTIONS}"} \"${PING_URL_WHEN_FAILURE}\""
     fi
     color yellow "MAIL_SMTP_ENABLE: ${MAIL_SMTP_ENABLE}"
     if [[ "${MAIL_SMTP_ENABLE}" == "TRUE" ]]; then
@@ -452,17 +492,33 @@ function init_env_ping() {
     get_env PING_URL
     PING_URL="${PING_URL:-""}"
 
+    # PING_URL_CURL_OPTIONS
+    get_env PING_URL_CURL_OPTIONS
+    PING_URL_CURL_OPTIONS="${PING_URL_CURL_OPTIONS:-""}"
+
     # PING_URL_WHEN_START
     get_env PING_URL_WHEN_START
     PING_URL_WHEN_START="${PING_URL_WHEN_START:-""}"
+
+    # PING_URL_WHEN_START_CURL_OPTIONS
+    get_env PING_URL_WHEN_START_CURL_OPTIONS
+    PING_URL_WHEN_START_CURL_OPTIONS="${PING_URL_WHEN_START_CURL_OPTIONS:-""}"
 
     # PING_URL_WHEN_SUCCESS
     get_env PING_URL_WHEN_SUCCESS
     PING_URL_WHEN_SUCCESS="${PING_URL_WHEN_SUCCESS:-""}"
 
+    # PING_URL_WHEN_SUCCESS_CURL_OPTIONS
+    get_env PING_URL_WHEN_SUCCESS_CURL_OPTIONS
+    PING_URL_WHEN_SUCCESS_CURL_OPTIONS="${PING_URL_WHEN_SUCCESS_CURL_OPTIONS:-""}"
+
     # PING_URL_WHEN_FAILURE
     get_env PING_URL_WHEN_FAILURE
     PING_URL_WHEN_FAILURE="${PING_URL_WHEN_FAILURE:-""}"
+
+    # PING_URL_WHEN_FAILURE_CURL_OPTIONS
+    get_env PING_URL_WHEN_FAILURE_CURL_OPTIONS
+    PING_URL_WHEN_FAILURE_CURL_OPTIONS="${PING_URL_WHEN_FAILURE_CURL_OPTIONS:-""}"
 }
 
 function init_env_mail() {

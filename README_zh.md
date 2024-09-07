@@ -14,20 +14,6 @@
 
 
 
-## 重命名
-
-**用 Rust 编写的非官方 Bitwarden 服务器，以前称为 `bitwarden_rs`，现在已经改名为 `vaultwarden`。**
-
-所以这个备份工具迁移到了 [ttionya/vaultwarden-backup](https://github.com/ttionya/vaultwarden-backup) 。
-
-旧的镜像仍然可以使用，只是 **DEPRECATED** 了。建议迁移到新的镜像 [ttionya/vaultwarden-backup](https://hub.docker.com/r/ttionya/vaultwarden-backup) 。
-
-**请在[这里](#迁移)查看如何迁移**。
-
-<br>
-
-
-
 ## 功能
 
 本工具会备份以下文件或目录。
@@ -326,68 +312,6 @@ Rclone 全局参数，详见 [flags](https://rclone.org/flags/)。
 
 默认值：`UTC`
 
-#### PING_URL
-
-使用 [healthcheck.io](https://healthchecks.io/) 地址或者其他类似的 cron 监控，以便在备份**完成（不论成功或失败）**后执行 `GET` 请求。
-
-#### PING_URL_WHEN_START
-
-使用 [healthcheck.io](https://healthchecks.io/) 地址或者其他类似的 cron 监控，以便在备份**开始**前执行 `GET` 请求。
-
-#### PING_URL_WHEN_SUCCESS
-
-使用 [healthcheck.io](https://healthchecks.io/) 地址或者其他类似的 cron 监控，以便在备份**成功**后执行 `GET` 请求。
-
-#### PING_URL_WHEN_FAILURE
-
-使用 [healthcheck.io](https://healthchecks.io/) 地址或者其他类似的 cron 监控，以便在备份**失败**后执行 `GET` 请求。
-
-#### MAIL_SMTP_ENABLE
-
-从 v1.19.0 开始，本工具使用 [`s-nail`](https://www.sdaoden.eu/code-nail.html) 代替 [`heirloom-mailx`](https://www.systutorials.com/docs/linux/man/1-heirloom-mailx/) 发送邮件。
-
-请注意，`heirloom-mailx` 是 `s-nail` 的基础，它们大部分功能是兼容的。因此你可能不需要为这个改变修改任何环境变量。
-
-默认值：`FALSE`
-
-#### MAIL_SMTP_VARIABLES
-
-因为发送邮件的配置太复杂，请自己配置邮件发送参数。
-
-**我们会根据使用场景设置邮件主题，所以你不应该使用 `-s` 选项。**
-
-测试期间，我们将增加 `-v` 选项来显示详细信息。
-
-```text
-# 提供一个能正常使用的例子：
-
-# For Zoho
--S smtp-use-starttls \
--S smtp=smtp://smtp.zoho.com:587 \
--S smtp-auth=login \
--S smtp-auth-user=<my-email-address> \
--S smtp-auth-password=<my-email-password> \
--S from=<my-email-address>
-```
-
-控制台有警告？查看 [issue #177](https://github.com/ttionya/vaultwarden-backup/issues/117#issuecomment-1691443179) 了解更多。
-
-#### MAIL_TO
-
-指定通知邮件的接收者。
-
-#### MAIL_WHEN_SUCCESS
-
-备份成功后发送邮件。
-
-默认值：`TRUE`
-
-#### MAIL_WHEN_FAILURE
-
-备份失败时发送邮件。
-
-默认值：`TRUE`
-
 #### DATA_DIR
 
 指定存放 vaultwarden 数据的目录。
@@ -395,6 +319,8 @@ Rclone 全局参数，详见 [flags](https://rclone.org/flags/)。
 当使用 `Docker Compose` 时，你一般不需要修改它，但是当你使用自动备份时，你通常需要将它修改为 `/data`。
 
 默认值：`/bitwarden/data`
+
+<strong>※ 通知相关环境变量请查看[通知](#通知)部分。</strong>
 
 <details>
 <summary><strong>※ 其他环境变量</strong></summary>
@@ -453,45 +379,45 @@ Default: `%Y%m%d`
 
 
 
-## Use `.env` file
+## 通知
 
-如果你喜欢使用 env 文件而不是环境变量，可以将包含环境变量的 env 文件映射到容器中的 `/.env` 文件。
+### Mail
 
-```shell
-docker run -d \
-  --mount type=bind,source=/path/to/env,target=/.env \
-  ttionya/vaultwarden-backup:latest
+从 v1.19.0 开始，本工具使用 [`s-nail`](https://www.sdaoden.eu/code-nail.html) 代替 [`heirloom-mailx`](https://www.systutorials.com/docs/linux/man/1-heirloom-mailx/) 发送邮件。
+
+请注意，`heirloom-mailx` 是 `s-nail` 的存根，它们大部分功能是兼容的。因此你可能不需要为这个改变修改任何环境变量。
+
+| 环境变量 | 默认值    | 描述        |
+| --- |--------|-----------|
+| MAIL_SMTP_ENABLE | `FALSE` | 启用邮件发送功能  |
+| MAIL_SMTP_VARIABLES |        | 邮件发送参数    |
+| MAIL_TO |        | 接收邮件的地址   |
+| MAIL_WHEN_SUCCESS | `TRUE` | 备份成功后发送邮件 |
+| MAIL_WHEN_FAILURE | `TRUE` | 备份失败后发送邮件 |
+
+对于 `MAIL_SMTP_VARIABLES`，你需要自行配置邮件发送参数。**我们会根据使用场景设置邮件主题，所以你不应该使用 `-s` 标志。**
+
+```text
+# 提供一个能正常使用的例子：
+
+# For Zoho
+-S smtp-use-starttls \
+-S smtp=smtp://smtp.zoho.com:587 \
+-S smtp-auth=login \
+-S smtp-auth-user=<my-email-address> \
+-S smtp-auth-password=<my-email-password> \
+-S from=<my-email-address>
 ```
 
-<br>
-
-
-
-## Docker Secrets
-
-作为通过环境变量传递敏感信息的替代方法，`_FILE` 可以追加到前面列出的环境变量后面，使初始化脚本从容器中存在的文件加载这些变量的值。特别是这可以用来从存储在 `/run/secrets/<secret_name>` 文件中的 Docker Secrets 中加载密码。
-
-```shell
-docker run -d \
-  -e ZIP_PASSWORD_FILE=/run/secrets/zip-password \
-  ttionya/vaultwarden-backup:latest
-```
+控制台有警告？查看 [issue #177](https://github.com/ttionya/vaultwarden-backup/issues/117#issuecomment-1691443179) 了解更多。
 
 <br>
 
 
 
-## 关于优先级
+### 邮件发送测试
 
-我们会优先使用环境变量，然后是环境变量定义的 `_FILE` 结尾的文件内容，之后是 `.env` 文件中定义的 `_FILE` 结尾的文件内容，最后才是 `.env` 文件的值。
-
-<br>
-
-
-
-## 邮件发送测试
-
-你可以使用下面的命令来测试邮件的发送。记得替换你的 SMTP 变量。
+你可以使用下面的命令测试邮件发送功能。我们会增加 `-v` 标志以显示详细信息，你无需在 `MAIL_SMTP_VARIABLES` 中重复设置。
 
 ```shell
 docker run --rm -it -e MAIL_SMTP_VARIABLES='<your smtp variables>' ttionya/vaultwarden-backup:latest mail <mail send to>
@@ -505,13 +431,126 @@ docker run --rm -it -e MAIL_SMTP_VARIABLES='<your smtp variables>' -e MAIL_TO='<
 
 
 
+### Ping
+
+我们提供了在备份完成、开始、成功、失败时发送通知的功能。
+
+**搭配 [healthcheck.io](https://healthchecks.io/) 地址或者其他类似的 cron 监控地址是一个不错的选择，这也是我们推荐的。** 对于一些更复杂的通知场景，你可以使用 `_CURL_OPTIONS` 后缀的环境变量来设置 curl 选项。比如你可以添加请求头，改变请求方法等。
+
+对于不同的通知场景，**备份工具提供了 `%{subject}` 和 `%{content}` 占位符用于替换实际的标题和内容**，你可以在以下环境变量中随意使用它们。请注意，标题和内容可能包含空格。对于包含 `_CURL_OPTIONS` 的四个环境变量，将直接替换占位符，保留空格。对于其他 `PING_URL` 环境变量，空格将被替换为 `+`，以符合 URL 规则。
+
+| 环境变量                               | 触发状态        | 测试标识         | 描述                                      |
+|------------------------------------|-------------|--------------|-----------------------------------------|
+| PING_URL                           | 完成（不论成功或失败） | `completion` | 备份完成后发送请求的地址                            |
+| PING_URL_CURL_OPTIONS              |             |  | 与 `PING_URL` 搭配使用的 curl 选项              |
+| PING_URL_WHEN_START                | 开始          | `start` | 备份开始时发送请求的地址                            |
+| PING_URL_WHEN_START_CURL_OPTIONS   |             |  | 与 `PING_URL_WHEN_START` 搭配使用的 curl 选项   |
+| PING_URL_WHEN_SUCCESS              | 成功          | `success` | 备份成功后发送请求的地址                            |
+| PING_URL_WHEN_SUCCESS_CURL_OPTIONS |             |  | 与 `PING_URL_WHEN_SUCCESS` 搭配使用的 curl 选项 |
+| PING_URL_WHEN_FAILURE              | 失败          | `failure` | 备份失败后发送请求的地址                            |
+| PING_URL_WHEN_FAILURE_CURL_OPTIONS |             |  | 与 `PING_URL_WHEN_FAILURE` 搭配使用的 curl 选项 |
+
+<br>
+
+
+
+### Ping 发送测试
+
+你可以使用下面的命令测试 Ping 发送功能。
+
+“test identifier”是[上一节](#ping)表格中的测试标识，你可以使用 `completion`、`start`、`success` 或 `failure`，它决定了使用哪一组环境变量。
+
+```shell
+docker run --rm -it \
+  -e PING_URL='<your ping url>' \
+  -e PING_URL_CURL_OPTIONS='<your curl options for PING_URL>' \
+  -e PING_URL_WHEN_START='<your ping url>' \
+  -e PING_URL_WHEN_START_CURL_OPTIONS='<your curl options for PING_URL_WHEN_START>' \
+  -e PING_URL_WHEN_SUCCESS='<your ping url>' \
+  -e PING_URL_WHEN_SUCCESS_CURL_OPTIONS='<your curl options for PING_URL_WHEN_SUCCESS>' \
+  -e PING_URL_WHEN_FAILURE='<your ping url>' \
+  -e PING_URL_WHEN_FAILURE_CURL_OPTIONS='<your curl options for PING_URL_WHEN_FAILURE>' \
+  ttionya/vaultwarden-backup:latest ping <test identifier>
+```
+
+<br>
+
+
+
+## 环境变量注意事项
+
+### 使用 `.env` 文件
+
+如果你喜欢使用 env 文件而不是环境变量，可以将包含环境变量的 env 文件映射到容器中的 `/.env` 文件。
+
+```shell
+docker run -d \
+  --mount type=bind,source=/path/to/env,target=/.env \
+  ttionya/vaultwarden-backup:latest
+```
+
+请不要直接使用 `--env-file` 标志，务必通过挂载文件的方式映射环境变量。`--env-file` 标志会错误地处理引号，导致发生意外情况。更多信息请参见 [docker/cli#3630](https://github.com/docker/cli/issues/3630)。
+
+<br>
+
+
+
+### Docker Secrets
+
+作为通过环境变量传递敏感信息的替代方法，可以在前面列出的环境变量后面追加 `_FILE`，使初始化脚本从容器中存在的文件加载这些变量的值。特别是这可以用来从存储在 `/run/secrets/<secret_name>` 文件中的 Docker Secrets 中加载密码。
+
+```shell
+docker run -d \
+  -e ZIP_PASSWORD_FILE=/run/secrets/zip-password \
+  ttionya/vaultwarden-backup:latest
+```
+
+<br>
+
+
+
+### 关于优先级
+
+我们按以下顺序查找环境变量： 
+
+1. 直接读取环境变量的值
+2. 读取以 `_FILE` 结尾的环境变量指向的文件的内容
+3. 读取 `.env` 文件中以 `_FILE` 结尾的环境变量指向的文件的内容
+4. 读取 `.env` 文件中环境变量的值
+
+示例：
+
+```txt
+# 对于 1
+MY_ENV="example1"
+
+# 对于 2
+MY_ENV_FILE="/path/to/example2"
+
+# 对于 3 (.env 文件)
+MY_ENV_FILE: "/path/to/example3" 
+
+# 对于 4 (.env 文件)
+MY_ENV: "example4"
+```
+
+<br>
+
+
+
 ## 迁移
+
+**用 Rust 编写的非官方 Bitwarden 服务器，以前称为 `bitwarden_rs`，已经改名为 `vaultwarden`。所以这个备份工具也由 `bitwardenrs-backup` 重命名为 `vaultwarden-backup`。**
+
+旧的镜像仍然可以使用，只是被标记为 **DEPRECATED** 了，请尽快迁移到新的镜像。
+
+**迁移说明**
 
 如果你使用自动备份，你只需要把镜像名改为 `ttionya/vaultwarden-backup`。注意你的卷的名称。
 
 如果你使用 `docker-compose`，你需要将 `bitwardenrs/server` 更新为 `vaultwarden/server`，`ttionya/bitwardenrs-backup` 更新为 `ttionya/vaultwarden-backup`。
 
-我们建议重新下载 `docker-compose.yml` 文件，替换你的环境变量，并注意 `volumes` 一节，你可能需要改变它。
+我们建议重新下载 [`docker-compose.yml`](./docker-compose.yml) 文件，更新你的环境变量，并注意 `volumes` 部分，你可能需要修改它。
 
 <br>
 
@@ -541,7 +580,7 @@ docker run --rm -it -e MAIL_SMTP_VARIABLES='<your smtp variables>' -e MAIL_TO='<
 
 感谢 [JetBrains](https://www.jetbrains.com/) 提供的 OSS 许可证。
 
-<a href="https://jb.gg/OpenSourceSupport" target="_blank"><img src="https://resources.jetbrains.com/storage/products/company/brand/logos/jb_beam.png" alt="JetBrains Logo (Main) logo" width="300"></a>
+<a href="https://jb.gg/OpenSourceSupport" target="_blank"><img src="https://resources.jetbrains.com/storage/products/company/brand/logos/jb_beam.png" alt="JetBrains Logo (Main) logo" width="250"></a>
 
 <br>
 
