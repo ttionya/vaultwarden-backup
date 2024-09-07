@@ -1,5 +1,15 @@
 # Changelog
 
+## v1.21.0 (20240907)
+
+### Feature
+
+- Enhance ping functionality to support customizable curl options. (close [#164](https://github.com/ttionya/vaultwarden-backup/issues/164))
+
+<br>
+
+
+
 ## v1.20.0 (20240721)
 
 ### Feature
