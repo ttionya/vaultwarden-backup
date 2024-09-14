@@ -1,5 +1,15 @@
 # Changelog
 
+## v1.21.1 (20240914)
+
+### Feature
+
+- Update Dockerfile base image to `rclone/rclone:1.68.0`
+
+<br>
+
+
+
 ## v1.21.0 (20240907)
 
 ### Feature
