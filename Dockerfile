@@ -1,8 +1,6 @@
-FROM rclone/rclone:1.68.2
+# syntax=docker/dockerfile:1
 
-LABEL "repository"="https://github.com/ttionya/vaultwarden-backup" \
-  "homepage"="https://github.com/ttionya/vaultwarden-backup" \
-  "maintainer"="ttionya <git@ttionya.com>"
+FROM rclone/rclone:1.68.2
 
 ARG USER_NAME="backuptool"
 ARG USER_ID="1100"
