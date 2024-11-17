@@ -2,6 +2,8 @@
 
 ## v1.21.3 (20241117)
 
+### Feature
+
 - Update Dockerfile base image to `rclone/rclone:1.68.2`
 - Use standardized docker labels
 
