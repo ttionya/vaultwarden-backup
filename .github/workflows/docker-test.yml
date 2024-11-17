@@ -48,7 +48,7 @@ jobs:
         with:
           files: ./docker-bake.hcl
           targets: image-test
-          push: true
+          load: true
       -
         name: Test
         run: |

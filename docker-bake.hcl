@@ -2,6 +2,10 @@ variable "VERSION" {
   default = "latest"
 }
 
+variable "TEST_BASE_TAG" {
+  default = "localhost:5000/base:dev"
+}
+
 target "docker-metadata-action" {}
 
 target "_common" {
@@ -42,15 +46,18 @@ target "image-beta" {
 target "image-test-base" {
   inherits = ["_common"]
   tags = [
-    "localhost:5000/base:dev"
+    "${TEST_BASE_TAG}"
   ]
 }
 
 target "image-test" {
   inherits = ["_common"]
   dockerfile = "./tests/Dockerfile"
+  platforms = [
+    "linux/amd64"
+  ]
   contexts = {
-    base = "docker-image://localhost:5000/base:dev"
+    base = "docker-image://${TEST_BASE_TAG}"
   }
   tags = [
     "ttionya/vaultwarden-backup:test"
