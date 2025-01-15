@@ -60,7 +60,7 @@ function configure_cron() {
 }
 
 init_env
-check_rclone_connection
+check_rclone_connection all
 configure_postgresql
 configure_timezone
 configure_cron

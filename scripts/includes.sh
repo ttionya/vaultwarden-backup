@@ -28,10 +28,10 @@ function color() {
 ########################################
 # Check storage system connection success.
 # Arguments:
-#     None
+#     success strategy (all / any)
 ########################################
 function check_rclone_connection() {
-    # check configuration exist
+    # check if the configuration exists
     rclone ${RCLONE_GLOBAL_FLAG} config show "${RCLONE_REMOTE_NAME}" > /dev/null 2>&1
     if [[ $? != 0 ]]; then
         color red "rclone configuration information not found"
@@ -40,7 +40,7 @@ function check_rclone_connection() {
     fi
 
     # check connection
-    local HAS_ERROR="FALSE"
+    local ERROR_COUNT=0
 
     for RCLONE_REMOTE_X in "${RCLONE_REMOTE_LIST[@]}"
     do
@@ -48,17 +48,23 @@ function check_rclone_connection() {
         if [[ $? != 0 ]]; then
             color red "storage system connection failure $(color yellow "[${RCLONE_REMOTE_X}]")"
 
-            HAS_ERROR="TRUE"
+            ((ERROR_COUNT++))
         fi
     done
 
-    if [[ "${HAS_ERROR}" == "TRUE" ]]; then
-        exit 1
+    if [[ "${ERROR_COUNT}" -gt 0 ]]; then
+        if [[ "$1" == "all" ]]; then
+            color red "storage system connection failure exists"
+            exit 1
+        elif [[ "$1" == "any" && "${ERROR_COUNT}" -eq "${#RCLONE_REMOTE_LIST[@]}" ]]; then
+            color red "all storage system connections failed"
+            exit 1
+        fi
     fi
 }
 
 ########################################
-# Check file is exist.
+# Check if the file exists.
 # Arguments:
 #     file
 ########################################
@@ -70,7 +76,7 @@ function check_file_exist() {
 }
 
 ########################################
-# Check directory is exist.
+# Check if the directory exists.
 # Arguments:
 #     directory
 ########################################
