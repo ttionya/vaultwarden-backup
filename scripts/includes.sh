@@ -56,9 +56,13 @@ function check_rclone_connection() {
         if [[ "$1" == "all" ]]; then
             color red "storage system connection failure exists"
             exit 1
-        elif [[ "$1" == "any" && "${ERROR_COUNT}" -eq "${#RCLONE_REMOTE_LIST[@]}" ]]; then
-            color red "all storage system connections failed"
-            exit 1
+        elif [[ "$1" == "any" ]]; then
+            if [[ "${ERROR_COUNT}" -eq "${#RCLONE_REMOTE_LIST[@]}" ]]; then
+                color red "all storage system connections failed"
+                exit 1
+            else
+                color yellow "some storage system connections failed, but the backup will continue"
+            fi
         fi
     fi
 }
