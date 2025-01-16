@@ -217,7 +217,7 @@ init_env
 
 send_notification "start" "Start backup at $(date +"%Y-%m-%d %H:%M:%S %Z")"
 
-check_rclone_connection
+check_rclone_connection any
 
 clear_dir
 backup_init
