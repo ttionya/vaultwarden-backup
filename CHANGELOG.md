@@ -1,5 +1,17 @@
 # Changelog
 
+## v1.22.0 (20250116)
+
+### Feature
+
+- Update Dockerfile base image to `rclone/rclone:1.69.0`
+- Support PostgreSQL 17 (close [#178](https://github.com/ttionya/vaultwarden-backup/issues/178))
+- Allow partial storage system connection failures during backup verification (close [#175](https://github.com/ttionya/vaultwarden-backup/issues/175))
+
+<br>
+
+
+
 ## v1.21.3 (20241117)
 
 ### Feature
