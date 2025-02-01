@@ -37,14 +37,14 @@ jobs:
           driver-opts: network=host
       -
         name: Build base image
-        uses: docker/bake-action@v5
+        uses: docker/bake-action@v6
         with:
           files: ./docker-bake.hcl
           targets: image-test-base
           push: true
       -
         name: Build test image
-        uses: docker/bake-action@v5
+        uses: docker/bake-action@v6
         with:
           files: ./docker-bake.hcl
           targets: image-test
