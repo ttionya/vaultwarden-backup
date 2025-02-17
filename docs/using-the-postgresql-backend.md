@@ -48,6 +48,18 @@ PostgreSQL password, **required**.
 
 The login information will be saved in the `~/.pgpass` file.
 
+#### PG_SSL_CA
+
+Path to the CA certificate for TLS connection, if used.
+
+#### PG_SSL_CERT
+
+Path to the client certificate for TLS connection, if used.
+
+#### PG_SSL_KEY
+
+Path to the client key for TLS connection, if used.
+
 <br>
 
 

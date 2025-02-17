@@ -78,7 +78,19 @@ function restore_db_sqlite() {
 function restore_db_postgresql() {
     color blue "restore vaultwarden postgresql database"
 
-    pg_restore -h "${PG_HOST}" -p "${PG_PORT}" -d "${PG_DBNAME}" -U "${PG_USERNAME}" -c "${RESTORE_FILE_DB}"
+    PG_RESTORE_CMD=(pg_restore -h "${PG_HOST}" -p "${PG_PORT}" -d "${PG_DBNAME}" -U "${PG_USERNAME}" -c "${RESTORE_FILE_DB}")
+    
+    if [[ -n "$PG_SSL_CA" ]]; then
+        PG_RESTORE_CMD+=(--sslrootcert="$PG_SSL_CA")
+    fi
+    if [[ -n "$PG_SSL_CERT" ]]; then
+        PG_RESTORE_CMD+=(--sslcert="$PG_SSL_CERT")
+    fi
+    if [[ -n "$PG_SSL_KEY" ]]; then
+        PG_RESTORE_CMD+=(--sslkey="$PG_SSL_KEY")
+    fi
+    
+    "${PG_RESTORE_CMD[@]}"
 
     if [[ $? == 0 ]]; then
         color green "restore vaultwarden postgresql database successful"
@@ -90,7 +102,19 @@ function restore_db_postgresql() {
 function restore_db_mysql() {
     color blue "restore vaultwarden mysql database"
 
-    mariadb -h "${MYSQL_HOST}" -P "${MYSQL_PORT}" -u "${MYSQL_USERNAME}" -p"${MYSQL_PASSWORD}" "${MYSQL_DATABASE}" < "${RESTORE_FILE_DB}"
+    MYSQL_RESTORE_CMD=(mariadb -h "${MYSQL_HOST}" -P "${MYSQL_PORT}" -u "${MYSQL_USERNAME}" -p"${MYSQL_PASSWORD}" "${MYSQL_DATABASE}")
+    
+    if [[ -n "$MYSQL_SSL_CA" ]]; then
+        MYSQL_RESTORE_CMD+=(--ssl-ca="$MYSQL_SSL_CA")
+    fi
+    if [[ -n "$MYSQL_SSL_CERT" ]]; then
+        MYSQL_RESTORE_CMD+=(--ssl-cert="$MYSQL_SSL_CERT")
+    fi
+    if [[ -n "$MYSQL_SSL_KEY" ]]; then
+        MYSQL_RESTORE_CMD+=(--ssl-key="$MYSQL_SSL_KEY")
+    fi
+    
+    "${MYSQL_RESTORE_CMD[@]}" < "${RESTORE_FILE_DB}"
 
     if [[ $? == 0 ]]; then
         color green "restore vaultwarden mysql database successful"

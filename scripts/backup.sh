@@ -38,13 +38,24 @@ function backup_db_sqlite() {
 
 function backup_db_postgresql() {
     color blue "backup vaultwarden postgresql database"
-
-    pg_dump -Fc -h "${PG_HOST}" -p "${PG_PORT}" -d "${PG_DBNAME}" -U "${PG_USERNAME}" -f "${BACKUP_FILE_DB_POSTGRESQL}"
+    
+    PG_DUMP_CMD=(pg_dump -Fc -h "${PG_HOST}" -p "${PG_PORT}" -d "${PG_DBNAME}" -U "${PG_USERNAME}" -f "${BACKUP_FILE_DB_POSTGRESQL}")
+    
+    if [[ -n "$PG_SSL_CA" ]]; then
+        PG_DUMP_CMD+=(--sslrootcert="$PG_SSL_CA")
+    fi
+    if [[ -n "$PG_SSL_CERT" ]]; then
+        PG_DUMP_CMD+=(--sslcert="$PG_SSL_CERT")
+    fi
+    if [[ -n "$PG_SSL_KEY" ]]; then
+        PG_DUMP_CMD+=(--sslkey="$PG_SSL_KEY")
+    fi
+    
+    "${PG_DUMP_CMD[@]}"
+    
     if [[ $? != 0 ]]; then
         color red "backup vaultwarden postgresql database failed"
-
         send_notification "failure" "Backup failed at $(date +"%Y-%m-%d %H:%M:%S %Z"). Reason: Backup postgresql database failed."
-
         exit 1
     fi
 }
@@ -52,12 +63,23 @@ function backup_db_postgresql() {
 function backup_db_mysql() {
     color blue "backup vaultwarden mysql database"
 
-    mariadb-dump -h "${MYSQL_HOST}" -P "${MYSQL_PORT}" -u "${MYSQL_USERNAME}" -p"${MYSQL_PASSWORD}" "${MYSQL_DATABASE}" > "${BACKUP_FILE_DB_MYSQL}"
+    MYSQL_DUMP_CMD=(mariadb-dump -h "${MYSQL_HOST}" -P "${MYSQL_PORT}" -u "${MYSQL_USERNAME}" -p"${MYSQL_PASSWORD}" "${MYSQL_DATABASE}")
+    
+    if [[ -n "$MYSQL_SSL_CA" ]]; then
+        MYSQL_DUMP_CMD+=(--ssl-ca="$MYSQL_SSL_CA")
+    fi
+    if [[ -n "$MYSQL_SSL_CERT" ]]; then
+        MYSQL_DUMP_CMD+=(--ssl-cert="$MYSQL_SSL_CERT")
+    fi
+    if [[ -n "$MYSQL_SSL_KEY" ]]; then
+        MYSQL_DUMP_CMD+=(--ssl-key="$MYSQL_SSL_KEY")
+    fi
+    
+    "${MYSQL_DUMP_CMD[@]}" > "${BACKUP_FILE_DB_MYSQL}"
+    
     if [[ $? != 0 ]]; then
         color red "backup vaultwarden mysql database failed"
-
         send_notification "failure" "Backup failed at $(date +"%Y-%m-%d %H:%M:%S %Z"). Reason: Backup mysql database failed."
-
         exit 1
     fi
 }
