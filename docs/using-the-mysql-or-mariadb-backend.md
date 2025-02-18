@@ -40,6 +40,18 @@ Default: `vaultwarden`
 
 MySQL(MariaDB) password, **required**.
 
+#### MYSQL_SSL_CA
+
+The path to the CA certificate for TLS connection (optional).
+
+#### MYSQL_SSL_CERT
+
+The path to the client certificate for TLS connection (optional).
+
+#### MYSQL_SSL_KEY
+
+The path to the client key for TLS connection (optional).
+
 <br>
 
 

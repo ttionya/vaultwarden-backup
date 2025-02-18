@@ -492,6 +492,15 @@ function init_env_db() {
 
         # MYSQL_PASSWORD
         get_env MYSQL_PASSWORD
+
+        # MYSQL_SSL_CA
+        get_env MYSQL_SSL_CA
+
+        # MYSQL_SSL_CERT
+        get_env MYSQL_SSL_CERT
+
+        # MYSQL_SSL_KEY
+        get_env MYSQL_SSL_KEY
     else # sqlite
         DB_TYPE="SQLITE"
     fi

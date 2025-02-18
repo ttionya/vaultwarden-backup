@@ -52,7 +52,18 @@ function backup_db_postgresql() {
 function backup_db_mysql() {
     color blue "backup vaultwarden mysql database"
 
-    mariadb-dump -h "${MYSQL_HOST}" -P "${MYSQL_PORT}" -u "${MYSQL_USERNAME}" -p"${MYSQL_PASSWORD}" "${MYSQL_DATABASE}" > "${BACKUP_FILE_DB_MYSQL}"
+    local EXTRA_OPTIONS=()
+    if [[ -n "${MYSQL_SSL_CA}" ]]; then
+        EXTRA_OPTIONS+=("--ssl-ca=\"${MYSQL_SSL_CA}\"")
+    fi
+    if [[ -n "${MYSQL_SSL_CERT}" ]]; then
+        EXTRA_OPTIONS+=("--ssl-cert=\"${MYSQL_SSL_CERT}\"")
+    fi
+    if [[ -n "${MYSQL_SSL_KEY}" ]]; then
+        EXTRA_OPTIONS+=("--ssl-key=\"${MYSQL_SSL_KEY}\"")
+    fi
+
+    eval "mariadb-dump -h \"${MYSQL_HOST}\" -P \"${MYSQL_PORT}\" -u \"${MYSQL_USERNAME}\" -p\"${MYSQL_PASSWORD}\" ${EXTRA_OPTIONS[@]} \"${MYSQL_DATABASE}\" > \"${BACKUP_FILE_DB_MYSQL}\""
     if [[ $? != 0 ]]; then
         color red "backup vaultwarden mysql database failed"
 
