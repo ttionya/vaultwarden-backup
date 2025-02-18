@@ -44,7 +44,7 @@ function check_rclone_connection() {
 
     for RCLONE_REMOTE_X in "${RCLONE_REMOTE_LIST[@]}"
     do
-        rclone ${RCLONE_GLOBAL_FLAG} mkdir "${RCLONE_REMOTE_X}"
+        rclone ${RCLONE_GLOBAL_FLAG} lsd "${RCLONE_REMOTE_X}" > /dev/null
         if [[ $? != 0 ]]; then
             color red "storage system connection failure $(color yellow "[${RCLONE_REMOTE_X}]")"
 
