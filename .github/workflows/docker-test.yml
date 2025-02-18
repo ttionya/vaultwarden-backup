@@ -39,6 +39,7 @@ jobs:
         name: Build base image
         uses: docker/bake-action@v6
         with:
+          source: .
           files: ./docker-bake.hcl
           targets: image-test-base
           push: true
@@ -46,6 +47,7 @@ jobs:
         name: Build test image
         uses: docker/bake-action@v6
         with:
+          source: .
           files: ./docker-bake.hcl
           targets: image-test
           load: true

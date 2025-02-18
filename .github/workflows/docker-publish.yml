@@ -60,6 +60,7 @@ jobs:
         env:
           VERSION: ${{ env.VERSION }}
         with:
+          source: .
           files: |
             ./docker-bake.hcl
             ${{ steps.meta.outputs.bake-file-labels }}
@@ -108,6 +109,7 @@ jobs:
         env:
           VERSION: ${{ env.VERSION }}
         with:
+          source: .
           files: |
             ./docker-bake.hcl
             ${{ steps.meta.outputs.bake-file-labels }}
@@ -174,6 +176,7 @@ jobs:
         env:
           VERSION: ${{ env.VERSION }}
         with:
+          source: .
           files: |
             ./docker-bake.hcl
             ${{ steps.meta.outputs.bake-file-labels }}
