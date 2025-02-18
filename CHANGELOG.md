@@ -1,5 +1,21 @@
 # Changelog
 
+## v1.23.0 (20250218)
+
+### Feature
+
+- Update Dockerfile base image to `rclone/rclone:1.69.1`
+- Support MySQL SSL connection (close [#185](https://github.com/ttionya/vaultwarden-backup/pull/185))
+- Optimize Rclone connection detection logic (close [#183](https://github.com/ttionya/vaultwarden-backup/issues/183))
+
+### Chore
+
+- Compatible with docker/bake-action@v6
+
+<br>
+
+
+
 ## v1.22.0 (20250116)
 
 ### Feature
