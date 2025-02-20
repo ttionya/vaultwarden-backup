@@ -40,6 +40,20 @@ Default: `vaultwarden`
 
 MySQL(MariaDB) password, **required**.
 
+#### MYSQL_SSL
+
+Enable SSL for connection.
+
+No default value is set; it uses the default provided by `mariadb-dump`, and starting from version `10.11`, the default is `TRUE`.
+
+#### MYSQL_SSL_VERIFY_SERVER_CERT
+
+Verify server's certificate.
+
+No default value is set; it uses the default provided by `mariadb-dump`, and starting from version `11.4`, the default is `TRUE`.
+
+If you encounter any TLS-related connection errors, you can try disabling it by setting values such as `0` or `FALSE`.
+
 #### MYSQL_SSL_CA
 
 The path to the CA certificate for TLS connection (optional).

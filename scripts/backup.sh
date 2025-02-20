@@ -53,6 +53,12 @@ function backup_db_mysql() {
     color blue "backup vaultwarden mysql database"
 
     local EXTRA_OPTIONS=()
+    if [[ -n "${MYSQL_SSL}" ]]; then
+        EXTRA_OPTIONS+=("--ssl=\"${MYSQL_SSL}\"")
+    fi
+    if [[ -n "${MYSQL_SSL_VERIFY_SERVER_CERT}" ]]; then
+        EXTRA_OPTIONS+=("--ssl-verify-server-cert=\"${MYSQL_SSL_VERIFY_SERVER_CERT}\"")
+    fi
     if [[ -n "${MYSQL_SSL_CA}" ]]; then
         EXTRA_OPTIONS+=("--ssl-ca=\"${MYSQL_SSL_CA}\"")
     fi

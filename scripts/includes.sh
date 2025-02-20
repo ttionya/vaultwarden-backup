@@ -493,6 +493,12 @@ function init_env_db() {
         # MYSQL_PASSWORD
         get_env MYSQL_PASSWORD
 
+        # MYSQL_SSL
+        get_env MYSQL_SSL
+
+        # MYSQL_SSL_VERIFY_SERVER_CERT
+        get_env MYSQL_SSL_VERIFY_SERVER_CERT
+
         # MYSQL_SSL_CA
         get_env MYSQL_SSL_CA
 
