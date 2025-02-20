@@ -1,5 +1,15 @@
 # Changelog
 
+## v1.23.1 (20250220)
+
+### Feature
+
+- Add environment variables `MYSQL_SSL` and `MYSQL_SSL_VERIFY_SERVER_CERT` to resolve the MySQL TLS connection error
+
+<br>
+
+
+
 ## v1.23.0 (20250218)
 
 ### Feature
