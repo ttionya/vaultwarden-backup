@@ -1,5 +1,15 @@
 # Changelog
 
+## v1.23.2 (20250312)
+
+### Fixed
+
+- Fix the issue where errors occur due to spaces in `MAIL_SMTP_VARIABLES` in some cases (fixed [#186](https://github.com/ttionya/vaultwarden-backup/issues/186))
+
+<br>
+
+
+
 ## v1.23.1 (20250220)
 
 ### Feature
