@@ -104,7 +104,7 @@ function send_mail() {
         local MAIL_VERBOSE="-v"
     fi
 
-    echo "$2" | mail ${MAIL_VERBOSE} -s "$1" ${MAIL_SMTP_VARIABLES} "${MAIL_TO}"
+    echo "$2" | eval "mail ${MAIL_VERBOSE} -s \"$1\" ${MAIL_SMTP_VARIABLES} \"${MAIL_TO}\""
     if [[ $? != 0 ]]; then
         color red "mail sending has failed"
     else
