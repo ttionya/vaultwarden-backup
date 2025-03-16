@@ -312,6 +312,14 @@ Rclone 全局参数，详见 [flags](https://rclone.org/flags/)。
 
 默认值：`UTC`
 
+#### DISPLAY_NAME
+
+用于在通知和日志中标识 vaultwarden 实例的自定义名称。
+
+这不会影响功能，仅影响通知标题和部分日志输出中的显示。
+
+默认值：`vaultwarden`
+
 #### DATA_DIR
 
 指定存放 vaultwarden 数据的目录。

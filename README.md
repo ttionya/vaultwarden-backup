@@ -314,6 +314,14 @@ Here is timezone list at [wikipedia](https://en.wikipedia.org/wiki/List_of_tz_da
 
 Default: `UTC`
 
+#### DISPLAY_NAME
+
+A custom name to identify your vaultwarden instance in notifications and logs.
+
+This doesn't affect functionality, it only affects the display in the notification title and partial log output.
+
+Default: `vaultwarden`
+
 #### DATA_DIR
 
 This folder stores the data of vaultwarden.
