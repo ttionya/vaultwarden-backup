@@ -1,5 +1,15 @@
 # Changelog
 
+## v1.24.0 (20250316)
+
+### Feature
+
+- Add environment variable `DISPLAY_NAME` to customize the display name (close [#189](https://github.com/ttionya/vaultwarden-backup/issues/189))
+
+<br>
+
+
+
 ## v1.23.2 (20250312)
 
 ### Fixed
