@@ -392,6 +392,52 @@ Default: `${DATA_DIR}/sends`
 
 ## Notification
 
+### Ping
+
+We provide functionality to send notifications when the backup is completed, started, successful, or failed.
+
+**Using a [healthcheck.io](https://healthchecks.io/) address or other similar cron monitoring addresses is a good choice, and it is also recommended.** For more complex notification scenarios, you can use environment variables with the `_CURL_OPTIONS` suffix to set curl options. For example, you can add request headers, change the request method, etc.
+
+For different notification scenarios, **the backup tool provides `%{subject}` and `%{content}` placeholders to replace the actual title and content**. You can use them in the following environment variables. Note that the title and content may contain spaces. For the four environment variables containing `_CURL_OPTIONS`, the placeholders will be directly replaced, retaining spaces. For other `PING_URL` environment variables, spaces will be replaced with `+` to comply with URL rules.
+
+| Environment Variable                               | Trigger Status        | Test Identifier         | Description                                                          |
+|------------------------------------|-------------|--------------|----------------------------------------------------------------------|
+| PING_URL                           | completion (success or failure) | `completion` | The URL to which the request is sent after the backup is completed.  |
+| PING_URL_CURL_OPTIONS              |             |  | Curl options used with `PING_URL`                                    |
+| PING_URL_WHEN_START                | start          | `start` | The URL to which the request is sent when the backup starts.         |
+| PING_URL_WHEN_START_CURL_OPTIONS   |             |  | Curl options used with `PING_URL_WHEN_START`                         |
+| PING_URL_WHEN_SUCCESS              | success          | `success` | The URL to which the request is sent after the backup is successful. |
+| PING_URL_WHEN_SUCCESS_CURL_OPTIONS |             |  | Curl options used with `PING_URL_WHEN_SUCCESS`                       |
+| PING_URL_WHEN_FAILURE              | failure          | `failure` | The URL to which the request is sent after the backup fails.         |
+| PING_URL_WHEN_FAILURE_CURL_OPTIONS |             |  | Curl options used with `PING_URL_WHEN_FAILURE`                       |
+
+<br>
+
+
+
+### Ping Test
+
+You can use the following command to test the Ping sending.
+
+The "test identifier" is the identifier in the table in the [previous section](#ping). You can use `completion`, `start`, `success`, or `failure`, which determines which set of environment variables to use.
+
+```shell
+docker run --rm -it \
+  -e PING_URL='<your ping url>' \
+  -e PING_URL_CURL_OPTIONS='<your curl options for PING_URL>' \
+  -e PING_URL_WHEN_START='<your ping url>' \
+  -e PING_URL_WHEN_START_CURL_OPTIONS='<your curl options for PING_URL_WHEN_START>' \
+  -e PING_URL_WHEN_SUCCESS='<your ping url>' \
+  -e PING_URL_WHEN_SUCCESS_CURL_OPTIONS='<your curl options for PING_URL_WHEN_SUCCESS>' \
+  -e PING_URL_WHEN_FAILURE='<your ping url>' \
+  -e PING_URL_WHEN_FAILURE_CURL_OPTIONS='<your curl options for PING_URL_WHEN_FAILURE>' \
+  ttionya/vaultwarden-backup:latest ping <test identifier>
+```
+
+<br>
+
+
+
 ### Mail
 
 Starting from v1.19.0, we will be using [`s-nail`](https://www.sdaoden.eu/code-nail.html) instead of [`heirloom-mailx`](https://www.systutorials.com/docs/linux/man/1-heirloom-mailx/) to send emails.
@@ -436,52 +482,6 @@ docker run --rm -it -e MAIL_SMTP_VARIABLES='<your smtp variables>' ttionya/vault
 # Or
 
 docker run --rm -it -e MAIL_SMTP_VARIABLES='<your smtp variables>' -e MAIL_TO='<mail send to>' ttionya/vaultwarden-backup:latest mail
-```
-
-<br>
-
-
-
-### Ping
-
-We provide functionality to send notifications when the backup is completed, started, successful, or failed.
-
-**Using a [healthcheck.io](https://healthchecks.io/) address or other similar cron monitoring addresses is a good choice, and it is also recommended.** For more complex notification scenarios, you can use environment variables with the `_CURL_OPTIONS` suffix to set curl options. For example, you can add request headers, change the request method, etc.
-
-For different notification scenarios, **the backup tool provides `%{subject}` and `%{content}` placeholders to replace the actual title and content**. You can use them in the following environment variables. Note that the title and content may contain spaces. For the four environment variables containing `_CURL_OPTIONS`, the placeholders will be directly replaced, retaining spaces. For other `PING_URL` environment variables, spaces will be replaced with `+` to comply with URL rules.
-
-| Environment Variable                               | Trigger Status        | Test Identifier         | Description                                                          |
-|------------------------------------|-------------|--------------|----------------------------------------------------------------------|
-| PING_URL                           | completion (success or failure) | `completion` | The URL to which the request is sent after the backup is completed.  |
-| PING_URL_CURL_OPTIONS              |             |  | Curl options used with `PING_URL`                                    |
-| PING_URL_WHEN_START                | start          | `start` | The URL to which the request is sent when the backup starts.         |
-| PING_URL_WHEN_START_CURL_OPTIONS   |             |  | Curl options used with `PING_URL_WHEN_START`                         |
-| PING_URL_WHEN_SUCCESS              | success          | `success` | The URL to which the request is sent after the backup is successful. |
-| PING_URL_WHEN_SUCCESS_CURL_OPTIONS |             |  | Curl options used with `PING_URL_WHEN_SUCCESS`                       |
-| PING_URL_WHEN_FAILURE              | failure          | `failure` | The URL to which the request is sent after the backup fails.         |
-| PING_URL_WHEN_FAILURE_CURL_OPTIONS |             |  | Curl options used with `PING_URL_WHEN_FAILURE`                       |
-
-<br>
-
-
-
-### Ping Test
-
-You can use the following command to test the Ping sending.
-
-The "test identifier" is the identifier in the table in the [previous section](#ping). You can use `completion`, `start`, `success`, or `failure`, which determines which set of environment variables to use.
-
-```shell
-docker run --rm -it \
-  -e PING_URL='<your ping url>' \
-  -e PING_URL_CURL_OPTIONS='<your curl options for PING_URL>' \
-  -e PING_URL_WHEN_START='<your ping url>' \
-  -e PING_URL_WHEN_START_CURL_OPTIONS='<your curl options for PING_URL_WHEN_START>' \
-  -e PING_URL_WHEN_SUCCESS='<your ping url>' \
-  -e PING_URL_WHEN_SUCCESS_CURL_OPTIONS='<your curl options for PING_URL_WHEN_SUCCESS>' \
-  -e PING_URL_WHEN_FAILURE='<your ping url>' \
-  -e PING_URL_WHEN_FAILURE_CURL_OPTIONS='<your curl options for PING_URL_WHEN_FAILURE>' \
-  ttionya/vaultwarden-backup:latest ping <test identifier>
 ```
 
 <br>

@@ -389,6 +389,52 @@ Default: `%Y%m%d`
 
 ## 通知
 
+### Ping
+
+我们提供了在备份完成、开始、成功、失败时发送通知的功能。
+
+**搭配 [healthcheck.io](https://healthchecks.io/) 地址或者其他类似的 cron 监控地址是一个不错的选择，这也是我们推荐的。** 对于一些更复杂的通知场景，你可以使用 `_CURL_OPTIONS` 后缀的环境变量来设置 curl 选项。比如你可以添加请求头，改变请求方法等。
+
+对于不同的通知场景，**备份工具提供了 `%{subject}` 和 `%{content}` 占位符用于替换实际的标题和内容**，你可以在以下环境变量中随意使用它们。请注意，标题和内容可能包含空格。对于包含 `_CURL_OPTIONS` 的四个环境变量，将直接替换占位符，保留空格。对于其他 `PING_URL` 环境变量，空格将被替换为 `+`，以符合 URL 规则。
+
+| 环境变量                               | 触发状态        | 测试标识         | 描述                                      |
+|------------------------------------|-------------|--------------|-----------------------------------------|
+| PING_URL                           | 完成（不论成功或失败） | `completion` | 备份完成后发送请求的地址                            |
+| PING_URL_CURL_OPTIONS              |             |  | 与 `PING_URL` 搭配使用的 curl 选项              |
+| PING_URL_WHEN_START                | 开始          | `start` | 备份开始时发送请求的地址                            |
+| PING_URL_WHEN_START_CURL_OPTIONS   |             |  | 与 `PING_URL_WHEN_START` 搭配使用的 curl 选项   |
+| PING_URL_WHEN_SUCCESS              | 成功          | `success` | 备份成功后发送请求的地址                            |
+| PING_URL_WHEN_SUCCESS_CURL_OPTIONS |             |  | 与 `PING_URL_WHEN_SUCCESS` 搭配使用的 curl 选项 |
+| PING_URL_WHEN_FAILURE              | 失败          | `failure` | 备份失败后发送请求的地址                            |
+| PING_URL_WHEN_FAILURE_CURL_OPTIONS |             |  | 与 `PING_URL_WHEN_FAILURE` 搭配使用的 curl 选项 |
+
+<br>
+
+
+
+### Ping 发送测试
+
+你可以使用下面的命令测试 Ping 发送功能。
+
+“test identifier”是[上一节](#ping)表格中的测试标识，你可以使用 `completion`、`start`、`success` 或 `failure`，它决定了使用哪一组环境变量。
+
+```shell
+docker run --rm -it \
+  -e PING_URL='<your ping url>' \
+  -e PING_URL_CURL_OPTIONS='<your curl options for PING_URL>' \
+  -e PING_URL_WHEN_START='<your ping url>' \
+  -e PING_URL_WHEN_START_CURL_OPTIONS='<your curl options for PING_URL_WHEN_START>' \
+  -e PING_URL_WHEN_SUCCESS='<your ping url>' \
+  -e PING_URL_WHEN_SUCCESS_CURL_OPTIONS='<your curl options for PING_URL_WHEN_SUCCESS>' \
+  -e PING_URL_WHEN_FAILURE='<your ping url>' \
+  -e PING_URL_WHEN_FAILURE_CURL_OPTIONS='<your curl options for PING_URL_WHEN_FAILURE>' \
+  ttionya/vaultwarden-backup:latest ping <test identifier>
+```
+
+<br>
+
+
+
 ### Mail
 
 从 v1.19.0 开始，本工具使用 [`s-nail`](https://www.sdaoden.eu/code-nail.html) 代替 [`heirloom-mailx`](https://www.systutorials.com/docs/linux/man/1-heirloom-mailx/) 发送邮件。
@@ -433,52 +479,6 @@ docker run --rm -it -e MAIL_SMTP_VARIABLES='<your smtp variables>' ttionya/vault
 # Or
 
 docker run --rm -it -e MAIL_SMTP_VARIABLES='<your smtp variables>' -e MAIL_TO='<mail send to>' ttionya/vaultwarden-backup:latest mail
-```
-
-<br>
-
-
-
-### Ping
-
-我们提供了在备份完成、开始、成功、失败时发送通知的功能。
-
-**搭配 [healthcheck.io](https://healthchecks.io/) 地址或者其他类似的 cron 监控地址是一个不错的选择，这也是我们推荐的。** 对于一些更复杂的通知场景，你可以使用 `_CURL_OPTIONS` 后缀的环境变量来设置 curl 选项。比如你可以添加请求头，改变请求方法等。
-
-对于不同的通知场景，**备份工具提供了 `%{subject}` 和 `%{content}` 占位符用于替换实际的标题和内容**，你可以在以下环境变量中随意使用它们。请注意，标题和内容可能包含空格。对于包含 `_CURL_OPTIONS` 的四个环境变量，将直接替换占位符，保留空格。对于其他 `PING_URL` 环境变量，空格将被替换为 `+`，以符合 URL 规则。
-
-| 环境变量                               | 触发状态        | 测试标识         | 描述                                      |
-|------------------------------------|-------------|--------------|-----------------------------------------|
-| PING_URL                           | 完成（不论成功或失败） | `completion` | 备份完成后发送请求的地址                            |
-| PING_URL_CURL_OPTIONS              |             |  | 与 `PING_URL` 搭配使用的 curl 选项              |
-| PING_URL_WHEN_START                | 开始          | `start` | 备份开始时发送请求的地址                            |
-| PING_URL_WHEN_START_CURL_OPTIONS   |             |  | 与 `PING_URL_WHEN_START` 搭配使用的 curl 选项   |
-| PING_URL_WHEN_SUCCESS              | 成功          | `success` | 备份成功后发送请求的地址                            |
-| PING_URL_WHEN_SUCCESS_CURL_OPTIONS |             |  | 与 `PING_URL_WHEN_SUCCESS` 搭配使用的 curl 选项 |
-| PING_URL_WHEN_FAILURE              | 失败          | `failure` | 备份失败后发送请求的地址                            |
-| PING_URL_WHEN_FAILURE_CURL_OPTIONS |             |  | 与 `PING_URL_WHEN_FAILURE` 搭配使用的 curl 选项 |
-
-<br>
-
-
-
-### Ping 发送测试
-
-你可以使用下面的命令测试 Ping 发送功能。
-
-“test identifier”是[上一节](#ping)表格中的测试标识，你可以使用 `completion`、`start`、`success` 或 `failure`，它决定了使用哪一组环境变量。
-
-```shell
-docker run --rm -it \
-  -e PING_URL='<your ping url>' \
-  -e PING_URL_CURL_OPTIONS='<your curl options for PING_URL>' \
-  -e PING_URL_WHEN_START='<your ping url>' \
-  -e PING_URL_WHEN_START_CURL_OPTIONS='<your curl options for PING_URL_WHEN_START>' \
-  -e PING_URL_WHEN_SUCCESS='<your ping url>' \
-  -e PING_URL_WHEN_SUCCESS_CURL_OPTIONS='<your curl options for PING_URL_WHEN_SUCCESS>' \
-  -e PING_URL_WHEN_FAILURE='<your ping url>' \
-  -e PING_URL_WHEN_FAILURE_CURL_OPTIONS='<your curl options for PING_URL_WHEN_FAILURE>' \
-  ttionya/vaultwarden-backup:latest ping <test identifier>
 ```
 
 <br>
