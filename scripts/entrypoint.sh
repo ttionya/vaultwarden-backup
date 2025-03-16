@@ -12,6 +12,7 @@ fi
 # mail test
 if [[ "$1" == "mail" ]]; then
     export_env_file
+    init_env_display
     init_env_mail
 
     MAIL_SMTP_ENABLE="TRUE"
@@ -21,7 +22,7 @@ if [[ "$1" == "mail" ]]; then
         MAIL_TO="$2"
     fi
 
-    send_mail "vaultwarden Backup Test" "Your SMTP configuration looks correct."
+    send_mail "${DISPLAY_NAME} Backup Test" "Your SMTP configuration looks correct."
 
     exit 0
 fi
@@ -29,11 +30,12 @@ fi
 # ping test
 if [[ "$1" == "ping" ]]; then
     export_env_file
+    init_env_display
     init_env_ping
 
     PING_DEBUG="TRUE"
 
-    send_ping "$2" "vaultwarden Backup Test" "Your PING configuration looks correct."
+    send_ping "$2" "${DISPLAY_NAME} Backup Test" "Your PING configuration looks correct."
 
     exit 0
 fi

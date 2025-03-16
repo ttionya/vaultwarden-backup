@@ -163,9 +163,9 @@ function send_ping() {
 #     notification content
 ########################################
 function send_notification() {
-    local SUBJECT_START="vaultwarden Backup Start"
-    local SUBJECT_SUCCESS="vaultwarden Backup Success"
-    local SUBJECT_FAILURE="vaultwarden Backup Failed"
+    local SUBJECT_START="${DISPLAY_NAME} Backup Start"
+    local SUBJECT_SUCCESS="${DISPLAY_NAME} Backup Success"
+    local SUBJECT_FAILURE="${DISPLAY_NAME} Backup Failed"
 
     case "$1" in
         start)
@@ -301,6 +301,7 @@ function init_env() {
 
     init_env_dir
     init_env_db
+    init_env_display
     init_env_ping
     init_env_mail
 
@@ -413,6 +414,7 @@ function init_env() {
         color yellow "MAIL_WHEN_FAILURE: ${MAIL_WHEN_FAILURE}"
     fi
     color yellow "TIMEZONE: ${TIMEZONE}"
+    color yellow "DISPLAY_NAME: ${DISPLAY_NAME}"
     color yellow "========================================"
 }
 
@@ -510,6 +512,12 @@ function init_env_db() {
     else # sqlite
         DB_TYPE="SQLITE"
     fi
+}
+
+function init_env_display() {
+    # DISPLAY_NAME
+    get_env DISPLAY_NAME
+    DISPLAY_NAME="${DISPLAY_NAME:-"vaultwarden"}"
 }
 
 function init_env_ping() {
