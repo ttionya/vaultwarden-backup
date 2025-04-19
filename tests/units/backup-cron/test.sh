@@ -1,6 +1,7 @@
 #!/bin/bash
 
 TEST_NAME="backup-cron"
+TEST_CONTAINER_NAME="${TEST_NAME}"
 TEST_OUTPUT_DIR="$(pwd)/${OUTPUT_DIR}/${TEST_NAME}"
 
 PASSWORD="faedea12-7f9e-4d84-983f-d049d9b82a36"
@@ -16,7 +17,7 @@ function prepare() {
 
 function start() {
     docker run --rm -d \
-        --name "${TEST_NAME}" \
+        --name "${TEST_CONTAINER_NAME}" \
         --mount "type=bind,source=${TEST_OUTPUT_DIR},target=${REMOTE_DIR}" \
         -e "RCLONE_REMOTE_DIR=${REMOTE_DIR}" \
         -e "ZIP_PASSWORD=${PASSWORD}" \
@@ -43,7 +44,7 @@ function test() {
     done
 
     # stop the container
-    docker stop "${TEST_NAME}"
+    docker stop "${TEST_CONTAINER_NAME}"
 
     ls -l "${BACKUP_FILE}"
 
