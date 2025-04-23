@@ -43,9 +43,6 @@ function test() {
         ((TIMER++))
     done
 
-    # stop the container
-    docker stop "${TEST_CONTAINER_NAME}"
-
     ls -l "${BACKUP_FILE}"
 
     if [[ "${SUCCESS}" == "FALSE" ]]; then
@@ -53,8 +50,21 @@ function test() {
     fi
 }
 
+function cleanup() {
+    # stop the container
+    docker stop "${TEST_CONTAINER_NAME}"
+
+    rm -rf "${TEST_OUTPUT_DIR}"
+
+    unset TEST_CONTAINER_NAME
+    unset TEST_OUTPUT_DIR
+    unset PASSWORD
+    unset BACKUP_FILE
+}
+
 prepare
 start
 test
+cleanup
 
 test_result "${TEST_NAME}" "${FAILED_NUM}"
