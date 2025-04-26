@@ -7,6 +7,7 @@ ERROR_NUM=0
 DATA_DIR="$(pwd)/tests/fixtures/source/bitwarden/data"
 OUTPUT_DIR="output"
 EXTRACT_DIR="extract"
+TEMP_DIR="tmp"
 REMOTE_DIR="/${OUTPUT_DIR}"
 
 ########################################
@@ -86,6 +87,7 @@ function test_result() {
     color red "Test case \"$1\" failed"
 }
 
+. tests/units/env-priority/test.sh
 . tests/units/backup-zip-file/test.sh
 . tests/units/backup-7z-file/test.sh
 . tests/units/backup-unpackage/test.sh
