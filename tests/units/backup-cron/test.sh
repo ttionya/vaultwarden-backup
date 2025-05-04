@@ -34,12 +34,6 @@ function test() {
 
     # wait 120s
     while [[ "${TIMER}" -lt 120 ]]; do
-        docker ps
-
-        if [[ $((TIMER % 20)) -eq 0 ]]; then
-            docker logs "${TEST_CONTAINER_NAME}" | tail -10
-        fi
-
         if [[ -f "${BACKUP_FILE}" && -s "${BACKUP_FILE}" ]]; then
             SUCCESS=TRUE
             break
@@ -60,7 +54,7 @@ function cleanup() {
     # stop the container
     docker stop "${TEST_CONTAINER_NAME}"
 
-    rm -rf "${TEST_OUTPUT_DIR}"
+    sudo rm -rf "${TEST_OUTPUT_DIR}"
 
     unset TEST_CONTAINER_NAME
     unset TEST_OUTPUT_DIR
