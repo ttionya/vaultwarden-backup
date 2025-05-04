@@ -22,7 +22,7 @@ function start() {
         -e "RCLONE_REMOTE_DIR=${REMOTE_DIR}" \
         -e "ZIP_PASSWORD=${PASSWORD}" \
         -e "BACKUP_FILE_SUFFIX=test" \
-        -e "CRON='* * * * *'" \
+        -e "CRON=* * * * *" \
         "${DOCKER_IMAGE}"
 }
 
