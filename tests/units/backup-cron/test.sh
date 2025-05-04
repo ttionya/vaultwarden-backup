@@ -32,6 +32,8 @@ function test() {
     local TIMER=0
     local SUCCESS=FALSE
 
+    docker ps
+
     # wait 120s
     while [[ "${TIMER}" -lt 120 ]]; do
         if [[ $((TIMER % 20)) -eq 0 ]]; then
