@@ -34,6 +34,10 @@ function test() {
 
     # wait 120s
     while [[ "${TIMER}" -lt 120 ]]; do
+        if [[ $((TIMER % 20)) -eq 0 ]]; then
+            docker logs "${TEST_CONTAINER_NAME}" | tail -10
+        fi
+
         if [[ -f "${BACKUP_FILE}" && -s "${BACKUP_FILE}" ]]; then
             SUCCESS=TRUE
             break

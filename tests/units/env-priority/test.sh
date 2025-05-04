@@ -86,22 +86,22 @@ function test() {
 
     ls -l "${TEST_OUTPUT_DIR}"
 
-    7z l -p"${PASSWORD1}" "${BACKUP_FILE1}"
+    7z t -p"${PASSWORD1}" "${BACKUP_FILE1}"
     if [[ $? != 0 ]]; then
         ((FAILED_NUM++))
     fi
 
-    7z l -p"${PASSWORD2}" "${BACKUP_FILE2}"
+    7z t -p"${PASSWORD2}" "${BACKUP_FILE2}"
     if [[ $? != 0 ]]; then
         ((FAILED_NUM++))
     fi
 
-    7z l -p"${PASSWORD3}" "${BACKUP_FILE3}"
+    7z t -p"${PASSWORD3}" "${BACKUP_FILE3}"
     if [[ $? != 0 ]]; then
         ((FAILED_NUM++))
     fi
 
-    7z l -p"${PASSWORD4}" "${BACKUP_FILE4}"
+    7z t -p"${PASSWORD4}" "${BACKUP_FILE4}"
     if [[ $? != 0 ]]; then
         ((FAILED_NUM++))
     fi
