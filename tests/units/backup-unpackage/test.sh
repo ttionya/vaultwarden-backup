@@ -46,7 +46,7 @@ function test() {
 }
 
 function cleanup() {
-    rm -rf "${TEST_OUTPUT_DIR}" "${TEST_EXTRACT_DIR}"
+    sudo rm -rf "${TEST_OUTPUT_DIR}" "${TEST_EXTRACT_DIR}"
 
     unset TEST_OUTPUT_DIR
     unset TEST_EXTRACT_DIR

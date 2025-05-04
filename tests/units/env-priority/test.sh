@@ -28,11 +28,11 @@ function prepare() {
     echo "${PASSWORD3}" > "${PASSWORD3_FILE}"
 
     cat > "${ENV_FILE1}" << EOF
-ZIP_PASSWORD_FILE: "/password3"
-ZIP_PASSWORD: "${PASSWORD4}"
+ZIP_PASSWORD_FILE="/password3"
+ZIP_PASSWORD="${PASSWORD4}"
 EOF
     cat > "${ENV_FILE4}" << EOF
-ZIP_PASSWORD: "${PASSWORD4}"
+ZIP_PASSWORD="${PASSWORD4}"
 EOF
 }
 
@@ -108,7 +108,7 @@ function test() {
 }
 
 function cleanup() {
-    rm -rf "${TEST_OUTPUT_DIR}" "${TEST_TEMP_DIR}"
+    sudo rm -rf "${TEST_OUTPUT_DIR}" "${TEST_TEMP_DIR}"
 
     unset TEST_OUTPUT_DIR
     unset TEST_TEMP_DIR
