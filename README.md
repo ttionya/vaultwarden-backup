@@ -539,10 +539,10 @@ MY_ENV="example1"
 MY_ENV_FILE="/path/to/example2"
 
 # For 3 (.env file)
-MY_ENV_FILE: "/path/to/example3" 
+MY_ENV_FILE="/path/to/example3" 
 
 # For 4 (.env file)
-MY_ENV: "example4"
+MY_ENV="example4"
 ```
 
 <br>

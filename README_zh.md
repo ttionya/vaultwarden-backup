@@ -536,10 +536,10 @@ MY_ENV="example1"
 MY_ENV_FILE="/path/to/example2"
 
 # 对于 3 (.env 文件)
-MY_ENV_FILE: "/path/to/example3" 
+MY_ENV_FILE="/path/to/example3" 
 
 # 对于 4 (.env 文件)
-MY_ENV: "example4"
+MY_ENV="example4"
 ```
 
 <br>
