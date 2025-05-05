@@ -45,8 +45,16 @@ function test() {
     fi
 }
 
+function cleanup() {
+    sudo rm -rf "${TEST_OUTPUT_DIR}" "${TEST_EXTRACT_DIR}"
+
+    unset TEST_OUTPUT_DIR
+    unset TEST_EXTRACT_DIR
+}
+
 prepare
 start
 test
+cleanup
 
 test_result "${TEST_NAME}" "${FAILED_NUM}"
