@@ -4,7 +4,7 @@ Sometimes, it's necessary to manually trigger backup actions.
 
 This can be useful when other programs are used to consistently schedule tasks or to verify that environment variables are properly configured.
 
-If your container is already running (with the container name `vaultwarden_backup`) and you want to execute an adhoc backup you can do so with the command `docker exec vaultwarden_backup bash /app/backup.sh`. 
+If your container is already running (with the container name `vaultwarden-backup`) and you want to execute an adhoc backup you can do so with the command `docker exec vaultwarden-backup bash /app/backup.sh`. 
 
 <br>
 
@@ -17,7 +17,7 @@ Previously, performing an immediate backup required overwriting the entrypoint o
 ```shell
 docker run \
   --rm \
-  --name vaultwarden_backup \
+  --name vaultwarden-backup \
   --volumes-from=vaultwarden \
   --mount type=volume,source=vaultwarden-rclone-data,target=/config/ \
   -e ... \
