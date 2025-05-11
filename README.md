@@ -304,7 +304,7 @@ This environment variable combines the functionalities of [`BACKUP_FILE_DATE`](#
 
 Please use the [date man page](https://man7.org/linux/man-pages/man1/date.1.html) for the format notation.
 
-Default: `%Y%m%d`
+Default: `%Y%m%d%H%M`
 
 #### TIMEZONE
 
