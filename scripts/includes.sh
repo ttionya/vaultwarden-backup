@@ -46,9 +46,14 @@ function check_rclone_connection() {
     do
         rclone ${RCLONE_GLOBAL_FLAG} lsd "${RCLONE_REMOTE_X}" > /dev/null
         if [[ $? != 0 ]]; then
-            color red "storage system connection failure $(color yellow "[${RCLONE_REMOTE_X}]")"
+            color red "storage system connection may not be initialized, try initializing $(color yellow "[${RCLONE_REMOTE_X}]")"
 
-            ((ERROR_COUNT++))
+            rclone ${RCLONE_GLOBAL_FLAG} mkdir "${RCLONE_REMOTE_X}"
+            if [[ $? != 0 ]]; then
+                color red "storage system connection failure $(color yellow "[${RCLONE_REMOTE_X}]")"
+
+                ((ERROR_COUNT++))
+            fi
         fi
     done
 
