@@ -1,5 +1,15 @@
 # Changelog
 
+## v1.24.2 (20250512)
+
+### Fixed
+
+- Fix `directory not found` error (fixed [#199](https://github.com/ttionya/vaultwarden-backup/issues/199))
+
+<br>
+
+
+
 ## v1.24.1 (20250503)
 
 ### Feature
