@@ -88,6 +88,7 @@ function test_result() {
 }
 
 . tests/units/env-priority/test.sh
+. tests/units/check-rclone-connection-initializing/test.sh
 . tests/units/backup-zip-file/test.sh
 . tests/units/backup-7z-file/test.sh
 . tests/units/backup-unpackage/test.sh
