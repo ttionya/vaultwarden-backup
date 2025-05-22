@@ -588,7 +588,7 @@ MY_ENV="example4"
 
 感谢 [JetBrains](https://www.jetbrains.com/) 提供的 OSS 许可证。
 
-<a href="https://jb.gg/OpenSourceSupport" target="_blank"><img src="https://resources.jetbrains.com/storage/products/company/brand/logos/jb_beam.png" alt="JetBrains Logo (Main) logo" width="250"></a>
+<a href="https://jb.gg/OpenSource" target="_blank"><img src="https://resources.jetbrains.com/storage/products/company/brand/logos/jetbrains.svg" alt="JetBrains logo."></a>
 
 <br>
 

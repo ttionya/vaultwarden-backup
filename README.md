@@ -591,7 +591,7 @@ Check out the [CHANGELOG](CHANGELOG.md) file.
 
 I am grateful for the OSS license provided by [JetBrains](https://www.jetbrains.com/).
 
-<a href="https://jb.gg/OpenSourceSupport" target="_blank"><img src="https://resources.jetbrains.com/storage/products/company/brand/logos/jb_beam.png" alt="JetBrains Logo (Main) logo" width="200"></a>
+<a href="https://jb.gg/OpenSource" target="_blank"><img src="https://resources.jetbrains.com/storage/products/company/brand/logos/jetbrains.svg" alt="JetBrains logo."></a>
 
 <br>
 
