@@ -107,7 +107,7 @@ function restore_db_mysql() {
         EXTRA_OPTIONS+=("--ssl-key=\"${MYSQL_SSL_KEY}\"")
     fi
 
-    eval "mariadb -h \"${MYSQL_HOST}\" -P \"${MYSQL_PORT}\" -u \"${MYSQL_USERNAME}\" -p\"${MYSQL_PASSWORD}\" ${EXTRA_OPTIONS[@]} \"${MYSQL_DATABASE}\" < \"${RESTORE_FILE_DB}\""
+    eval "mariadb -h \"${MYSQL_HOST}\" -P \"${MYSQL_PORT}\" -u \"${MYSQL_USERNAME}\" -p\"${MYSQL_PASSWORD}\" --show-warnings ${EXTRA_OPTIONS[@]} \"${MYSQL_DATABASE}\" < \"${RESTORE_FILE_DB}\""
 
     if [[ $? == 0 ]]; then
         color green "restore vaultwarden mysql database successful"
