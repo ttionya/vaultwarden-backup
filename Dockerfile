@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 
-FROM rclone/rclone:1.70.2
+FROM rclone/rclone:1.70.3
 
 ARG USER_NAME="backuptool"
 ARG USER_ID="1100"
