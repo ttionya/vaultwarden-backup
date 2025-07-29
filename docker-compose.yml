@@ -36,6 +36,7 @@ services:
     #   PING_URL_WHEN_FAILURE_CURL_OPTIONS: ''
     #   MAIL_SMTP_ENABLE: 'FALSE'
     #   MAIL_SMTP_VARIABLES: ''
+    #   MAIL_FROM: ''
     #   MAIL_TO: ''
     #   MAIL_WHEN_SUCCESS: 'TRUE'
     #   MAIL_WHEN_FAILURE: 'TRUE'

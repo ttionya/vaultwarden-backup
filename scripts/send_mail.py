@@ -15,7 +15,7 @@ MAIL_SMTP_VARIABLES = os.environ.get('MAIL_SMTP_VARIABLES', '')
 MAIL_DEBUG = os.environ.get("MAIL_DEBUG", "FALSE").upper() == "TRUE"
 
 MAIL_SUBJECT = os.environ.get('MAIL_SUBJECT', 'Vaultwarden Backup')
-MAIL_FROM = os.environ.get('MAIL_FROM', 'ds.pratap1997@gmail.com')
+MAIL_FROM = os.environ.get('MAIL_FROM', 'backup@vaultwarden.com'')
 MAIL_TO = os.environ.get('MAIL_TO')
 
 now = datetime.now(timezone.utc)  
@@ -48,7 +48,7 @@ def send_mail_smtp():
     # Threading: first-time or continuing thread?
     if USE_THREADING:
         if not os.path.exists(PARENT_ID_FILE):
-            parent_msgid = make_msgid(domain="hanisntsolo.com")
+            parent_msgid = make_msgid(domain="vaultwarden.com")
             with open(PARENT_ID_FILE, "w") as f:
                 f.write(parent_msgid)
         else:
@@ -57,7 +57,7 @@ def send_mail_smtp():
     else:
         parent_msgid = None
 
-    current_msgid = make_msgid(domain="hanisntsolo.com")
+    current_msgid = make_msgid(domain="vaultwarden.com")
 
     msg = EmailMessage()
     msg['Subject'] = MAIL_SUBJECT
