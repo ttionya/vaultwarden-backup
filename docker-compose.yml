@@ -40,6 +40,10 @@ services:
     #   MAIL_WHEN_SUCCESS: 'TRUE'
     #   MAIL_WHEN_FAILURE: 'TRUE'
     #   TIMEZONE: 'UTC'
+    # USE_THREADING: 'TRUE' # When enables new emails will be sent as part of same subject which will prevent flooding the mail box.
+    # USE_LEGACY: 'FALSE' # False will trigger using s-nail mail while true relies on python for enhanced email send.
+    # SMTP_USER: 'example@email.com'
+    # SMTP_PASSWORD: 'WHEREISMYSMTPPASSWORD?'
     volumes:
       - vaultwarden-data:/bitwarden/data/
       - vaultwarden-rclone-data:/config/
