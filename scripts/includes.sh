@@ -111,9 +111,9 @@ function send_mail() {
 
     local THREAD_HEADERS=""
     if [[ -n "${MAIL_THREAD_ID}" ]]; then
-        THREAD_HEADERS+=" -a 'Message-ID: ${MAIL_THREAD_ID}'"
-        THREAD_HEADERS+=" -a 'In-Reply-To: ${MAIL_THREAD_ID}'"
-        THREAD_HEADERS+=" -a 'References: ${MAIL_THREAD_ID}'"
+        THREAD_HEADERS+=" -s 'Message-ID: ${MAIL_THREAD_ID}'"
+        THREAD_HEADERS+=" -s 'In-Reply-To: ${MAIL_THREAD_ID}'"
+        THREAD_HEADERS+=" -s 'References: ${MAIL_THREAD_ID}'"
     fi
 
     echo "$2" | eval "mail ${MAIL_VERBOSE} -s \"$1\" ${MAIL_SMTP_VARIABLES} ${THREAD_HEADERS} \"${MAIL_TO}\""
