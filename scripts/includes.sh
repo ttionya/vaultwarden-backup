@@ -109,7 +109,15 @@ function send_mail() {
         local MAIL_VERBOSE="-v"
     fi
 
-    echo "$2" | eval "mail ${MAIL_VERBOSE} -s \"$1\" ${MAIL_SMTP_VARIABLES} \"${MAIL_TO}\""
+    local THREAD_HEADERS=""
+    if [[ -n "${MAIL_THREAD_ID}" ]]; then
+        THREAD_HEADERS+=" -a 'Message-ID: ${MAIL_THREAD_ID}'"
+        THREAD_HEADERS+=" -a 'In-Reply-To: ${MAIL_THREAD_ID}'"
+        THREAD_HEADERS+=" -a 'References: ${MAIL_THREAD_ID}'"
+    fi
+
+    echo "$2" | eval "mail ${MAIL_VERBOSE} -s \"$1\" ${MAIL_SMTP_VARIABLES} ${THREAD_HEADERS} \"${MAIL_TO}\""
+    # echo "$2" | eval "mail ${MAIL_VERBOSE} -s \"$1\" ${MAIL_SMTP_VARIABLES} \"${MAIL_TO}\""
     if [[ $? != 0 ]]; then
         color red "mail sending has failed"
     else
