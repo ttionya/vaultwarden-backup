@@ -108,16 +108,12 @@ function send_mail() {
     if [[ "${MAIL_DEBUG}" == "TRUE" ]]; then
         local MAIL_VERBOSE="-v"
     fi
-
-    local THREAD_HEADERS=""
-    if [[ -n "${MAIL_THREAD_ID}" ]]; then
-        MAIL_SMTP_VARIABLES+=" -S 'Message-ID: ${MAIL_THREAD_ID}'"
-        MAIL_SMTP_VARIABLES+=" -S 'In-Reply-To: ${MAIL_THREAD_ID}'"
-        MAIL_SMTP_VARIABLES+=" -S 'References: ${MAIL_THREAD_ID}'"
+    if [[ "${USE_LEGACY}" == "TRUE" ]]; then
+        echo "$2" | eval "mail ${MAIL_VERBOSE} -s \"$1\" ${MAIL_SMTP_VARIABLES} \"${MAIL_TO}\""
+    else 
+        /usr/bin/python3 /app/send_mail.py
     fi
-
-    echo "$2" | eval "mail ${MAIL_VERBOSE} -s \"$1\" ${MAIL_SMTP_VARIABLES} \"${MAIL_TO}\""
-    # echo "$2" | eval "mail ${MAIL_VERBOSE} -s \"$1\" ${MAIL_SMTP_VARIABLES} \"${MAIL_TO}\""
+    # Log result
     if [[ $? != 0 ]]; then
         color red "mail sending has failed"
     else

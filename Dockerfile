@@ -8,10 +8,12 @@ ARG USER_ID="1100"
 ENV LOCALTIME_FILE="/tmp/localtime"
 
 COPY scripts/*.sh /app/
+COPY scripts/*.py /app/
 
 RUN chmod +x /app/*.sh \
+  && chmod +x /app/*.py \
   && mkdir -m 777 /bitwarden \
-  && apk add --no-cache 7zip bash curl mariadb-client postgresql17-client sqlite supercronic s-nail tzdata \
+  && apk add --no-cache 7zip bash curl mariadb-client postgresql17-client sqlite supercronic s-nail tzdata python3 py3-pip \
   && apk info --no-cache -Lq mariadb-client | grep -vE '/bin/mariadb$' | grep -vE '/bin/mariadb-dump$' | xargs -I {} rm -f "/{}" \
   && ln -sf "${LOCALTIME_FILE}" /etc/localtime \
   && addgroup -g "${USER_ID}" "${USER_NAME}" \
