@@ -37,7 +37,7 @@ MAIL_BODY = os.environ.get('MAIL_BODY') or f"""
 
 """.strip()
 
-PARENT_ID_FILE = "/app/parent_message_id.txt"
+PARENT_ID_FILE = "/config/parent_message_id.txt"
 smtp_server = os.environ.get("SMTP_SERVER", "smtp.gmail.com")
 smtp_port = int(os.environ.get("SMTP_PORT", "587"))
 smtp_user = os.environ.get("SMTP_USER")
