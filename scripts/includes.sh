@@ -1,6 +1,7 @@
 #!/bin/bash
 
 ENV_FILE="/.env"
+MAIL_PARENT_MESSAGE_ID_FILE="/mail_parent_message_id"
 CRON_CONFIG_FILE="${HOME}/crontabs"
 BACKUP_DIR="/bitwarden/backup"
 RESTORE_DIR="/bitwarden/restore"
@@ -105,15 +106,39 @@ function check_dir_exist() {
 #     send mail result
 ########################################
 function send_mail() {
+    local MAIL_VERBOSE_FLAG=""
+    local MAIL_TEMPLATE_FLAG=""
+    local MAIL_TEMPLATE=""
+    local MAIL_USED_MESSAGE_ID=""
+
+    # verbose
     if [[ "${MAIL_DEBUG}" == "TRUE" ]]; then
-        local MAIL_VERBOSE="-v"
+        MAIL_VERBOSE_FLAG="-v"
     fi
 
-    echo "$2" | eval "mail ${MAIL_VERBOSE} -s \"$1\" ${MAIL_SMTP_VARIABLES} \"${MAIL_TO}\""
+    # template
+    if [[ "${MAIL_FORCE_THREAD}" == "TRUE" ]]; then
+        if [[ -n "${MAIL_PARENT_MESSAGE_ID}" ]]; then
+            MAIL_USED_MESSAGE_ID="${MAIL_PARENT_MESSAGE_ID}"
+            MAIL_TEMPLATE="References: ${MAIL_USED_MESSAGE_ID}\nIn-Reply-To: ${MAIL_USED_MESSAGE_ID}\n\n"
+        else
+            MAIL_USED_MESSAGE_ID="<$(date +%s%N).$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 16).$(hostname)@vaultwarden.backup>"
+            MAIL_TEMPLATE="Message-ID: ${MAIL_USED_MESSAGE_ID}\n\n"
+        fi
+    fi
+    if [[ -n "${MAIL_TEMPLATE}" ]]; then
+        local MAIL_TEMPLATE_FLAG="-t"
+    fi
+
+    echo -e "${MAIL_TEMPLATE}$2" | eval "mail ${MAIL_VERBOSE_FLAG} ${MAIL_TEMPLATE_FLAG} -s \"$1\" ${MAIL_SMTP_VARIABLES} \"${MAIL_TO}\""
     if [[ $? != 0 ]]; then
         color red "mail sending has failed"
     else
         color blue "mail has been sent successfully"
+
+        if [[ "${MAIL_FORCE_THREAD}" == "TRUE" ]]; then
+            echo -n "${MAIL_USED_MESSAGE_ID}" > "${MAIL_PARENT_MESSAGE_ID_FILE}"
+        fi
     fi
 }
 
@@ -417,6 +442,13 @@ function init_env() {
         color yellow "MAIL_TO: ${MAIL_TO}"
         color yellow "MAIL_WHEN_SUCCESS: ${MAIL_WHEN_SUCCESS}"
         color yellow "MAIL_WHEN_FAILURE: ${MAIL_WHEN_FAILURE}"
+        if [[ "${MAIL_FORCE_THREAD}" == "TRUE" ]]; then
+            if [[ -n "${MAIL_PARENT_MESSAGE_ID}" ]]; then
+                color yellow "MAIL_PARENT_MESSAGE_ID: ${MAIL_PARENT_MESSAGE_ID}"
+            else
+                color yellow "MAIL_MESSAGE_ID: auto generate"
+            fi
+        fi
     fi
     color yellow "TIMEZONE: ${TIMEZONE}"
     color yellow "DISPLAY_NAME: ${DISPLAY_NAME}"
@@ -588,5 +620,24 @@ function init_env_mail() {
         MAIL_WHEN_FAILURE="FALSE"
     else
         MAIL_WHEN_FAILURE="TRUE"
+    fi
+
+    # MAIL_FORCE_THREAD
+    get_env MAIL_FORCE_THREAD
+    # 1. As long as MAIL_PARENT_MESSAGE_ID is valid (either specified or read from a file), MAIL_FORCE_THREAD must be set to TRUE
+    # 2. As long as MAIL_FORCE_THREAD is set to TRUE, even if an invalid Message-ID is read from the file, it will be regenerated subsequently
+    if [[ "${MAIL_FORCE_THREAD^^}" == "TRUE" ]]; then
+        MAIL_FORCE_THREAD="TRUE"
+        if [[ -f "${MAIL_PARENT_MESSAGE_ID_FILE}" && -s "${MAIL_PARENT_MESSAGE_ID_FILE}" ]]; then
+            MAIL_PARENT_MESSAGE_ID="$(cat "${MAIL_PARENT_MESSAGE_ID_FILE}")"
+        fi
+    else
+        MAIL_PARENT_MESSAGE_ID="${MAIL_FORCE_THREAD}"
+        MAIL_FORCE_THREAD="FALSE"
+    fi
+    if [[ "${MAIL_PARENT_MESSAGE_ID}" =~ ^\<.*\@.+\>$ ]]; then
+        MAIL_FORCE_THREAD="TRUE"
+    else
+        MAIL_PARENT_MESSAGE_ID=""
     fi
 }
