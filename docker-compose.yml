@@ -39,6 +39,7 @@ services:
     #   MAIL_TO: ''
     #   MAIL_WHEN_SUCCESS: 'TRUE'
     #   MAIL_WHEN_FAILURE: 'TRUE'
+    #   MAIL_FORCE_THREAD: 'FALSE'
     #   TIMEZONE: 'UTC'
     volumes:
       - vaultwarden-data:/bitwarden/data/
