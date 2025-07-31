@@ -444,13 +444,14 @@ Starting from v1.19.0, we will be using [`s-nail`](https://www.sdaoden.eu/code-n
 
 Please note that `heirloom-mailx` is a stub for `s-nail`, and most of its functionality is compatible. Therefore, you may not need to modify any environment variables for this change.
 
-| Environment Variable | Default Value | Description                                           |
-| --- | --- |-------------------------------------------------------|
-| MAIL_SMTP_ENABLE | `FALSE` | Enable sending mail.                                  |
-| MAIL_SMTP_VARIABLES | | Mail sending options.                                 |
-| MAIL_TO | | The recipient of the notification email.              |
-| MAIL_WHEN_SUCCESS | `TRUE` | Send an email when the backup completes successfully. |
-| MAIL_WHEN_FAILURE | `TRUE` | Send an email if the backup fails.                    |
+| Environment Variable | Default Value | Description                                                                                                           |
+| --- | --- |-----------------------------------------------------------------------------------------------------------------------|
+| MAIL_SMTP_ENABLE | `FALSE` | Enable sending mail.                                                                                                  |
+| MAIL_SMTP_VARIABLES | | Mail sending options.                                                                                                 |
+| MAIL_TO | | The recipient of the notification email.                                                                              |
+| MAIL_WHEN_SUCCESS | `TRUE` | Send an email when the backup completes successfully.                                                                 |
+| MAIL_WHEN_FAILURE | `TRUE` | Send an email if the backup fails.                                                                                    |
+| MAIL_FORCE_THREAD | `FALSE` | Particularly useful when mail clients fail to group related messages in conversation view despite identical subjects. |
 
 For `MAIL_SMTP_VARIABLES`, you need to configure the mail sending options yourself. **We will set the email subject based on the usage scenario, so you should not use the `-s` flag.**
 
@@ -467,6 +468,14 @@ For `MAIL_SMTP_VARIABLES`, you need to configure the mail sending options yourse
 ```
 
 Console showing warnings? Check [issue #177](https://github.com/ttionya/vaultwarden-backup/issues/117#issuecomment-1691443179) for more details.
+
+For `MAIL_FORCE_THREAD`, particularly useful when receiving systems fail to properly aggregate messages into conversation threads. It supports three modes of operation:
+
+1. `FALSE`: Default email sending behavior
+2. `TRUE`: Auto-generates RFC-compliant Message-ID to force thread creation
+3. `Valid Message-ID string`: Uses specified Message-ID to associate with existing thread
+
+When enabled, the system automatically adds required headers (`Message-ID`, `References`, `In-Reply-To`) to enforce proper thread association on the receiving end.
 
 <br>
 
