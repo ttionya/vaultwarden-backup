@@ -1,8 +1,9 @@
 #!/bin/bash
 
 ENV_FILE="/.env"
-MAIL_PARENT_MESSAGE_ID_FILE="/mail_parent_message_id"
 CRON_CONFIG_FILE="${HOME}/crontabs"
+MAIL_CONFIG_DIR="/config/mail"
+MAIL_PARENT_MESSAGE_ID_FILE="${MAIL_CONFIG_DIR}/parent_message_id"
 BACKUP_DIR="/bitwarden/backup"
 RESTORE_DIR="/bitwarden/restore"
 RESTORE_EXTRACT_DIR="/bitwarden/extract"
@@ -136,7 +137,8 @@ function send_mail() {
     else
         color blue "mail has been sent successfully"
 
-        if [[ "${MAIL_FORCE_THREAD}" == "TRUE" ]]; then
+        if [[ "${MAIL_FORCE_THREAD}" == "TRUE" && -z "${MAIL_PARENT_MESSAGE_ID}" ]]; then
+            mkdir -p "$(dirname "${MAIL_PARENT_MESSAGE_ID_FILE}")"
             echo -n "${MAIL_USED_MESSAGE_ID}" > "${MAIL_PARENT_MESSAGE_ID_FILE}"
         fi
     fi
@@ -624,8 +626,9 @@ function init_env_mail() {
 
     # MAIL_FORCE_THREAD
     get_env MAIL_FORCE_THREAD
-    # 1. As long as MAIL_PARENT_MESSAGE_ID is valid (either specified or read from a file), MAIL_FORCE_THREAD must be set to TRUE
-    # 2. As long as MAIL_FORCE_THREAD is set to TRUE, even if an invalid Message-ID is read from the file, it will be regenerated subsequently
+    # 1. As long as MAIL_PARENT_MESSAGE_ID is valid (either specified or read from a file), MAIL_FORCE_THREAD must be set to TRUE.
+    # 2. As long as MAIL_FORCE_THREAD is set to TRUE, even if an invalid Message-ID is read from the file, it will be regenerated subsequently.
+    # 3. When MAIL_FORCE_THREAD is not set to TRUE, promptly clear the persistent files.
     if [[ "${MAIL_FORCE_THREAD^^}" == "TRUE" ]]; then
         MAIL_FORCE_THREAD="TRUE"
         if [[ -f "${MAIL_PARENT_MESSAGE_ID_FILE}" && -s "${MAIL_PARENT_MESSAGE_ID_FILE}" ]]; then
@@ -634,6 +637,7 @@ function init_env_mail() {
     else
         MAIL_PARENT_MESSAGE_ID="${MAIL_FORCE_THREAD}"
         MAIL_FORCE_THREAD="FALSE"
+        rm -rf "${MAIL_CONFIG_DIR}"
     fi
     if [[ "${MAIL_PARENT_MESSAGE_ID}" =~ ^\<.*\@.+\>$ ]]; then
         MAIL_FORCE_THREAD="TRUE"
