@@ -124,7 +124,6 @@ function send_mail() {
         else
             MAIL_USED_MESSAGE_ID="<$(date +%s%N).$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 16).$(hostname)@vaultwarden.backup>"
             MAIL_TEMPLATE="Message-ID: ${MAIL_USED_MESSAGE_ID}\n\n"
-            color blue "new Message-ID generated is \"${MAIL_USED_MESSAGE_ID}\""
         fi
     fi
     if [[ -n "${MAIL_TEMPLATE}" ]]; then
@@ -139,10 +138,6 @@ function send_mail() {
 
         if [[ "${MAIL_FORCE_THREAD}" == "TRUE" ]]; then
             echo -n "${MAIL_USED_MESSAGE_ID}" > "${MAIL_PARENT_MESSAGE_ID_FILE}"
-
-            if [[ -z "${MAIL_PARENT_MESSAGE_ID}" ]]; then
-                color yellow "we recommend setting the MAIL_FORCE_THREAD environment variable to \"${MAIL_USED_MESSAGE_ID}\" to maintain persistent thread association"
-            fi
         fi
     fi
 }
