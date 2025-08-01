@@ -471,9 +471,9 @@ Console showing warnings? Check [issue #177](https://github.com/ttionya/vaultwar
 
 For `MAIL_FORCE_THREAD`, particularly useful when receiving systems fail to properly aggregate messages into conversation threads. It supports three modes of operation:
 
-1. `FALSE`: Default email sending behavior
-2. `TRUE`: Auto-generates RFC-compliant Message-ID to force thread creation
-3. `Valid Message-ID string`: Uses specified Message-ID to associate with existing thread
+1. `FALSE`: Default email sending behavior.
+2. `TRUE`: Auto-generates RFC-compliant Message-ID to force thread creation. **Note: Container restarts invalidate thread associations. For persistence, mount the `/mail_parent_message_id` file or set the `MAIL_FORCE_THREAD` environment variable to the generated Message-ID.**
+3. `Valid Message-ID string`: Uses specified Message-ID to associate with existing thread. Find it in the original email's Message-ID field.
 
 When enabled, the system automatically adds required headers (`Message-ID`, `References`, `In-Reply-To`) to enforce proper thread association on the receiving end.
 

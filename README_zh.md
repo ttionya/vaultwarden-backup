@@ -469,8 +469,8 @@ docker run --rm -it \
 对于 `MAIL_FORCE_THREAD`，在邮件客户端无法正确将邮件聚合到同一会话中时特别有用。它支持三种操作模式：
 
 1. `FALSE`：默认电子邮件发送行为
-2. `TRUE`：自动生成符合 RFC 的 Message-ID 以强制会话关联
-3. `有效 Message-ID 字符串`：使用指定的 Message-ID 与现有会话关联
+2. `TRUE`：自动生成符合 RFC 的 Message-ID 以强制会话关联。**注意：每次重启容器都会导致会话关联失效。为了持久化保存，可以挂载 `/mail_parent_message_id` 文件或将自动生成的 Message-ID 指定为 `MAIL_FORCE_THREAD` 环境变量的值**
+3. `有效 Message-ID 字符串`：使用指定的 Message-ID 与现有会话关联。你可以在原始邮件内容的 Message-ID 字段中找到它
 
 启用后，系统会自动添加所需的标头（`Message-ID`、`References`、`In-Reply-To`），以便邮件客户端适当地关联会话。
 
