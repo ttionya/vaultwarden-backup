@@ -441,13 +441,14 @@ docker run --rm -it \
 
 请注意，`heirloom-mailx` 是 `s-nail` 的存根，它们大部分功能是兼容的。因此你可能不需要为这个改变修改任何环境变量。
 
-| 环境变量 | 默认值    | 描述        |
-| --- |--------|-----------|
-| MAIL_SMTP_ENABLE | `FALSE` | 启用邮件发送功能  |
-| MAIL_SMTP_VARIABLES |        | 邮件发送参数    |
-| MAIL_TO |        | 接收邮件的地址   |
-| MAIL_WHEN_SUCCESS | `TRUE` | 备份成功后发送邮件 |
-| MAIL_WHEN_FAILURE | `TRUE` | 备份失败后发送邮件 |
+| 环境变量 | 默认值    | 描述                                     |
+| --- |--------|----------------------------------------|
+| MAIL_SMTP_ENABLE | `FALSE` | 启用邮件发送功能                               |
+| MAIL_SMTP_VARIABLES |        | 邮件发送参数                                 |
+| MAIL_TO |        | 接收邮件的地址                                |
+| MAIL_WHEN_SUCCESS | `TRUE` | 备份成功后发送邮件                              |
+| MAIL_WHEN_FAILURE | `TRUE` | 备份失败后发送邮件                              |
+| MAIL_FORCE_THREAD | `FALSE` | 尤其适用于邮件客户端在主题相同的情况下仍无法在对话视图中将相关邮件分组的情况 |
 
 对于 `MAIL_SMTP_VARIABLES`，你需要自行配置邮件发送参数。**我们会根据使用场景设置邮件主题，所以你不应该使用 `-s` 标志。**
 
@@ -464,6 +465,14 @@ docker run --rm -it \
 ```
 
 控制台有警告？查看 [issue #177](https://github.com/ttionya/vaultwarden-backup/issues/117#issuecomment-1691443179) 了解更多。
+
+对于 `MAIL_FORCE_THREAD`，在邮件客户端无法正确将邮件聚合到同一会话中时特别有用。它支持三种操作模式：
+
+1. `FALSE`：默认电子邮件发送行为
+2. `TRUE`：自动生成符合 RFC 的 Message-ID 以强制会话关联
+3. `有效 Message-ID 字符串`：使用指定的 Message-ID 与现有会话关联。你可以在原始邮件内容的 Message-ID 字段中找到它
+
+启用后，系统会自动添加所需的标头（`Message-ID`、`References`、`In-Reply-To`），以便邮件客户端适当地关联会话。
 
 <br>
 
