@@ -1,5 +1,15 @@
 # Changelog
 
+## v1.25.0 (20250802)
+
+### Feature
+
+- Add environment variable `MAIL_FORCE_THREAD` to control email threading (close [#210](https://github.com/ttionya/vaultwarden-backup/issues/210))
+
+<br>
+
+
+
 ## v1.24.4 (20250712)
 
 ### Feature
