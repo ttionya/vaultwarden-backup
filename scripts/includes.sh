@@ -128,7 +128,7 @@ function send_mail() {
         fi
     fi
     if [[ -n "${MAIL_TEMPLATE}" ]]; then
-        local MAIL_TEMPLATE_FLAG="-t"
+        MAIL_TEMPLATE_FLAG="-t"
     fi
 
     echo -e "${MAIL_TEMPLATE}$2" | eval "mail ${MAIL_VERBOSE_FLAG} ${MAIL_TEMPLATE_FLAG} -s \"$1\" ${MAIL_SMTP_VARIABLES} \"${MAIL_TO}\""
