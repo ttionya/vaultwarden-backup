@@ -82,14 +82,14 @@ function test_result() {
 
     if [[ "$2" == "0" ]]; then
         color green "Test case \"$1\" passed"
-        color none "${SEP}"
+        color none "${SEP}${SEP}"
         return
     fi
 
     ((ERROR_NUM++))
 
     color red "Test case \"$1\" failed"
-    color none "${SEP}"
+    color none "${SEP}${SEP}"
 }
 
 . tests/units/env-priority/test.sh
