@@ -1,5 +1,13 @@
 #!/bin/bash
 
+# When verifying the Rclone connection, the previous method ensured
+# the remote directory existed by creating it (mkdir), which requires special permissions on S3.
+# It has been changed to attempt listing the remote directory (lsd) to avoid this issue.
+# If listing the directory fails, the directory is considered non-existent and will be created.
+# See issue https://github.com/ttionya/vaultwarden-backup/issues/199 for details.
+#
+# This test case verifies that the remote directory can be created correctly without affecting the backup operation.
+
 TEST_NAME="check-rclone-connection-initializing"
 TEST_OUTPUT_DIR="$(pwd)/${OUTPUT_DIR}/${TEST_NAME}"
 TEST_EXTRACT_DIR="$(pwd)/${EXTRACT_DIR}/${TEST_NAME}"

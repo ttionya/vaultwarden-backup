@@ -5,6 +5,7 @@ DOCKER_IMAGE="ttionya/vaultwarden-backup:test"
 ERROR_NUM=0
 
 DATA_DIR="$(pwd)/tests/fixtures/source/bitwarden/data"
+CONFIG_DIR="config"
 OUTPUT_DIR="output"
 EXTRACT_DIR="extract"
 TEMP_DIR="tmp"
@@ -88,6 +89,7 @@ function test_result() {
 }
 
 . tests/units/env-priority/test.sh
+. tests/units/check-rclone-config-exists/test.sh
 . tests/units/check-rclone-connection-initializing/test.sh
 . tests/units/backup-zip-file/test.sh
 . tests/units/backup-7z-file/test.sh

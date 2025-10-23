@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# The tool can set environment variables in four ways.
+# This test case tests the priority by setting different passwords for the environment variable `ZIP_PASSWORD`.
+
 TEST_NAME="env-priority"
 TEST_OUTPUT_DIR="$(pwd)/${OUTPUT_DIR}/${TEST_NAME}"
 TEST_TEMP_DIR="$(pwd)/${TEMP_DIR}/${TEST_NAME}"
