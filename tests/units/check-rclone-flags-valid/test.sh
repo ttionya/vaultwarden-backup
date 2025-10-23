@@ -1,22 +1,20 @@
 #!/bin/bash
 
-# During Rclone connection verification, the configuration is considered complete
-# by checking for the presence of `RCLONE_REMOTE_NAME` in the configuration file.
+# Using non-existent flags with Rclone will throw an exception and exit.
 #
-# This test case ensures the verification method works by triggering the expected error message.
+# This test case ensures the verification method works correctly by triggering the error message.
 
-TEST_NAME="check-rclone-config-exits"
+TEST_NAME="check-rclone-flags-valid"
 TEST_OUTPUT_DIR="$(pwd)/${OUTPUT_DIR}/${TEST_NAME}"
-TEST_CONFIG_DIR="$(pwd)/${CONFIG_DIR}/${TEST_NAME}"
 
-PASSWORD="231454f1-594c-45e2-8810-3ac917ebcf70"
+PASSWORD="43ef5fec-292d-4f9a-ab97-34f622deb462"
 
 FAILED_NUM=0
 
 color yellow "Starting test case \"${TEST_NAME}\""
 
 function prepare() {
-    mkdir -p "${TEST_OUTPUT_DIR}" "${TEST_CONFIG_DIR}"
+    mkdir -p "${TEST_OUTPUT_DIR}"
 }
 
 # function start() {
@@ -27,12 +25,12 @@ function test() {
 
     FOUND_MESSAGE_COUNT=$(docker run --rm \
         --mount "type=bind,source=${TEST_OUTPUT_DIR},target=${REMOTE_DIR}" \
-        --mount "type=bind,source=${TEST_CONFIG_DIR},target=/config" \
         -e "RCLONE_REMOTE_DIR=${REMOTE_DIR}" \
+        -e "RCLONE_GLOBAL_FLAG=-v --non-existent" \
         -e "ZIP_PASSWORD=${PASSWORD}" \
         -e "BACKUP_FILE_SUFFIX=test" \
         "${DOCKER_IMAGE}" \
-        backup | grep -c "rclone configuration information not found")
+        backup | grep -c "illegal rclone global flags")
 
     if [[ "${FOUND_MESSAGE_COUNT}" -ne 1 ]]; then
         ((FAILED_NUM++))
@@ -40,10 +38,9 @@ function test() {
 }
 
 function cleanup() {
-    sudo rm -rf "${TEST_OUTPUT_DIR}" "${TEST_CONFIG_DIR}"
+    sudo rm -rf "${TEST_OUTPUT_DIR}"
 
     unset TEST_OUTPUT_DIR
-    unset TEST_CONFIG_DIR
     unset PASSWORD
     unset FOUND_MESSAGE_COUNT
 }
