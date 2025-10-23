@@ -1,5 +1,16 @@
 # Changelog
 
+## v1.25.3 (20251023)
+
+### Feature
+
+- Update Dockerfile base image to `rclone/rclone:1.71.2`
+- Accurately distinguish between an unconfigured Rclone and the use of illegal Rclone flags (fixed [#205](https://github.com/ttionya/vaultwarden-backup/issues/205))
+
+<br>
+
+
+
 ## v1.25.2 (20250928)
 
 ### Feature
