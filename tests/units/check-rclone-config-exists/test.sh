@@ -28,7 +28,7 @@ function test() {
 
     FOUND_MESSAGE_COUNT=$(docker run --rm \
         --mount "type=bind,source=${TEST_OUTPUT_DIR},target=${REMOTE_DIR}" \
-        --mount "type=bind,source=${TEST_RCLONE_CONFIG_DIR},target=/config" \
+        --mount "type=bind,source=${TEST_CONFIG_DIR},target=/config" \
         -e "RCLONE_REMOTE_DIR=${REMOTE_DIR}" \
         -e "ZIP_PASSWORD=${PASSWORD}" \
         -e "BACKUP_FILE_SUFFIX=test" \
