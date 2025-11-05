@@ -127,7 +127,7 @@ function send_mail() {
     fi
 
     # template
-    if [[ "${MAIL_FORCE_THREAD}" == "TRUE" ]]; then
+    if [[ "${MAIL_USE_THREAD}" == "TRUE" ]]; then
         if [[ -n "${MAIL_PARENT_MESSAGE_ID}" ]]; then
             MAIL_USED_MESSAGE_ID="${MAIL_PARENT_MESSAGE_ID}"
             MAIL_TEMPLATE="References: ${MAIL_USED_MESSAGE_ID}\nIn-Reply-To: ${MAIL_USED_MESSAGE_ID}\n\n"
@@ -146,7 +146,7 @@ function send_mail() {
     else
         color blue "mail has been sent successfully"
 
-        if [[ "${MAIL_FORCE_THREAD}" == "TRUE" && -z "${MAIL_PARENT_MESSAGE_ID}" ]]; then
+        if [[ "${MAIL_USE_THREAD}" == "TRUE" && -z "${MAIL_PARENT_MESSAGE_ID}" ]]; then
             mkdir -p "$(dirname "${MAIL_PARENT_MESSAGE_ID_FILE}")"
             echo -n "${MAIL_USED_MESSAGE_ID}" > "${MAIL_PARENT_MESSAGE_ID_FILE}"
         fi
@@ -453,7 +453,7 @@ function init_env() {
         color yellow "MAIL_TO: ${MAIL_TO}"
         color yellow "MAIL_WHEN_SUCCESS: ${MAIL_WHEN_SUCCESS}"
         color yellow "MAIL_WHEN_FAILURE: ${MAIL_WHEN_FAILURE}"
-        if [[ "${MAIL_FORCE_THREAD}" == "TRUE" ]]; then
+        if [[ "${MAIL_USE_THREAD}" == "TRUE" ]]; then
             if [[ -n "${MAIL_PARENT_MESSAGE_ID}" ]]; then
                 color yellow "MAIL_PARENT_MESSAGE_ID: ${MAIL_PARENT_MESSAGE_ID}"
             else
@@ -639,17 +639,17 @@ function init_env_mail() {
     # 2. As long as MAIL_FORCE_THREAD is set to TRUE, even if an invalid Message-ID is read from the file, it will be regenerated subsequently.
     # 3. When MAIL_FORCE_THREAD is not set to TRUE, promptly clear the persistent files.
     if [[ "${MAIL_FORCE_THREAD^^}" == "TRUE" ]]; then
-        MAIL_FORCE_THREAD="TRUE"
+        MAIL_USE_THREAD="TRUE"
         if [[ -f "${MAIL_PARENT_MESSAGE_ID_FILE}" && -s "${MAIL_PARENT_MESSAGE_ID_FILE}" ]]; then
             MAIL_PARENT_MESSAGE_ID="$(cat "${MAIL_PARENT_MESSAGE_ID_FILE}")"
         fi
     else
         MAIL_PARENT_MESSAGE_ID="${MAIL_FORCE_THREAD}"
-        MAIL_FORCE_THREAD="FALSE"
+        MAIL_USE_THREAD="FALSE"
         rm -rf "${MAIL_CONFIG_DIR}"
     fi
     if [[ "${MAIL_PARENT_MESSAGE_ID}" =~ ^\<.*\@.+\>$ ]]; then
-        MAIL_FORCE_THREAD="TRUE"
+        MAIL_USE_THREAD="TRUE"
     else
         MAIL_PARENT_MESSAGE_ID=""
     fi
