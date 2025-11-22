@@ -1,5 +1,19 @@
 # Changelog
 
+## v1.25.4 (20251122)
+
+### Feature
+
+- Update Dockerfile base image to `rclone/rclone:1.72.0`
+
+### Fixed
+
+- Fix the incorrect generation of the Message-ID (fixed [#220](https://github.com/ttionya/vaultwarden-backup/issues/220))
+
+<br>
+
+
+
 ## v1.25.3 (20251023)
 
 ### Feature
