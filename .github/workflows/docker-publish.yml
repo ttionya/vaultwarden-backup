@@ -21,7 +21,7 @@ jobs:
     steps:
       -
         name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       -
         name: Prepare
         run: echo "VERSION=${GITHUB_REF_NAME#v}" >> $GITHUB_ENV
@@ -77,7 +77,7 @@ jobs:
     steps:
       -
         name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       -
         name: Prepare
         run: echo "VERSION=${GITHUB_REF_NAME#v}" >> $GITHUB_ENV
@@ -133,7 +133,7 @@ jobs:
           excludes: prerelease, draft
       -
         name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           ref: refs/tags/${{ steps.tag.outputs.release }}
       -
