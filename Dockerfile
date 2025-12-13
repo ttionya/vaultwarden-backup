@@ -12,7 +12,6 @@ COPY scripts/*.sh /app/
 
 RUN chmod +x /app/*.sh \
   && mkdir -m 777 /bitwarden \
-  && echo "https://dl-cdn.alpinelinux.org/alpine/edge/main" >> /etc/apk/repositories \
   && apk add --no-cache 7zip bash curl mariadb-client postgresql18-client sqlite supercronic s-nail tzdata \
   && apk info --no-cache -Lq mariadb-client | grep -vE '/bin/mariadb$' | grep -vE '/bin/mariadb-dump$' | xargs -I {} rm -f "/{}" \
   && ln -sf "${LOCALTIME_FILE}" /etc/localtime \
