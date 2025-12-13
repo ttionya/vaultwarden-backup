@@ -1,5 +1,16 @@
 # Changelog
 
+## v1.26.0 (20251213)
+
+### Feature
+
+- Update Dockerfile base image to `rclone/rclone:1.72.1`
+- Support PostgreSQL 18 (close [#223](https://github.com/ttionya/vaultwarden-backup/issues/223))
+
+<br>
+
+
+
 ## v1.25.4 (20251122)
 
 ### Feature
