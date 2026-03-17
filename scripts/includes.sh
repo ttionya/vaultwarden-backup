@@ -33,20 +33,19 @@ function color() {
 #     success strategy (all / any)
 ########################################
 function check_rclone_connection() {
-    # check if the configuration exists
-    local RCLONE_CONFIG_FILE=$(rclone config file 2>&1 | grep -o '/[^[:space:]]*rclone\.conf')
-    grep -c "\[${RCLONE_REMOTE_NAME}\]" "${RCLONE_CONFIG_FILE}" > /dev/null 2>&1
-    if [[ $? != 0 ]]; then
-        color red "rclone configuration information not found"
-        color blue "Please configure rclone first, check https://github.com/ttionya/vaultwarden-backup/blob/master/README.md#backup"
-        exit 1
-    fi
-
     # check flags validity
     rclone ${RCLONE_GLOBAL_FLAG} version > /dev/null 2>&1
     if [[ $? != 0 ]]; then
         color red "illegal rclone global flags"
         color blue "Please check https://rclone.org/flags/"
+        exit 1
+    fi
+
+    # check if the configuration exists
+    rclone ${RCLONE_GLOBAL_FLAG} config show 2>&1 | grep -F "[${RCLONE_REMOTE_NAME}]" > /dev/null
+    if [[ $? != 0 ]]; then
+        color red "rclone configuration information not found"
+        color blue "Please configure rclone first, check https://github.com/ttionya/vaultwarden-backup/blob/master/README.md#backup"
         exit 1
     fi
 
