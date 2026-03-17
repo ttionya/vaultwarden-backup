@@ -42,7 +42,7 @@ function check_rclone_connection() {
     fi
 
     # check if the configuration exists
-    rclone ${RCLONE_GLOBAL_FLAG} config show 2>&1 | grep "\[${RCLONE_REMOTE_NAME}\]" > /dev/null
+    rclone ${RCLONE_GLOBAL_FLAG} config show 2>&1 | grep -F "[${RCLONE_REMOTE_NAME}]" > /dev/null
     if [[ $? != 0 ]]; then
         color red "rclone configuration information not found"
         color blue "Please configure rclone first, check https://github.com/ttionya/vaultwarden-backup/blob/master/README.md#backup"
