@@ -1,5 +1,15 @@
 # Changelog
 
+## v1.26.4 (20260317)
+
+### Fixed
+
+- Fix unable to validate encrypted Rclone config (fixed [#229](https://github.com/ttionya/vaultwarden-backup/issues/229))
+
+<br>
+
+
+
 ## v1.26.3 (20260307)
 
 ### Feature
