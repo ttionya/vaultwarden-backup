@@ -37,7 +37,7 @@ jobs:
           driver-opts: network=host
       -
         name: Build base image
-        uses: docker/bake-action@v6
+        uses: docker/bake-action@v7
         with:
           source: .
           files: ./docker-bake.hcl
@@ -45,7 +45,7 @@ jobs:
           push: true
       -
         name: Build test image
-        uses: docker/bake-action@v6
+        uses: docker/bake-action@v7
         with:
           source: .
           files: ./docker-bake.hcl
