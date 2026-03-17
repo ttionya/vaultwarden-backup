@@ -30,6 +30,7 @@ And the following ways of notifying backup results are supported.
 
 - Ping (send on completion, start, success, or failure)
 - Mail (SMTP based, send on success and on failure)
+- Discord Webhook (embed message, send on success and/or failure)
 
 <br>
 
@@ -491,6 +492,46 @@ docker run --rm -it -e MAIL_SMTP_VARIABLES='<your smtp variables>' ttionya/vault
 # Or
 
 docker run --rm -it -e MAIL_SMTP_VARIABLES='<your smtp variables>' -e MAIL_TO='<mail send to>' ttionya/vaultwarden-backup:latest mail
+```
+
+<br>
+
+
+
+### Discord Webhook
+
+Use a Discord incoming webhook URL to send backup result notifications with an embed message.
+
+The embed includes:
+
+- Backup status (`SUCCESS` / `FAILURE`)
+- Backup date and time
+- Backup message details
+
+Embed colors:
+
+- `SUCCESS`: Green
+- `FAILURE`: Red
+
+| Environment Variable | Default Value | Description |
+| --- | --- | --- |
+| DISCORD_WEBHOOK_URL | | Discord webhook URL. Leave empty to disable Discord notifications. |
+| DISCORD_WHEN_SUCCESS | `TRUE` | Send Discord notification when backup succeeds. |
+| DISCORD_WHEN_FAILURE | `TRUE` | Send Discord notification when backup fails. |
+| DISCORD_DEBUG | `FALSE` | Print debug information for Discord webhook requests. |
+
+<br>
+
+
+
+### Discord Test
+
+You can use the following command to test Discord webhook sending.
+
+```shell
+docker run --rm -it \
+  -e DISCORD_WEBHOOK_URL='<your discord webhook url>' \
+  ttionya/vaultwarden-backup:latest discord
 ```
 
 <br>

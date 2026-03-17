@@ -197,6 +197,59 @@ function send_ping() {
 }
 
 ########################################
+# Escape JSON string.
+# Arguments:
+#     raw string
+# Outputs:
+#     escaped string
+########################################
+function escape_json_string() {
+    echo -n "$1" | sed ':a;N;$!ba;s/\\/\\\\/g;s/"/\\"/g;s/\n/\\n/g;s/\r/\\r/g;s/\t/\\t/g'
+}
+
+########################################
+# Send notification to Discord webhook.
+# Arguments:
+#     status (success / failure)
+#     notification subject
+#     notification content
+########################################
+function send_discord_webhook() {
+    local STATUS_UPPER="${1^^}"
+    local COLOR=""
+
+    if [[ -z "${DISCORD_WEBHOOK_URL}" ]]; then
+        return
+    fi
+
+    case "${STATUS_UPPER}" in
+        SUCCESS) COLOR="5763719" ;;
+        FAILURE) COLOR="15548997" ;;
+        *)       color red "illegal discord status, only supports success and failure"; return ;;
+    esac
+
+    local NOW_LOCAL="$(date +"%Y-%m-%d %H:%M:%S %Z")"
+    local NOW_UTC="$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
+    local SUBJECT="$(escape_json_string "$2")"
+    local CONTENT="$(escape_json_string "$3")"
+    local DISPLAY_NAME_ESCAPED="$(escape_json_string "${DISPLAY_NAME}")"
+
+    local PAYLOAD="{\"embeds\":[{\"title\":\"${SUBJECT}\",\"description\":\"${CONTENT}\",\"color\":${COLOR},\"fields\":[{\"name\":\"Backup Status\",\"value\":\"${STATUS_UPPER}\",\"inline\":true},{\"name\":\"Backup Date/Time\",\"value\":\"${NOW_LOCAL}\",\"inline\":true},{\"name\":\"Instance\",\"value\":\"${DISPLAY_NAME_ESCAPED}\",\"inline\":false}],\"timestamp\":\"${NOW_UTC}\"}]}"
+
+    if [[ "${DISCORD_DEBUG}" == "TRUE" ]]; then
+        color yellow "discord webhook payload: ${PAYLOAD}"
+        color yellow "curl command: curl -m 15 --retry 10 --retry-delay 1 -o /dev/null -s -H 'Content-Type: application/json' -X POST --data '<payload>' \"${DISCORD_WEBHOOK_URL}\""
+    fi
+
+    curl -m 15 --retry 10 --retry-delay 1 -o /dev/null -s -H 'Content-Type: application/json' -X POST --data "${PAYLOAD}" "${DISCORD_WEBHOOK_URL}"
+    if [[ $? != 0 ]]; then
+        color red "discord webhook sending has failed"
+    else
+        color blue "discord webhook has been sent successfully"
+    fi
+}
+
+########################################
 # Send notification.
 # Arguments:
 #     status (start / success / failure)
@@ -217,6 +270,10 @@ function send_notification() {
             if [[ "${MAIL_SMTP_ENABLE}" == "TRUE" && "${MAIL_WHEN_SUCCESS}" == "TRUE" ]]; then
                 send_mail "${SUBJECT_SUCCESS}" "$2"
             fi
+            # discord
+            if [[ "${DISCORD_WHEN_SUCCESS}" == "TRUE" ]]; then
+                send_discord_webhook "success" "${SUBJECT_SUCCESS}" "$2"
+            fi
             # ping
             send_ping "success" "${SUBJECT_SUCCESS}" "$2"
             send_ping "completion" "${SUBJECT_SUCCESS}" "$2"
@@ -225,6 +282,10 @@ function send_notification() {
             # mail
             if [[ "${MAIL_SMTP_ENABLE}" == "TRUE" && "${MAIL_WHEN_FAILURE}" == "TRUE" ]]; then
                 send_mail "${SUBJECT_FAILURE}" "$2"
+            fi
+            # discord
+            if [[ "${DISCORD_WHEN_FAILURE}" == "TRUE" ]]; then
+                send_discord_webhook "failure" "${SUBJECT_FAILURE}" "$2"
             fi
             # ping
             send_ping "failure" "${SUBJECT_FAILURE}" "$2"
@@ -344,6 +405,7 @@ function init_env() {
     init_env_display
     init_env_ping
     init_env_mail
+    init_env_discord
 
     # CRON
     get_env CRON
@@ -459,6 +521,11 @@ function init_env() {
                 color yellow "MAIL_MESSAGE_ID: auto generate"
             fi
         fi
+    fi
+    if [[ -n "${DISCORD_WEBHOOK_URL}" ]]; then
+        color yellow "DISCORD_WEBHOOK_URL: configured"
+        color yellow "DISCORD_WHEN_SUCCESS: ${DISCORD_WHEN_SUCCESS}"
+        color yellow "DISCORD_WHEN_FAILURE: ${DISCORD_WHEN_FAILURE}"
     fi
     color yellow "TIMEZONE: ${TIMEZONE}"
     color yellow "DISPLAY_NAME: ${DISPLAY_NAME}"
@@ -651,5 +718,35 @@ function init_env_mail() {
         MAIL_USE_THREAD="TRUE"
     else
         MAIL_PARENT_MESSAGE_ID=""
+    fi
+}
+
+function init_env_discord() {
+    # DISCORD_WEBHOOK_URL
+    get_env DISCORD_WEBHOOK_URL
+    DISCORD_WEBHOOK_URL="${DISCORD_WEBHOOK_URL:-""}"
+
+    # DISCORD_WHEN_SUCCESS
+    get_env DISCORD_WHEN_SUCCESS
+    if [[ "${DISCORD_WHEN_SUCCESS^^}" == "FALSE" ]]; then
+        DISCORD_WHEN_SUCCESS="FALSE"
+    else
+        DISCORD_WHEN_SUCCESS="TRUE"
+    fi
+
+    # DISCORD_WHEN_FAILURE
+    get_env DISCORD_WHEN_FAILURE
+    if [[ "${DISCORD_WHEN_FAILURE^^}" == "FALSE" ]]; then
+        DISCORD_WHEN_FAILURE="FALSE"
+    else
+        DISCORD_WHEN_FAILURE="TRUE"
+    fi
+
+    # DISCORD_DEBUG
+    get_env DISCORD_DEBUG
+    if [[ "${DISCORD_DEBUG^^}" == "TRUE" ]]; then
+        DISCORD_DEBUG="TRUE"
+    else
+        DISCORD_DEBUG="FALSE"
     fi
 }

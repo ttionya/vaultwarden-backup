@@ -30,6 +30,7 @@
 
 - Ping (完成，开始，成功或失败时发送)
 - Mail (基于 SMTP，成功时和失败时都会发送)
+- Discord Webhook (使用 Embed 消息，在成功和/或失败时发送)
 
 <br>
 
@@ -488,6 +489,46 @@ docker run --rm -it -e MAIL_SMTP_VARIABLES='<your smtp variables>' ttionya/vault
 # Or
 
 docker run --rm -it -e MAIL_SMTP_VARIABLES='<your smtp variables>' -e MAIL_TO='<mail send to>' ttionya/vaultwarden-backup:latest mail
+```
+
+<br>
+
+
+
+### Discord Webhook
+
+你可以使用 Discord 的 Webhook URL 发送备份结果通知，消息采用 Embed 格式。
+
+Embed 中包含：
+
+- 备份状态（`SUCCESS` / `FAILURE`）
+- 备份日期和时间
+- 备份详情信息
+
+Embed 颜色：
+
+- `SUCCESS`：绿色
+- `FAILURE`：红色
+
+| 环境变量 | 默认值 | 描述 |
+| --- | --- | --- |
+| DISCORD_WEBHOOK_URL | | Discord Webhook 地址。留空表示禁用 Discord 通知。 |
+| DISCORD_WHEN_SUCCESS | `TRUE` | 备份成功时发送 Discord 通知。 |
+| DISCORD_WHEN_FAILURE | `TRUE` | 备份失败时发送 Discord 通知。 |
+| DISCORD_DEBUG | `FALSE` | 输出 Discord Webhook 请求的调试信息。 |
+
+<br>
+
+
+
+### Discord 发送测试
+
+你可以使用下面的命令测试 Discord Webhook 发送功能。
+
+```shell
+docker run --rm -it \
+  -e DISCORD_WEBHOOK_URL='<your discord webhook url>' \
+  ttionya/vaultwarden-backup:latest discord
 ```
 
 <br>

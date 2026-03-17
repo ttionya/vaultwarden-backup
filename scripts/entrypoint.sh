@@ -40,6 +40,19 @@ if [[ "$1" == "ping" ]]; then
     exit 0
 fi
 
+# discord test
+if [[ "$1" == "discord" ]]; then
+    export_env_file
+    init_env_display
+    init_env_discord
+
+    DISCORD_DEBUG="TRUE"
+
+    send_discord_webhook "success" "${DISPLAY_NAME} Backup Test" "Your Discord webhook configuration looks correct."
+
+    exit 0
+fi
+
 # restore
 if [[ "$1" == "restore" ]]; then
     . /app/restore.sh

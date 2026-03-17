@@ -40,6 +40,10 @@ services:
     #   MAIL_WHEN_SUCCESS: 'TRUE'
     #   MAIL_WHEN_FAILURE: 'TRUE'
     #   MAIL_FORCE_THREAD: 'FALSE'
+    #   DISCORD_WEBHOOK_URL: ''
+    #   DISCORD_WHEN_SUCCESS: 'TRUE'
+    #   DISCORD_WHEN_FAILURE: 'TRUE'
+    #   DISCORD_DEBUG: 'FALSE'
     #   TIMEZONE: 'UTC'
     volumes:
       - vaultwarden-data:/bitwarden/data/
