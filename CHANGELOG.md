@@ -1,5 +1,15 @@
 # Changelog
 
+## v1.26.12 (20260724)
+
+### Feature
+
+- Update Dockerfile base image to `rclone/rclone:1.74.4`
+
+<br>
+
+
+
 ## v1.26.11 (20260606)
 
 ### Feature
