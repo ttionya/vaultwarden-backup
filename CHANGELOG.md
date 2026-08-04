@@ -1,5 +1,17 @@
 # Changelog
 
+## v1.27.0 (20260804)
+
+### Feature
+
+- Update Dockerfile base image to `rclone/rclone:1.75.0`
+- Added verification of SQLite backup results
+- When `DB_TYPE` is `sqlite` (the default), missing SQLite database file will no longer be allowed (close [#248](https://github.com/ttionya/vaultwarden-backup/issues/248))
+
+<br>
+
+
+
 ## v1.26.12 (20260724)
 
 ### Feature
