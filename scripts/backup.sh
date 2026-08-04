@@ -29,6 +29,8 @@ function backup_init() {
 function backup_db_sqlite() {
     color blue "backup vaultwarden sqlite database"
 
+    check_file_exist "${DATA_DB}"
+
     sqlite3 "${DATA_DB}" ".backup '${BACKUP_FILE_DB_SQLITE}'"
     if [[ $? != 0 ]]; then
         color red "backup vaultwarden sqlite database failed"
