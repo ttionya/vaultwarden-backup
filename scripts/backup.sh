@@ -29,10 +29,13 @@ function backup_init() {
 function backup_db_sqlite() {
     color blue "backup vaultwarden sqlite database"
 
-    if [[ -f "${DATA_DB}" ]]; then
-        sqlite3 "${DATA_DB}" ".backup '${BACKUP_FILE_DB_SQLITE}'"
-    else
-        color yellow "not found vaultwarden sqlite database, skipping"
+    sqlite3 "${DATA_DB}" ".backup '${BACKUP_FILE_DB_SQLITE}'"
+    if [[ $? != 0 ]]; then
+        color red "backup vaultwarden sqlite database failed"
+
+        send_notification "failure" "Backup failed at $(date +"%Y-%m-%d %H:%M:%S %Z"). Reason: Backup sqlite database failed."
+
+        exit 1
     fi
 }
 
