@@ -97,6 +97,7 @@ function test_result() {
 . tests/units/check-rclone-flags-valid/test.sh
 . tests/units/check-rclone-connection-initializing/test.sh
 . tests/units/check-encrypted-rclone-config/test.sh
+. tests/units/backup-db-sqlite-not-exists/test.sh
 . tests/units/backup-zip-file/test.sh
 . tests/units/backup-7z-file/test.sh
 . tests/units/backup-unpackage/test.sh
