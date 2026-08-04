@@ -596,16 +596,6 @@ Check out the [CHANGELOG](CHANGELOG.md) file.
 
 
 
-## Thanks
-
-I am grateful for the OSS license provided by [JetBrains](https://www.jetbrains.com/).
-
-<a href="https://jb.gg/OpenSource" target="_blank"><img src="https://resources.jetbrains.com/storage/products/company/brand/logos/jetbrains.svg" alt="JetBrains logo."></a>
-
-<br>
-
-
-
 ## License
 
 MIT

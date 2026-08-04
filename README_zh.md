@@ -593,16 +593,6 @@ MY_ENV="example4"
 
 
 
-## 感谢
-
-感谢 [JetBrains](https://www.jetbrains.com/) 提供的 OSS 许可证。
-
-<a href="https://jb.gg/OpenSource" target="_blank"><img src="https://resources.jetbrains.com/storage/products/company/brand/logos/jetbrains.svg" alt="JetBrains logo."></a>
-
-<br>
-
-
-
 ## 许可证
 
 MIT
