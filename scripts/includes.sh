@@ -107,6 +107,84 @@ function check_dir_exist() {
 }
 
 ########################################
+# Convert a date format string to a regular expression.
+# Arguments:
+#     date format string
+# Outputs:
+#     regular expression
+########################################
+function date_format_to_regex() {
+    local FMT="$1"
+    local RX=""
+    local LEN=${#FMT}
+    local I=0
+
+    while (( I < LEN )); do
+        local C="${FMT:$I:1}"
+        if [[ "$C" == "%" ]]; then
+            (( I++ ))
+            if (( I >= LEN )); then
+                RX="${RX}%"
+                break
+            fi
+            local FLAG=""
+            local NEXT_C="${FMT:$I:1}"
+            if [[ "$NEXT_C" =~ ^[-_0^#]$ ]]; then
+                FLAG="$NEXT_C"
+                (( I++ ))
+                if (( I >= LEN )); then
+                    RX="${RX}%${FLAG}"
+                    break
+                fi
+                NEXT_C="${FMT:$I:1}"
+            fi
+
+            case "$NEXT_C" in
+                "%") RX="${RX}%" ;;
+                "Y"|"G") RX="${RX}[0-9]{4}" ;;
+                "y"|"g"|"C") RX="${RX}[0-9]{2}" ;;
+                "m"|"d"|"H"|"M"|"S"|"I"|"V"|"U"|"W")
+                    if [[ "$FLAG" == "-" ]]; then
+                        RX="${RX}[0-9]{1,2}"
+                    elif [[ "$FLAG" == "_" ]]; then
+                        RX="${RX}[0-9 ]{1,2}"
+                    else
+                        RX="${RX}[0-9]{2}"
+                    fi
+                    ;;
+                "e"|"k"|"l") RX="${RX}[0-9 ]{1,2}" ;;
+                "j") RX="${RX}[0-9]{3}" ;;
+                "u") RX="${RX}[1-7]" ;;
+                "w") RX="${RX}[0-6]" ;;
+                "s") RX="${RX}[0-9]+" ;;
+                "N") RX="${RX}[0-9]{1,9}" ;;
+                "F") RX="${RX}[0-9]{4}-[0-9]{2}-[0-9]{2}" ;;
+                "T") RX="${RX}[0-9]{2}:[0-9]{2}:[0-9]{2}" ;;
+                "R") RX="${RX}[0-9]{2}:[0-9]{2}" ;;
+                "b"|"h"|"B"|"a"|"A"|"p"|"P") RX="${RX}[A-Za-z]+" ;;
+                "z") RX="${RX}[+-][0-9]{4}" ;;
+                "Z") RX="${RX}[A-Za-z0-9_+-]+" ;;
+                *)
+                    RX="${RX}[0-9a-zA-Z_-]+"
+                    ;;
+            esac
+        else
+            case "$C" in
+                \\|\.|\^|\$|\*|\+|\?|\(|\)|\[|\]|\{|\}|\|)
+                    RX="${RX}\\${C}"
+                    ;;
+                *)
+                    RX="${RX}${C}"
+                    ;;
+            esac
+        fi
+        (( I++ ))
+    done
+
+    echo "${RX}"
+}
+
+########################################
 # Send mail by s-nail.
 # Arguments:
 #     mail subject
@@ -388,7 +466,23 @@ function init_env() {
 
     # BACKUP_KEEP_DAYS
     get_env BACKUP_KEEP_DAYS
-    BACKUP_KEEP_DAYS="${BACKUP_KEEP_DAYS:-"0"}"
+    BACKUP_KEEP_DAYS="${BACKUP_KEEP_DAYS:-"7"}"
+
+    # BACKUP_KEEP_WEEKS
+    get_env BACKUP_KEEP_WEEKS
+    BACKUP_KEEP_WEEKS="${BACKUP_KEEP_WEEKS:-"4"}"
+
+    # BACKUP_KEEP_MONTHS
+    get_env BACKUP_KEEP_MONTHS
+    BACKUP_KEEP_MONTHS="${BACKUP_KEEP_MONTHS:-"12"}"
+
+    # BACKUP_KEEP_YEARS
+    get_env BACKUP_KEEP_YEARS
+    BACKUP_KEEP_YEARS="${BACKUP_KEEP_YEARS:-"3"}"
+
+    # BACKUP_KEEP_LAST
+    get_env BACKUP_KEEP_LAST
+    BACKUP_KEEP_LAST="${BACKUP_KEEP_LAST:-"0"}"
 
     # BACKUP_FILE_DATE_FORMAT
     get_env BACKUP_FILE_SUFFIX
@@ -396,6 +490,7 @@ function init_env() {
     get_env BACKUP_FILE_DATE_SUFFIX
     BACKUP_FILE_DATE="$(echo "${BACKUP_FILE_DATE:-"%Y%m%d"}${BACKUP_FILE_DATE_SUFFIX}" | sed 's/[^0-9a-zA-Z%_-]//g')"
     BACKUP_FILE_DATE_FORMAT="$(echo "${BACKUP_FILE_SUFFIX:-"${BACKUP_FILE_DATE}"}" | sed 's/\///g')"
+    BACKUP_FILE_SUFFIX_REGEX="$(date_format_to_regex "${BACKUP_FILE_DATE_FORMAT}")"
 
     # TIMEZONE
     get_env TIMEZONE
@@ -435,6 +530,10 @@ function init_env() {
     color yellow "ZIP_TYPE: ${ZIP_TYPE}"
     color yellow "BACKUP_FILE_DATE_FORMAT: ${BACKUP_FILE_DATE_FORMAT} (example \"[filename].$(date +"${BACKUP_FILE_DATE_FORMAT}").[ext]\")"
     color yellow "BACKUP_KEEP_DAYS: ${BACKUP_KEEP_DAYS}"
+    color yellow "BACKUP_KEEP_WEEKS: ${BACKUP_KEEP_WEEKS}"
+    color yellow "BACKUP_KEEP_MONTHS: ${BACKUP_KEEP_MONTHS}"
+    color yellow "BACKUP_KEEP_YEARS: ${BACKUP_KEEP_YEARS}"
+    color yellow "BACKUP_KEEP_LAST: ${BACKUP_KEEP_LAST}"
     if [[ -n "${PING_URL}" ]]; then
         color yellow "PING_URL: curl${PING_URL_CURL_OPTIONS:+" ${PING_URL_CURL_OPTIONS}"} \"${PING_URL}\""
     fi

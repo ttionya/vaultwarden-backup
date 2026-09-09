@@ -213,24 +213,185 @@ function upload() {
 }
 
 function clear_history() {
-    if [[ "${BACKUP_KEEP_DAYS}" -gt 0 ]]; then
-        for RCLONE_REMOTE_X in "${RCLONE_REMOTE_LIST[@]}"
-        do
-            color blue "delete ${BACKUP_KEEP_DAYS} days ago backup files $(color yellow "[${RCLONE_REMOTE_X}]")"
-
-            mapfile -t RCLONE_DELETE_LIST < <(rclone ${RCLONE_GLOBAL_FLAG} lsf "${RCLONE_REMOTE_X}" --min-age "${BACKUP_KEEP_DAYS}d")
-
-            for RCLONE_DELETE_FILE in "${RCLONE_DELETE_LIST[@]}"
-            do
-                color yellow "deleting \"${RCLONE_DELETE_FILE}\""
-
-                rclone ${RCLONE_GLOBAL_FLAG} delete "${RCLONE_REMOTE_X}/${RCLONE_DELETE_FILE}"
-                if [[ $? != 0 ]]; then
-                    color red "delete \"${RCLONE_DELETE_FILE}\" failed"
-                fi
-            done
-        done
+    # If all retention variables are 0, retention is disabled
+    if [[ "${BACKUP_KEEP_DAYS}" -eq 0 && "${BACKUP_KEEP_WEEKS}" -eq 0 && "${BACKUP_KEEP_MONTHS}" -eq 0 && "${BACKUP_KEEP_YEARS}" -eq 0 && "${BACKUP_KEEP_LAST}" -eq 0 ]]; then
+        color yellow "retention policy disabled (all BACKUP_KEEP_* are 0), skipping history cleanup"
+        return 0
     fi
+
+    for RCLONE_REMOTE_X in "${RCLONE_REMOTE_LIST[@]}"
+    do
+        color blue "evaluating retention policy on storage system $(color yellow "[${RCLONE_REMOTE_X}]")"
+
+        mapfile -t RCLONE_REMOTE_FILES < <(rclone ${RCLONE_GLOBAL_FLAG} lsf "${RCLONE_REMOTE_X}" --files-only --format "tp" --time-format "2006-01-02 15:04:05" --separator ";")
+
+        if [[ "${#RCLONE_REMOTE_FILES[@]}" -eq 0 ]]; then
+            color yellow "no files found on remote [${RCLONE_REMOTE_X}]"
+            continue
+        fi
+
+        # Parse backup files and group by snapshot
+        declare -A SNAPSHOT_TIMESTAMP=()
+        declare -A SNAPSHOT_FILES=()
+        local SNAPSHOT_IDS=()
+
+        local SUFFIX_REGEX="${BACKUP_FILE_SUFFIX_REGEX:-}"
+        if [[ -z "${SUFFIX_REGEX}" ]]; then
+            SUFFIX_REGEX="$(date_format_to_regex "${BACKUP_FILE_DATE_FORMAT}")"
+        fi
+
+        for FILE_ENTRY in "${RCLONE_REMOTE_FILES[@]}"; do
+            [[ -z "${FILE_ENTRY}" ]] && continue
+
+            local FILE_TS="${FILE_ENTRY%%;*}"
+            local FILE_NAME="${FILE_ENTRY#*;}"
+            local SNAP_ID=""
+
+            if [[ "${FILE_NAME}" =~ ^backup\.(.+)\.(zip|7z)$ ]]; then
+                local SUFFIX="${BASH_REMATCH[1]}"
+                if [[ "${SUFFIX}" =~ ^${SUFFIX_REGEX}$ ]]; then
+                    SNAP_ID="pkg_${SUFFIX}"
+                fi
+            elif [[ "${FILE_NAME}" =~ ^db\.(.+)\.(sqlite3|dump|sql)$ ]]; then
+                local SUFFIX="${BASH_REMATCH[1]}"
+                if [[ "${SUFFIX}" =~ ^${SUFFIX_REGEX}$ ]]; then
+                    SNAP_ID="unpacked_${SUFFIX}"
+                fi
+            elif [[ "${FILE_NAME}" =~ ^config\.(.+)\.json$ ]]; then
+                local SUFFIX="${BASH_REMATCH[1]}"
+                if [[ "${SUFFIX}" =~ ^${SUFFIX_REGEX}$ ]]; then
+                    SNAP_ID="unpacked_${SUFFIX}"
+                fi
+            elif [[ "${FILE_NAME}" =~ ^(rsakey|attachments|sends)\.(.+)\.tar$ ]]; then
+                local SUFFIX="${BASH_REMATCH[2]}"
+                if [[ "${SUFFIX}" =~ ^${SUFFIX_REGEX}$ ]]; then
+                    SNAP_ID="unpacked_${SUFFIX}"
+                fi
+            fi
+
+            if [[ -z "${SNAP_ID}" ]]; then
+                # Non-backup file or suffix mismatch, ignore
+                continue
+            fi
+
+            if [[ -z "${SNAPSHOT_TIMESTAMP[${SNAP_ID}]:-}" ]]; then
+                SNAPSHOT_TIMESTAMP["${SNAP_ID}"]="${FILE_TS}"
+                SNAPSHOT_FILES["${SNAP_ID}"]="${FILE_NAME}"
+                SNAPSHOT_IDS+=("${SNAP_ID}")
+            else
+                SNAPSHOT_FILES["${SNAP_ID}"]="${SNAPSHOT_FILES[${SNAP_ID}]} ${FILE_NAME}"
+            fi
+        done
+
+        if [[ "${#SNAPSHOT_IDS[@]}" -eq 0 ]]; then
+            color yellow "no matching backup files found on remote [${RCLONE_REMOTE_X}]"
+            continue
+        fi
+
+        # Sort snapshots chronologically descending (newest first)
+        local SORTED_SNAPSHOTS=()
+        mapfile -t SORTED_SNAPSHOTS < <(
+            for SNAP_ID in "${SNAPSHOT_IDS[@]}"; do
+                echo "${SNAPSHOT_TIMESTAMP[${SNAP_ID}]};${SNAP_ID}"
+            done | sort -r
+        )
+
+        declare -A KEPT_SNAPSHOTS=()
+        declare -A SEEN_DAYS=()
+        declare -A SEEN_WEEKS=()
+        declare -A SEEN_MONTHS=()
+        declare -A SEEN_YEARS=()
+        local LAST_COUNT=0
+
+        for SNAP_LINE in "${SORTED_SNAPSHOTS[@]}"; do
+            [[ -z "${SNAP_LINE}" ]] && continue
+
+            local SNAP_TS="${SNAP_LINE%%;*}"
+            local SNAP_ID="${SNAP_LINE#*;}"
+            local KEEP_THIS="FALSE"
+            local REASONS=()
+
+            # 1. Keep Last N
+            if [[ "${BACKUP_KEEP_LAST}" -gt 0 && "${LAST_COUNT}" -lt "${BACKUP_KEEP_LAST}" ]]; then
+                KEEP_THIS="TRUE"
+                ((LAST_COUNT++))
+                REASONS+=("last (${LAST_COUNT}/${BACKUP_KEEP_LAST})")
+            fi
+
+            local DAY_KEY="${SNAP_TS:0:10}"
+            local MONTH_KEY="${SNAP_TS:0:7}"
+            local YEAR_KEY="${SNAP_TS:0:4}"
+            local DATE_INPUT="${SNAP_TS:0:10} ${SNAP_TS:11:8}"
+            local WEEK_KEY
+            WEEK_KEY=$(date -d "${DATE_INPUT}" +"%G-W%V" 2>/dev/null)
+            if [[ -z "${WEEK_KEY}" ]]; then
+                WEEK_KEY="${DAY_KEY}"
+            fi
+
+            # 2. Keep Daily
+            if [[ "${BACKUP_KEEP_DAYS}" -gt 0 ]]; then
+                if [[ -z "${SEEN_DAYS[${DAY_KEY}]:-}" && "${#SEEN_DAYS[@]}" -lt "${BACKUP_KEEP_DAYS}" ]]; then
+                    SEEN_DAYS["${DAY_KEY}"]="1"
+                    KEEP_THIS="TRUE"
+                    REASONS+=("daily (${#SEEN_DAYS[@]}/${BACKUP_KEEP_DAYS} - ${DAY_KEY})")
+                fi
+            fi
+
+            # 3. Keep Weekly
+            if [[ "${BACKUP_KEEP_WEEKS}" -gt 0 ]]; then
+                if [[ -z "${SEEN_WEEKS[${WEEK_KEY}]:-}" && "${#SEEN_WEEKS[@]}" -lt "${BACKUP_KEEP_WEEKS}" ]]; then
+                    SEEN_WEEKS["${WEEK_KEY}"]="1"
+                    KEEP_THIS="TRUE"
+                    REASONS+=("weekly (${#SEEN_WEEKS[@]}/${BACKUP_KEEP_WEEKS} - ${WEEK_KEY})")
+                fi
+            fi
+
+            # 4. Keep Monthly
+            if [[ "${BACKUP_KEEP_MONTHS}" -gt 0 ]]; then
+                if [[ -z "${SEEN_MONTHS[${MONTH_KEY}]:-}" && "${#SEEN_MONTHS[@]}" -lt "${BACKUP_KEEP_MONTHS}" ]]; then
+                    SEEN_MONTHS["${MONTH_KEY}"]="1"
+                    KEEP_THIS="TRUE"
+                    REASONS+=("monthly (${#SEEN_MONTHS[@]}/${BACKUP_KEEP_MONTHS} - ${MONTH_KEY})")
+                fi
+            fi
+
+            # 5. Keep Yearly
+            if [[ "${BACKUP_KEEP_YEARS}" -gt 0 ]]; then
+                if [[ -z "${SEEN_YEARS[${YEAR_KEY}]:-}" && "${#SEEN_YEARS[@]}" -lt "${BACKUP_KEEP_YEARS}" ]]; then
+                    SEEN_YEARS["${YEAR_KEY}"]="1"
+                    KEEP_THIS="TRUE"
+                    REASONS+=("yearly (${#SEEN_YEARS[@]}/${BACKUP_KEEP_YEARS} - ${YEAR_KEY})")
+                fi
+            fi
+
+            local REASON_STR
+            REASON_STR="$(IFS=", "; echo "${REASONS[*]}")"
+
+            if [[ "${KEEP_THIS}" == "TRUE" ]]; then
+                KEPT_SNAPSHOTS["${SNAP_ID}"]="1"
+                for SNAP_FILE in ${SNAPSHOT_FILES[${SNAP_ID}]}; do
+                    color blue "keeping backup \"${SNAP_FILE}\" (${SNAP_TS:0:19}) -> ${REASON_STR}"
+                done
+            else
+                for SNAP_FILE in ${SNAPSHOT_FILES[${SNAP_ID}]}; do
+                    color yellow "pruning expired backup \"${SNAP_FILE}\" (${SNAP_TS:0:19})"
+                done
+            fi
+        done
+
+        # Delete unkept files
+        for SNAP_ID in "${SNAPSHOT_IDS[@]}"; do
+            if [[ -z "${KEPT_SNAPSHOTS[${SNAP_ID}]:-}" ]]; then
+                for DEL_FILE in ${SNAPSHOT_FILES[${SNAP_ID}]}; do
+                    color yellow "deleting \"${DEL_FILE}\""
+                    rclone ${RCLONE_GLOBAL_FLAG} delete "${RCLONE_REMOTE_X}/${DEL_FILE}"
+                    if [[ $? != 0 ]]; then
+                        color red "delete \"${DEL_FILE}\" failed"
+                    fi
+                done
+            fi
+        done
+    done
 }
 
 color blue "running the backup program at $(date +"%Y-%m-%d %H:%M:%S %Z")"
