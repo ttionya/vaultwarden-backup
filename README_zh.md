@@ -490,6 +490,8 @@ docker run --rm -it -e MAIL_SMTP_VARIABLES='<your smtp variables>' ttionya/vault
 docker run --rm -it -e MAIL_SMTP_VARIABLES='<your smtp variables>' -e MAIL_TO='<mail send to>' ttionya/vaultwarden-backup:latest mail
 ```
 
+上述命令中的 `mail` 参数由容器的入口脚本处理，入口脚本会将 `MAIL_SMTP_VARIABLES` 中指定的选项传递给 `mail` 程序。但是，如果你在已经运行的容器中直接执行 `mail`，这些选项不会自动生效，需要显式传入，例如：`mail $MAIL_SMTP_VARIABLES <mail send to>`。这要求 `MAIL_SMTP_VARIABLES` 已设置为容器环境变量。仅将 `.env` 文件挂载到 `/.env` 并不会自动将其中的值导出为环境变量。如果未提供 SMTP 选项，`mail` 可能会尝试连接本地邮件服务器，并报错 `Connection refused`。这并不一定意味着网络连接存在问题。
+
 <br>
 
 

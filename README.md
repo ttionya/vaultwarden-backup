@@ -493,6 +493,8 @@ docker run --rm -it -e MAIL_SMTP_VARIABLES='<your smtp variables>' ttionya/vault
 docker run --rm -it -e MAIL_SMTP_VARIABLES='<your smtp variables>' -e MAIL_TO='<mail send to>' ttionya/vaultwarden-backup:latest mail
 ```
 
+The `mail` argument in the commands above is handled by the container's entrypoint script, which passes the options specified in `MAIL_SMTP_VARIABLES` to the `mail` program. However, if you run `mail` directly inside an already running container, these options are not applied automatically. You must pass them explicitly, for example: `mail $MAIL_SMTP_VARIABLES <mail send to>`. This requires `MAIL_SMTP_VARIABLES` to be set as a container environment variable. Mounting a `.env` file at `/.env` does not export its values as environment variables. Without the SMTP options, `mail` may attempt to connect to the local mail server and fail with `Connection refused`, which does not necessarily indicate a network issue.
+
 <br>
 
 
