@@ -8,3 +8,9 @@
 # Log
 *.log
 *.log.*
+
+# Local configuration and secrets
+.env
+
+# GitHub workflow configuration
+.github

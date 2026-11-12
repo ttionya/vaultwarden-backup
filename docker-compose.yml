@@ -1,62 +1,13 @@
 version: '3.4'
 
 services:
-
-  vaultwarden:
-    image: vaultwarden/server:latest
-    restart: always
-    # environment:
-    #   SIGNUPS_ALLOWED: 'false'
-    #   ADMIN_TOKEN: 'your authentication token'
-    ports:
-      - '127.0.0.1:8200:80'
-    volumes:
-      - vaultwarden-data:/data/
-
   backup:
     image: ttionya/vaultwarden-backup:latest
     restart: always
-    # environment:
-    #   RCLONE_REMOTE_NAME: 'BitwardenBackup'
-    #   RCLONE_REMOTE_DIR: '/BitwardenBackup/'
-    #   RCLONE_GLOBAL_FLAG: ''
-    #   CRON: '5 * * * *'
-    #   ZIP_ENABLE: 'TRUE'
-    #   ZIP_PASSWORD: 'WHEREISMYPASSWORD?'
-    #   ZIP_TYPE: 'zip'
-    #   BACKUP_FILE_SUFFIX: '%Y%m%d'
-    #   BACKUP_KEEP_DAYS: 0
-    #   PING_URL: ''
-    #   PING_URL_CURL_OPTIONS: ''
-    #   PING_URL_WHEN_START: ''
-    #   PING_URL_WHEN_START_CURL_OPTIONS: ''
-    #   PING_URL_WHEN_SUCCESS: ''
-    #   PING_URL_WHEN_SUCCESS_CURL_OPTIONS: ''
-    #   PING_URL_WHEN_FAILURE: ''
-    #   PING_URL_WHEN_FAILURE_CURL_OPTIONS: ''
-    #   MAIL_SMTP_ENABLE: 'FALSE'
-    #   MAIL_SMTP_VARIABLES: ''
-    #   MAIL_TO: ''
-    #   MAIL_WHEN_SUCCESS: 'TRUE'
-    #   MAIL_WHEN_FAILURE: 'TRUE'
-    #   MAIL_FORCE_THREAD: 'FALSE'
-    #   TIMEZONE: 'UTC'
+    environment:
+      RCLONE_CONFIG_PASS: "${RCLONE_CONFIG_PASS}"
+      MAIL_SMTP_VARIABLES: "${MAIL_SMTP_STARTTLS} -S smtp=${MAIL_SMTP_PROTOCOL}://${MAIL_SMTP_HOST}:${MAIL_SMTP_PORT} -S smtp-auth=${MAIL_SMTP_AUTH} -S smtp-auth-user=${MAIL_SMTP_USER} -S smtp-auth-password=${MAIL_SMTP_PASSWORD} -S from=${MAIL_SMTP_FROM}"
     volumes:
-      - vaultwarden-data:/bitwarden/data/
-      - vaultwarden-rclone-data:/config/
-    #   - /path/to/env:/.env
-
-volumes:
-  vaultwarden-data:
-    # Specify the name of the volume where you save the vaultwarden data,
-    # use vaultwarden-data for new users
-    # and bitwardenrs-data for migrated users
-    name: vaultwarden-data
-    # name: bitwardenrs-data
-  vaultwarden-rclone-data:
-    external: true
-    # Specify the name of the volume where you save the rclone configuration,
-    # use vaultwarden-rclone-data for new users
-    # and bitwardenrs-rclone-data for migrated users
-    name: vaultwarden-rclone-data
-    # name: bitwardenrs-rclone-data
+      - ${VAULTWARDEN_DATA_DIR}:/bitwarden/data/
+      - ${RCLONE_CONFIG_DIR}:/config/
+      - ./.env:/.env:ro

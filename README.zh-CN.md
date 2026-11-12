@@ -2,7 +2,7 @@
 
 [![Docker Image Version (latest by date)](https://img.shields.io/docker/v/ttionya/vaultwarden-backup?label=Version&logo=docker)](https://hub.docker.com/r/ttionya/vaultwarden-backup/tags) [![Docker Pulls](https://img.shields.io/docker/pulls/ttionya/vaultwarden-backup?label=Docker%20Pulls&logo=docker)](https://hub.docker.com/r/ttionya/vaultwarden-backup) [![GitHub](https://img.shields.io/github/license/ttionya/vaultwarden-backup?label=License&logo=github)](https://github.com/ttionya/vaultwarden-backup/blob/master/LICENSE)
 
-[README](README.md) | 中文文档
+[README](README.md) | 简体中文文档 | [繁體中文文件](README.zh-TW.md)
 
 备份 [vaultwarden](https://github.com/dani-garcia/vaultwarden) (之前叫 `bitwarden_rs`) 数据并通过 [Rclone](https://rclone.org/) 同步到其他存储系统。
 
@@ -575,11 +575,11 @@ MY_ENV="example4"
 
 ## 高级
 
-- [以非 root 用户运行](docs/run-as-non-root-user.md)
-- [备份到多个远程目标](docs/multiple-remote-destinations.md)
-- [手动触发备份](docs/manually-trigger-a-backup.md)
-- [使用 PostgreSQL 数据库](docs/using-the-postgresql-backend.md)
-- [使用 MySQL(MariaDB) 数据库](docs/using-the-mysql-or-mariadb-backend.md)
+- [以非 root 用户运行](docs/run-as-non-root-user.zh-CN.md)
+- [备份到多个远程目标](docs/multiple-remote-destinations.zh-CN.md)
+- [手动触发备份](docs/manually-trigger-a-backup.zh-CN.md)
+- [使用 PostgreSQL 数据库](docs/using-the-postgresql-backend.zh-CN.md)
+- [使用 MySQL(MariaDB) 数据库](docs/using-the-mysql-or-mariadb-backend.zh-CN.md)
 
 <br>
 

@@ -2,7 +2,7 @@
 
 [![Docker Image Version (latest by date)](https://img.shields.io/docker/v/ttionya/vaultwarden-backup?label=Version&logo=docker)](https://hub.docker.com/r/ttionya/vaultwarden-backup/tags) [![Docker Pulls](https://img.shields.io/docker/pulls/ttionya/vaultwarden-backup?label=Docker%20Pulls&logo=docker)](https://hub.docker.com/r/ttionya/vaultwarden-backup) [![GitHub](https://img.shields.io/github/license/ttionya/vaultwarden-backup?label=License&logo=github)](https://github.com/ttionya/vaultwarden-backup/blob/master/LICENSE)
 
-README | [中文文档](README_zh.md)
+README | [简体中文文档](README.zh-CN.md) | [繁體中文文件](README.zh-TW.md)
 
 Docker containers for [vaultwarden](https://github.com/dani-garcia/vaultwarden) (formerly known as **`bitwarden_rs`**) backup to remote.
 
